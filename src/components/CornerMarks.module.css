@@ -1,0 +1,18 @@
+.mark {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1;
+  color: var(--line-strong);
+  pointer-events: none;
+  user-select: none;
+}
+
+.mark.accent {
+  color: var(--accent);
+}
+
+.tl { top: -0.5em; left: -0.5em; }
+.tr { top: -0.5em; right: -0.5em; }
+.bl { bottom: -0.5em; left: -0.5em; }
+.br { bottom: -0.5em; right: -0.5em; }

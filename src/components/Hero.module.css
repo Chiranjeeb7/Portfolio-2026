@@ -1,0 +1,109 @@
+.hero {
+  padding-block: clamp(40px, 6vw, 72px) clamp(32px, 4vw, 56px);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(28px, 4vw, 56px);
+  align-items: stretch;
+}
+
+.textCol {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.greeting {
+  font-family: var(--font-mono);
+  font-size: clamp(0.95rem, 0.5vw + 0.8rem, 1.05rem);
+  letter-spacing: var(--tracking-mono);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.heading {
+  margin-top: 6px;
+  font-size: clamp(1.65rem, 1.6vw + 1.05rem, 2.35rem);
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+  max-width: 19ch;
+}
+
+.heading em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.subhead {
+  margin-top: 18px;
+  font-size: 1rem;
+  color: var(--ink-muted);
+  max-width: 46ch;
+}
+
+.roleChips {
+  display: flex;
+  gap: 10px;
+}
+
+.roleChip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.logo {
+  height: 0.85rem;
+  width: auto;
+  display: block;
+}
+
+.byjusLogo {
+  height: 1.3rem;
+}
+
+.logoDark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .logoLight {
+    display: none;
+  }
+  :root:not([data-theme="light"]) .logoDark {
+    display: block;
+  }
+}
+
+:root[data-theme="dark"] .logoLight {
+  display: none;
+}
+:root[data-theme="dark"] .logoDark {
+  display: block;
+}
+
+@media (max-width: 880px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .textCol {
+    gap: 40px;
+  }
+}
+
+@media (max-width: 420px) {
+  .roleChips {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -1,0 +1,263 @@
+/* Departure Mono — self-hosted, SIL OFL license (see /public/fonts/DepartureMono-LICENSE.txt) */
+@font-face {
+  font-family: "Departure Mono";
+  src:
+    url("/fonts/DepartureMono-Regular.woff2") format("woff2"),
+    url("/fonts/DepartureMono-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------- Tokens ----------
+   Reverse-engineered from som.design's own computed styles: cool near-white
+   ground, slate ink (never black), hairline borders, near-zero radius,
+   zero shadow, and one coral accent used only at decorative/large scale
+   (logo, corner marks) — never as button fill or body text. */
+:root {
+  --bg: #fafcfd;
+  --bg-panel: #f1f4f6;
+  --bg-panel-raised: #ffffff;
+  --ink: #32404f;
+  --ink-muted: #5b6b7a;
+  --ink-faint: #67747f;
+  --line: #e5e8eb;
+  --line-strong: #c7ced4;
+
+  /* Decorative/large-scale only (logo, corner marks, hero emphasis word) —
+     this is som's own accent value, which only clears WCAG large-text
+     contrast (3:1), not normal-text (4.5:1). --accent-strong is the AA-safe
+     shade for anywhere accent touches small text or a filled surface. */
+  --accent: #e86543;
+  --accent-strong: #b8421f;
+  --accent-hover: #93390a;
+  --accent-ink: #fff8f2;
+  --accent-tint: #fbe4dc;
+  /* For accent text sitting on a var(--ink)-colored surface (e.g. the
+     inverted tooltip chip) — bright in light mode since --ink is dark there,
+     dark in dark mode since --ink flips light. */
+  --accent-on-ink: #ff8a5c;
+
+  --sage: #4c7361;
+  --sage-tint: #e3ebe5;
+  --sky: #3d6b8f;
+  --sky-tint: #dde9f0;
+  --violet: #6b5b95;
+  --violet-tint: #e6e1ef;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "Departure Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Departure Mono is a pixel font tuned for multiples of 11px; nudge the
+     tracking wider as size drops, matching som.design's own mono usage. */
+  --tracking-mono-tight: -0.02em;
+  --tracking-mono: normal;
+  --tracking-mono-loose: 0.04em;
+  --tracking-mono-wide: 0.09em;
+
+  /* Sharp, technical — matches som's 0px panels / 2px chips exactly. */
+  --radius-sm: 2px;
+  --radius-md: 2px;
+  --radius-lg: 0px;
+
+  --container-w: min(1320px, 92vw);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  color-scheme: light;
+}
+
+/* Dark tokens apply by system preference (unless the visitor forced light),
+   and again, identically, when the visitor explicitly picked dark via the
+   nav toggle — see src/hooks/useTheme.js. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #151a20;
+    --bg-panel: #1a2028;
+    --bg-panel-raised: #1f2630;
+    --ink: #dfe6ec;
+    --ink-muted: #9aa8b5;
+    --ink-faint: #7e8c99;
+    --line: #2a323b;
+    --line-strong: #3a434d;
+
+    --accent: #ff8a5c;
+    --accent-strong: #ff8a5c;
+    --accent-hover: #ffa579;
+    --accent-ink: #1c0f06;
+    --accent-tint: #3a2313;
+    --accent-on-ink: #a03a1b;
+
+    --sage: #86a892;
+    --sage-tint: #1f2921;
+    --sky: #7fb0d6;
+    --sky-tint: #1c2a33;
+    --violet: #a597c9;
+    --violet-tint: #251f30;
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #151a20;
+  --bg-panel: #1a2028;
+  --bg-panel-raised: #1f2630;
+  --ink: #dfe6ec;
+  --ink-muted: #9aa8b5;
+  --ink-faint: #7e8c99;
+  --line: #2a323b;
+  --line-strong: #3a434d;
+
+  --accent: #ff8a5c;
+  --accent-strong: #ff8a5c;
+  --accent-hover: #ffa579;
+  --accent-ink: #1c0f06;
+  --accent-tint: #3a2313;
+  --accent-on-ink: #a03a1b;
+
+  --sage: #86a892;
+  --sage-tint: #1f2921;
+  --sky: #7fb0d6;
+  --sky-tint: #1c2a33;
+  --violet: #a597c9;
+  --violet-tint: #251f30;
+
+  color-scheme: dark;
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; }
+ul { list-style: none; margin: 0; padding: 0; }
+h1, h2, h3, h4, p { margin: 0; }
+
+h1, h2, h3, h4 {
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+p, li {
+  letter-spacing: -0.04em;
+  text-wrap: pretty;
+}
+
+.numeric, .mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-mono);
+  text-transform: uppercase;
+}
+
+/* ---------- Browser surfaces ---------- */
+::selection { background: var(--accent); color: var(--accent-ink); }
+
+:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+* { scrollbar-color: var(--line-strong) transparent; scrollbar-width: thin; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 999px;
+  border: 2.5px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+
+/* ---------- Layout helpers ---------- */
+.container {
+  width: 100%;
+  max-width: var(--container-w);
+  margin-inline: auto;
+  padding-inline: 28px;
+}
+
+.section {
+  padding-block: clamp(64px, 10vw, 128px);
+}
+
+.measure {
+  max-width: 68ch;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Shared components ---------- */
+.tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: var(--tracking-mono-loose);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.88rem;
+  letter-spacing: var(--tracking-mono);
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: var(--bg-panel-raised);
+  border-color: var(--ink);
+}
+.btn-primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ink-muted);
+  border-color: var(--line-strong);
+}
+.btn-secondary:hover { border-color: var(--ink); color: var(--ink); }
+
+.btn-disabled {
+  background: var(--bg-panel);
+  color: var(--ink-faint);
+  cursor: not-allowed;
+  border-color: var(--line);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

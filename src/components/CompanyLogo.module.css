@@ -1,0 +1,30 @@
+.wrap {
+  display: inline-flex;
+  align-items: center;
+}
+
+.img {
+  height: 0.85rem;
+  width: auto;
+  display: block;
+}
+
+.onDark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .onLight {
+    display: none;
+  }
+  :root:not([data-theme="light"]) .onDark {
+    display: block;
+  }
+}
+
+:root[data-theme="dark"] .onLight {
+  display: none;
+}
+:root[data-theme="dark"] .onDark {
+  display: block;
+}

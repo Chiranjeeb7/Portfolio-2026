@@ -1,0 +1,47 @@
+import { ArrowUpRight } from "lucide-react";
+import { projects } from "../data/content";
+import CompanyLogo from "./CompanyLogo";
+import ThumbnailPlaceholder from "./ThumbnailPlaceholder";
+import styles from "./Work.module.css";
+
+export default function Work() {
+  return (
+    <section id="work" className={`container ${styles.section}`}>
+      <h2 className={styles.heading}>Work that shipped, with the numbers to show for it</h2>
+      <p className={styles.intro}>Three projects, three real outcomes.</p>
+
+      <div className={styles.list}>
+        {projects.map((p) => (
+          <article className={styles.card} key={p.id}>
+            <div className={styles.art}>
+              <ThumbnailPlaceholder />
+              <div className={styles.shippedAt}>
+                <span>Shipped at</span>
+                <CompanyLogo company={p.company} className={styles.metaLogo} />
+              </div>
+            </div>
+            <div className={styles.body}>
+              <span className="tag">{p.tag}</span>
+
+              <h3 className={styles.cardTitle}>{p.title}</h3>
+              <p className={styles.cardDescription}>{p.description}</p>
+
+              <div className={styles.stats}>
+                {p.stats.map((s) => (
+                  <div className={styles.stat} key={s.label}>
+                    <span className={`${styles.statValue} numeric`}>{s.value}</span>
+                    <span className={styles.statLabel}>{s.label}</span>
+                  </div>
+                ))}
+              </div>
+
+              <a className={styles.link} href={p.href} target="_blank" rel="noreferrer">
+                View case study <ArrowUpRight size={16} />
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}

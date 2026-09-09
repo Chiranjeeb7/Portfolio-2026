@@ -1,0 +1,140 @@
+.section {
+  padding-block: clamp(40px, 6vw, 72px) clamp(64px, 10vw, 128px);
+}
+
+.heading {
+  font-size: clamp(1.5rem, 1.2vw + 1.1rem, 1.85rem);
+}
+
+.intro {
+  margin-top: 14px;
+  color: var(--ink-muted);
+  font-size: 1.05rem;
+}
+
+.list {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel-raised);
+  overflow: hidden;
+  transition: border-color 0.2s var(--ease-out-expo);
+}
+
+.card:hover {
+  border-color: var(--line-strong);
+}
+
+.art {
+  position: relative;
+  min-height: 240px;
+}
+
+.body {
+  padding: 32px clamp(24px, 3vw, 40px);
+  display: flex;
+  flex-direction: column;
+}
+
+.shippedAt {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel-raised);
+}
+
+.shippedAt span {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: var(--tracking-mono-loose);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.metaLogo {
+  opacity: 0.9;
+}
+
+.cardTitle {
+  margin-top: 16px;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.cardDescription {
+  margin-top: 12px;
+  color: var(--ink-muted);
+  max-width: 46ch;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.stat {
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+}
+
+.statValue {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 400;
+  letter-spacing: var(--tracking-mono-tight);
+  color: var(--accent-strong);
+}
+
+.statLabel {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: var(--tracking-mono-loose);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-top: 4px;
+}
+
+.link {
+  margin-top: 26px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.85rem;
+  letter-spacing: var(--tracking-mono);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.link svg { transition: transform 0.2s var(--ease-out-expo); }
+.link:hover svg { transform: translate(3px, -3px); }
+
+@media (max-width: 760px) {
+  .card {
+    grid-template-columns: 1fr;
+  }
+  .art { min-height: 160px; }
+}

@@ -1,0 +1,109 @@
+.wrap {
+  min-width: 0;
+  margin-top: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel-raised);
+  padding: 18px 18px 14px;
+}
+
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: var(--tracking-mono);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.hudScores {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.combo {
+  color: var(--accent-strong);
+  animation: comboPop 0.24s var(--ease-out-expo);
+}
+
+@keyframes comboPop {
+  from { transform: scale(1.3); }
+  to { transform: scale(1); }
+}
+
+.lives {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  min-height: 220px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--bg-panel);
+}
+
+.canvas {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: pointer;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  padding: 20px;
+  background: color-mix(in srgb, var(--bg-panel) 88%, transparent);
+  backdrop-filter: blur(3px);
+}
+
+.overlayIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel-raised);
+  color: var(--accent-strong);
+  margin-bottom: 2px;
+}
+
+.overlayTitle {
+  font-size: clamp(0.98rem, 1.4vw + 0.7rem, 1.1rem);
+  font-weight: 500;
+}
+
+.overlaySubtitle {
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  max-width: 34ch;
+}
+
+.hint {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: var(--tracking-mono-loose);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-align: center;
+}

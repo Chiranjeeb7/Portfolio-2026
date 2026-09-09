@@ -1,0 +1,48 @@
+.icon {
+  overflow: visible;
+}
+
+.steam1,
+.steam2,
+.steam3 {
+  transform-origin: center bottom;
+  opacity: 0.7;
+}
+
+.animate .steam1 {
+  animation: rise 2.6s ease-in-out infinite;
+}
+
+.animate .steam2 {
+  animation: rise 2.6s ease-in-out infinite 0.5s;
+}
+
+.animate .steam3 {
+  animation: rise 2.6s ease-in-out infinite 1s;
+}
+
+@keyframes rise {
+  0% {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  30% {
+    opacity: 0.75;
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate .steam1,
+  .animate .steam2,
+  .animate .steam3 {
+    animation: none;
+    opacity: 0.55;
+  }
+}
