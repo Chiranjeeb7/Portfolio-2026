@@ -6,8 +6,16 @@ import CanvasAbout from "./components/CanvasAbout";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Writing from "./components/Writing";
 import Footer from "./components/Footer";
+import PlannerCaseStudy from "./pages/PlannerCaseStudy";
+import { useHashRoute } from "./hooks/useHashRoute";
 
 function App() {
+  const route = useHashRoute();
+
+  if (route === "planner") {
+    return <PlannerCaseStudy />;
+  }
+
   return (
     <>
       <Nav />

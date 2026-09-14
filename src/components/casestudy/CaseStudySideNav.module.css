@@ -1,0 +1,40 @@
+.sideNav {
+  position: sticky;
+  top: 96px;
+  align-self: start;
+}
+
+.sideNav ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-left: 1px solid var(--line);
+}
+
+.link {
+  display: block;
+  padding: 7px 0 7px 16px;
+  margin-left: -1px;
+  border-left: 1px solid transparent;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: var(--tracking-mono-loose);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.link:hover {
+  color: var(--ink);
+}
+
+.linkActive {
+  color: var(--accent-strong);
+  border-left-color: var(--accent-strong);
+}
+
+@media (max-width: 900px) {
+  .sideNav {
+    display: none;
+  }
+}

@@ -17,6 +17,7 @@
 .brand {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   gap: 2px;
   text-decoration: none;
 }
@@ -27,6 +28,7 @@
   font-weight: 400;
   letter-spacing: var(--tracking-mono-tight);
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .brandRole {
@@ -35,6 +37,7 @@
   letter-spacing: var(--tracking-mono-loose);
   text-transform: uppercase;
   color: var(--ink-muted);
+  white-space: nowrap;
 }
 
 .links {

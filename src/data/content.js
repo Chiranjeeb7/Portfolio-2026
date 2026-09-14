@@ -23,14 +23,14 @@ export const projects = [
     id: "planner",
     company: "current", // Delhivery
     tag: "B2B SaaS · Logistics",
-    title: "74% faster logistics planning",
+    title: "Getting planners to trust the algorithm",
     description:
-      "Redesigned an existing stock-control planner, cutting daily planning time and losses across the board.",
+      "Redesigned a planner clients were quietly bypassing — turned a black-box output into one planners actually shipped.",
     stats: [
+      { value: "18% → 72%", label: "auto-plan acceptance" },
       { value: "19 min → <5 min", label: "daily planning time" },
-      { value: "3×", label: "decrease in losses" },
     ],
-    href: `${V1}/planner`,
+    href: "#/planner",
   },
   {
     id: "transporter-mobile-app",

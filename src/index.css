@@ -19,8 +19,8 @@
   --bg-panel: #f1f4f6;
   --bg-panel-raised: #ffffff;
   --ink: #32404f;
-  --ink-muted: #5b6b7a;
-  --ink-faint: #67747f;
+  --ink-muted: #4c5b6a;
+  --ink-faint: #56636e;
   --line: #e5e8eb;
   --line-strong: #c7ced4;
 
@@ -45,7 +45,7 @@
   --violet: #6b5b95;
   --violet-tint: #e6e1ef;
 
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-sans: "Manrope", system-ui, sans-serif;
   --font-mono: "Departure Mono", ui-monospace, SFMono-Regular, monospace;
 
   /* Departure Mono is a pixel font tuned for multiples of 11px; nudge the
@@ -75,8 +75,8 @@
     --bg-panel: #1a2028;
     --bg-panel-raised: #1f2630;
     --ink: #dfe6ec;
-    --ink-muted: #9aa8b5;
-    --ink-faint: #7e8c99;
+    --ink-muted: #a8b5c1;
+    --ink-faint: #8d9aa6;
     --line: #2a323b;
     --line-strong: #3a434d;
 
@@ -103,8 +103,8 @@
   --bg-panel: #1a2028;
   --bg-panel-raised: #1f2630;
   --ink: #dfe6ec;
-  --ink-muted: #9aa8b5;
-  --ink-faint: #7e8c99;
+  --ink-muted: #a8b5c1;
+  --ink-faint: #8d9aa6;
   --line: #2a323b;
   --line-strong: #3a434d;
 
@@ -141,17 +141,17 @@ body {
 img, svg { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; }
-ul { list-style: none; margin: 0; padding: 0; }
+ul, ol { list-style: none; margin: 0; padding: 0; }
 h1, h2, h3, h4, p { margin: 0; }
 
 h1, h2, h3, h4 {
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.04em;
   text-wrap: balance;
 }
 
 p, li {
-  letter-spacing: -0.04em;
+  letter-spacing: -0.011em;
   text-wrap: pretty;
 }
 
