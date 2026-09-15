@@ -42,6 +42,21 @@
   background: radial-gradient(130% 160% at 20% 10%, var(--accent) 0%, var(--accent-strong) 55%, var(--accent-hover) 100%);
 }
 
+/* For thumbnails that are flat, self-contained compositions (their own
+   background baked into the raster) rather than a screenshot floating over
+   the accent gradient — fixed regardless of theme so it always matches the
+   image underneath, and avoids an orange flash while the image decodes. */
+.artFlat {
+  background: #050608;
+}
+
+/* Map Practice: the screenshot is BYJU'S purple (#5351c6), which fights the
+   orange accent. A lighter tonal lavender lets the screen read as the darker
+   focal point. Fixed across themes since it's matched to the image. */
+.artLavender {
+  background: radial-gradient(130% 160% at 20% 10%, #e4e2fa 0%, #bcb9ef 55%, #9793e2 100%);
+}
+
 .thumbnail {
   position: absolute;
   right: -3px;
@@ -57,6 +72,25 @@
 
 .card:hover .thumbnail {
   transform: scale(1.06);
+}
+
+.thumbnailCover {
+  position: absolute;
+  inset: 0;
+  right: auto;
+  bottom: auto;
+  max-width: none;
+  max-height: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: center;
+  transform: scale(1);
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+.card:hover .thumbnailCover {
+  transform: scale(1.03);
 }
 
 .body {

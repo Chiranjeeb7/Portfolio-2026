@@ -7,6 +7,8 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import Writing from "./components/Writing";
 import Footer from "./components/Footer";
 import PlannerCaseStudy from "./pages/PlannerCaseStudy";
+import MapPracticeCaseStudy from "./pages/MapPracticeCaseStudy";
+import TransporterCaseStudy from "./pages/TransporterCaseStudy";
 import { useHashRoute } from "./hooks/useHashRoute";
 
 function App() {
@@ -14,6 +16,14 @@ function App() {
 
   if (route === "planner") {
     return <PlannerCaseStudy />;
+  }
+
+  if (route === "map-practice") {
+    return <MapPracticeCaseStudy />;
+  }
+
+  if (route === "transporter") {
+    return <TransporterCaseStudy />;
   }
 
   return (

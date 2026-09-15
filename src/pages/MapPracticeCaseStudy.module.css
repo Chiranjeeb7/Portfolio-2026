@@ -1,0 +1,272 @@
+/* Map Practice–only pieces. Everything shared with the Planner page
+   (header, hero, sections, stat rows, solution blocks, impact…) lives in
+   CaseStudy.module.css. */
+
+/* ---------- Hero ---------- */
+/* Source screen is 16:10 with empty purple above/below the content and a
+   device nav bar at the bottom. The map board already sits on the image's
+   vertical midline, so an even top/bottom crop keeps it centred with equal
+   margins (the screen header and nav bar both fall outside the crop). */
+.heroCrop {
+  aspect-ratio: 2.1 / 1;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ---------- Figures & video ---------- */
+.figure {
+  margin: 28px 0 0;
+}
+
+.figureFrame {
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+}
+
+/* Research visuals are light-background exports — keep them on a fixed white
+   mat in both themes rather than floating on a dark panel. */
+.figureImg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.figureCaption {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: var(--tracking-mono-loose);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.videoFrame {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  background: #000;
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.videoFrame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ---------- Context: device stage ---------- */
+.deviceStage {
+  display: flex;
+  justify-content: center;
+  padding: 28px 24px 12px;
+  background-color: var(--bg-panel);
+  background-image: radial-gradient(var(--line-strong) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.deviceImg {
+  display: block;
+  width: min(360px, 80%);
+  height: auto;
+}
+
+/* ---------- Research ---------- */
+.findingGrid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.finding {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  background: var(--bg-panel-raised);
+}
+
+.findingValue {
+  font-size: 1.8rem;
+  line-height: 1;
+  color: var(--accent-strong);
+}
+
+.findingLabel {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  line-height: 1.4;
+}
+
+/* ---------- Insights: grade perception ---------- */
+.gradeList {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.grade {
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  color: #32404f;
+}
+
+.gradeHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.gradeTitle {
+  font-size: 1rem;
+}
+
+.gradeRange {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: var(--tracking-mono-loose);
+  text-transform: uppercase;
+  color: #5b6b7a;
+}
+
+.gradeImg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.gradePoints {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  font-size: 0.87rem;
+  color: #4c5b6a;
+  line-height: 1.45;
+}
+
+.fourUp {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* ---------- Testing ---------- */
+.metaRow {
+  margin: 20px 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.metaItem {
+  padding: 14px 18px;
+  background: var(--bg-panel-raised);
+}
+
+.metaValue {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--ink);
+}
+
+.testGrid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  border: 1px solid var(--line);
+  background: var(--bg-panel-raised);
+}
+
+.testImg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-right: 1px solid var(--line);
+}
+
+.testFindings {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  padding: 24px;
+}
+
+.testFinding {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.testFinding svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.toneGood {
+  color: var(--sage);
+}
+
+.toneIssue {
+  color: var(--accent-strong);
+}
+
+.testFindingTitle {
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.testFindingText {
+  font-size: 0.87rem;
+  color: var(--ink-muted);
+}
+
+.threeCol {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.tallImage {
+  width: auto;
+  max-width: 100%;
+  max-height: 520px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .findingGrid,
+  .fourUp {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .threeCol {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .metaRow,
+  .gradePoints,
+  .testGrid {
+    grid-template-columns: 1fr;
+  }
+  .fourUp {
+    grid-template-columns: 1fr;
+  }
+  .testImg {
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+}

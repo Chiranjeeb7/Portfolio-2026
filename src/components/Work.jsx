@@ -3,10 +3,22 @@ import { projects } from "../data/content";
 import CompanyLogo from "./CompanyLogo";
 import ThumbnailPlaceholder from "./ThumbnailPlaceholder";
 import plannerThumbnail from "../assets/photos/planner-thumbnail.png";
+import transporterThumbnail from "../assets/photos/transporter-thumbnail.png";
+import mapPracticeThumbnail from "../assets/photos/map-practice-thumbnail.png";
 import styles from "./Work.module.css";
 
 // Populate with `{ [project.id]: importedImage }` once real thumbnail art is ready.
-const THUMBNAILS = { planner: plannerThumbnail };
+const THUMBNAILS = {
+  planner: plannerThumbnail,
+  "transporter-mobile-app": transporterThumbnail,
+  "map-practice": mapPracticeThumbnail,
+};
+// Thumbnails that already fill their own frame (own background) render full-bleed
+// instead of floating over the accent gradient like a bare screenshot does.
+const COVER_THUMBNAILS = new Set(["transporter-mobile-app"]);
+// Per-project backdrop overrides for screenshots whose colours clash with the
+// default accent gradient.
+const ART_BACKGROUNDS = { "map-practice": styles.artLavender };
 
 export default function Work() {
   return (
@@ -17,13 +29,15 @@ export default function Work() {
       <div className={styles.list}>
         {projects.map((p) => (
           <article className={styles.card} key={p.id}>
-            <div className={styles.art}>
+            <div
+              className={`${styles.art} ${COVER_THUMBNAILS.has(p.id) ? styles.artFlat : ""} ${ART_BACKGROUNDS[p.id] ?? ""}`}
+            >
               <span className={`tag ${styles.cardTag}`}>{p.tag}</span>
               {THUMBNAILS[p.id] ? (
                 <img
                   src={THUMBNAILS[p.id]}
                   alt={p.title}
-                  className={styles.thumbnail}
+                  className={COVER_THUMBNAILS.has(p.id) ? styles.thumbnailCover : styles.thumbnail}
                   loading="lazy"
                 />
               ) : (

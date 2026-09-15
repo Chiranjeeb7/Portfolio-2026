@@ -42,17 +42,19 @@ import Footer from "../components/Footer";
 import landingBanner from "../assets/photos/planner-landing-banner.png";
 import plannerPlan from "../assets/photos/planner-plan.png";
 import plannerFailureSummary from "../assets/photos/planner-failure-summary.png";
-import planner3DTruck from "../assets/photos/3d-truck.gif";
-import plannerOrderLoad from "../assets/photos/order-loading.gif";
-import styles from "./PlannerCaseStudy.module.css";
+import truck3dMp4 from "../assets/photos/3d-truck.mp4";
+import orderLoadMp4 from "../assets/photos/order-loading.mp4";
+import styles from "./CaseStudy.module.css";
 
 const FLOW_ICONS = { orders: PackageSearch, core: Cpu, output: ShieldCheck };
 const STAT_ICONS = { trust: ShieldCheck, cost: Banknote, time: Clock, onboarding: GraduationCap };
 const SOLUTION_IMAGES = {
   plan: plannerPlan,
   summary: plannerFailureSummary,
-  truck3d: planner3DTruck,
-  orderLoad: plannerOrderLoad,
+};
+const SOLUTION_VIDEOS = {
+  truck3d: { mp4: truck3dMp4 },
+  orderLoad: { mp4: orderLoadMp4 },
 };
 const INSIGHT_STAT_ICONS = { gauge: Gauge, clock: Clock };
 const INSIGHT_POINT_ICONS = {
@@ -321,7 +323,18 @@ export default function PlannerCaseStudy() {
               {solutions.map((sol) => (
                 <div key={sol.title} className={styles.solutionBlock}>
                   <div className={styles.solutionMedia}>
-                    {sol.image ? (
+                    {SOLUTION_VIDEOS[sol.image] ? (
+                      <video
+                        className={styles.solutionImage}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        aria-label={sol.title}
+                      >
+                        <source src={SOLUTION_VIDEOS[sol.image].mp4} type="video/mp4" />
+                      </video>
+                    ) : sol.image ? (
                       <img
                         src={SOLUTION_IMAGES[sol.image]}
                         alt={sol.title}
@@ -392,7 +405,7 @@ export default function PlannerCaseStudy() {
               <h2 className={styles.sectionTitle}>Other work</h2>
               <div className={styles.otherList}>
                 {otherProjects.map((p) => (
-                  <a key={p.id} className={styles.otherLink} href={p.href} target="_blank" rel="noreferrer">
+                  <a key={p.id} className={styles.otherLink} href={p.href}>
                     {p.title} <ArrowUpRight size={16} />
                   </a>
                 ))}

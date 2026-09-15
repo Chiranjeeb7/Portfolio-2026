@@ -14,10 +14,6 @@ export const companies = {
   previous: { name: "BYJU'S", domain: "Ed-tech" },
 };
 
-// V1 case-study pages are live on the previous Framer site — linked here until
-// dedicated V2 case-study pages are built.
-const V1 = "https://chiranjeebdeb.framer.website";
-
 export const projects = [
   {
     id: "planner",
@@ -43,7 +39,7 @@ export const projects = [
       { value: "80%", label: "of load acceptance now on app" },
       { value: "9–10% → 39%", label: "auction participation" },
     ],
-    href: `${V1}/transporter-mobile-app`,
+    href: "#/transporter",
   },
   {
     id: "map-practice",
@@ -53,7 +49,7 @@ export const projects = [
     description:
       "A phygital (physical + digital) application for practicing maps, built for how young kids actually learn.",
     stats: [{ value: "90%", label: "of kids tested found it highly engaging" }],
-    href: `${V1}/map-practice`,
+    href: "#/map-practice",
   },
 ];
 
