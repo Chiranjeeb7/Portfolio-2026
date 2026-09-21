@@ -48,10 +48,15 @@ components.
   specifically for accent text sitting on a `var(--ink)`-colored surface
   (the inverted tooltip chip), since that surface's actual color flips
   between light and dark mode.
-- `--sage` / `--sky` / `--violet` — the only "full palette" exception,
-  reserved for the activity grid's 4-way category legend. A categorical
-  data-viz legend legitimately needs distinct hues; nothing else on the
-  page uses them.
+- `--gold` `#e0a82e` (light) / `#e6b03a` (dark), with `--gold-strong` for its
+  hairline edge — the single exception to the one-accent rule, and only in
+  the activity grid, where it marks the three milestone cells (first Figma plugin,
+  first pull request, the AI workshop). Everything else in that grid is one
+  accent colour, so the exception stays legible as an exception.
+- `--sage` — success/positive accents only: the copied-email confirmation and
+  the case studies' "pro" ticks. (`--sky` and `--violet` are gone; they
+  existed for the activity grid's old 4-hue category legend, which the
+  single-colour grid replaced.)
 - `--radius-sm`/`--radius-md` `2px`, `--radius-lg` `0px` — sharp, technical.
   Matches som's own values exactly (0px on their "Key Moments" panel, 2px on
   their role-info box and buttons). No rounded pills or soft cards anywhere.
@@ -109,17 +114,58 @@ with a `--line-strong` border. Both sharp-cornered, Departure Mono uppercase.
   Third-party brand assets below), no CTA buttons in the hero itself. The
   text column and the activity panel stretch to equal height
   (`align-items: stretch` on the hero grid).
-- **Activity grid** (`MilestonesGrid.jsx` + `data/activity.js`): scoped to
-  2025–2026, 24 columns × 7 rows, ~97% filled. Categories are weighted
-  (design/research common, ship/write rare accents) with a 1–3 opacity
-  "level" per cell, so the field reads as two dominant hues with occasional
-  pops rather than four equally-loud flat colors. The grid vertically
-  centers within its panel so extra height (from matching the hero's other
-  column) distributes as balanced space, not one dead gap before the
-  legend. `data/activity.js` currently generates deterministic (seeded,
-  stable across reloads) placeholder entries with *generic* category labels
-  only — never a fabricated specific claim. Swap `buildColumns()` for real
-  dated events when the user provides them.
+- **Activity grid** (`MilestonesGrid.jsx` + `data/activity.js`): real events
+  now, replacing the earlier seeded placeholder field. Shape follows
+  GitHub/Claude (and som's own "Key Moments" block): a **horizontal grid of
+  day squares**, one square per day running left to right, **only the years
+  labelled** along the top — no month labels, no row labels — over a rolling
+  58-week window ending with the current week (so it can never show
+  pre-filled future activity, and never needs re-scoping).
+  - **Row count is a CSS variable, not a data decision.** `buildGrid()`
+    returns one flat list of days and the grid uses `grid-auto-flow: column`
+    with `grid-template-rows: repeat(var(--rows), auto)`, so the days wrap
+    top-to-bottom then left-to-right however CSS says. Rows are the only
+    knob: fewer rows makes the block shorter but the columns narrower (and
+    so the squares smaller), which is a straight trade — 11 rows on desktop
+    (~12px squares, ~164px tall), 12 under 900px, 14 on phones, where fewer
+    rows would shrink the squares to specks. Row tracks are `auto`, never
+    `1fr`: `1fr` stretches them to the panel height and leaves the squares
+    floating in tall tracks.
+  - Getting here took three wrong turns worth not repeating: 13
+    month-columns × 5 week-rows (not a day grid at all); a calendar heatmap
+    of month-rows × day-of-month-columns (month labels down the left, which
+    is exactly what the reference does not do); and 58 × 7, the most
+    GitHub-faithful and the worst fit — ~8px squares and a sideways scroll
+    on phones.
+  - **The three milestones are also listed under the grid** (gold dot,
+    name, month), so a recruiter does not have to hunt for three gold
+    squares among 400.
+  Colour carries one bit of meaning — a day either holds something or it
+  does not: every event is `--accent`, the three milestones are `--gold`,
+  quiet days are a bordered grey, and days still to come this week are an
+  empty outline. (A GitHub-style Less→More intensity ramp was
+  built first and dropped: with at most one event per day it rendered every
+  cell at the palest step, which read as washed-out rather than as data.)
+  Legend is Milestone / Event / Quiet day plus a total count.
+  - **Dates are month-precision on purpose.** The events were given as "N
+    months back," so `activityEvents` stores `{ month: "2026-02", week }` —
+    never an invented day — and tooltips only ever claim the month. A
+    day-grid still needs a day to draw, so `placeEvent()` derives one inside
+    the right week from a stable hash of the label: the square never moves
+    between renders, and nothing on screen claims a date we were not given.
+  - **The ramp is deliberate, and only where it is honest.** Every date the
+    user fixed stays fixed: the first Figma plugin (Spacing Checker, Sep 2025, which replaced the original "first commit" milestone), first pull request 7
+    months back, the AI workshop 5 months back, each build and community
+    event on its stated month. The commits and pull requests that came with
+    a count but no date (10 commits, 5 PRs) were originally spread evenly,
+    one a month; they are now weighted toward recent months, so the field
+    ramps from 0–2 events a month early on to 4 a month since June — "I have
+    become more active," without moving a single stated date or inventing an
+    event. Counts are unchanged: 11 commits, 6 PRs, 5 builds, 5 community,
+    1 workshop = 28.
+  - The grid vertically centers within its panel so extra height (from
+    matching the hero's other column) distributes as balanced space, not one
+    dead gap before the legend.
 - **ToolsStrip**: a slim hairline-bordered band between Hero and Work —
   "TOOLS & CRAFT" + the skill tags already in `data/content.js`, rendered as
   the shared `.tag` chip. Added specifically to close a large whitespace gap
@@ -478,11 +524,85 @@ the brand logos, rather than `public/` string paths) and downsized with
   placeholder border was dropped in favor of the card system's normal
   solid border now that it holds real content.
 
+## Recruiter / mobile audit pass (Sep 2026)
+
+A full-site pass judged from two angles: a recruiter skimming for proof, and a
+visitor on a phone. System rules above (flat, sharp, one accent) unchanged.
+
+- **Credibility**: placeholder metrics (`placeholder: true`, the "TBD" tiles)
+  and `src: null` screen slots stay in the data files but no longer render.
+  A case study whose Impact stats are all placeholders drops that section and
+  its side-nav entry (Transporter, for now); an odd count of tiles lets the
+  last one span the row. The activity grid leaves months after the current
+  one empty (outlined "upcoming" cells) with a "Now" marker, since a grid
+  already logging next quarter reads as fake.
+- **Mobile**: container gutters were 92vw plus 28px padding (about 44px a
+  side on a phone), now `--gutter` (20–28px). Work-card and case-study stats
+  stack value over label on phones, so labels no longer wrap into a narrow
+  column. Case-study stat tiles and insight points become compact
+  icon-beside-text rows under 560px. The Planner diagram scales to fit
+  instead of scrolling sideways. Hero company chips wrap (they overlapped
+  between roughly 720 and 1100px). The About board uses `touch-action: pan-y`
+  on touch devices, so a thumb scrolling the page is no longer trapped by
+  it (sideways drag still pans, pinch still zooms). Hover-only hints swap
+  for touch copy.
+- **Navigation**: case studies share `CaseStudyHeader` (back goes to `#work`
+  rather than the page top, with a breadcrumb and a reading-progress
+  hairline) and `MoreWork` (thumbnail cards instead of a bare link list).
+  `App.jsx` owns scroll-on-route-change and per-page `document.title`. The
+  whole Work card is clickable (stretched link). The homepage nav marks the
+  section in view. Also added: a skip link, Escape to close the mobile menu,
+  and a copy-email button in the footer (`mailto:` does nothing for webmail
+  users).
+- **Motion**: hero load-in stagger; activity cells fill column by column;
+  sections and cards fade up on scroll via `useReveal` + `[data-reveal]`.
+  All of it is disabled under `prefers-reduced-motion`.
+- **Weight**: large PNGs re-encoded to WebP (at most 2000px wide), 8.8MB to
+  1.7MB. `3d-truck.mp4` re-encoded at CRF 30, 2.6MB to 1.0MB. The original
+  PNGs are still in `assets/photos`, unreferenced.
+- **index.html**: removed a stale internal build-notes comment (it named
+  fonts the site doesn't use) and added Open Graph / Twitter tags plus
+  theme-color.
+
+## Copy hygiene pass (Sep 2026)
+
+An editorial sweep of every user-visible string site-wide (homepage copy,
+all three case studies, `<title>`/meta tags, `alt` text, `aria-label`s, and
+the coffee game's UI copy) with no visual/system changes.
+
+- **Em dashes removed everywhere.** The site's prose leaned heavily on
+  " — " to join clauses (a habit that reads as generated rather than
+  written); every instance was rewritten into two sentences, a comma, a
+  colon, or parentheses depending on what the joined clauses actually meant
+  — never a mechanical find/replace. `CanvasAbout.jsx`'s `bio.replace(...)`
+  strip-prefix was updated to match the bio string's new punctuation so the
+  About board's name/bio split still works.
+- **En dashes in ranges switched to plain hyphens** (`9–10%` → `9-10%`,
+  `15–20 min` → `15-20 min`, `JAN 2023 – PRESENT` → `JAN 2023 - PRESENT`,
+  etc.) and the `+/–` bid-control glyphs became `+/-`.
+- **Dropped the "Selected work / 03" pagination-style eyebrow** in
+  `Work.jsx` — a section eyebrow citing its own item count reads as an
+  AI-portfolio tell rather than as information a visitor needs. Now just
+  "Selected work"; the now-unused `.count` style was removed from
+  `Work.module.css`. The per-card `01`/`02`/`03` index in the card body is
+  unrelated (a normal numbered-list affordance) and was left alone.
+
 ## Known follow-ups (left for the user, not fabricated here)
 
-- Real thumbnails for the three Work cards (currently `ThumbnailPlaceholder.jsx`)
-- Real dated events for the 2025–2026 activity grid (`src/data/activity.js`)
-- V2 case-study pages (Work cards currently link to the V1 Framer pages)
+- Real figures for the hidden placeholder metrics: Planner freight cost
+  saved; all four Transporter auction-redesign outcomes (its Impact section
+  returns automatically once any is filled)
+- Transporter screens still missing: old/new place-bid (Solution 3), old
+  revise-bid (Solution 4)
+- The homepage Transporter card cites the original app launch (80%,
+  9–10% → 39%) but links to the auction-redesign case study; align one or
+  the other
+- A resume/CV link (none exists on the site yet)
+- An Open Graph preview image (`og:image` needs an absolute URL on the live
+  domain)
+- The split-expense app has no date of its own in the brief (it shared a
+  line with the Lego block game), so it sits alongside it at 9 months back
+  / Dec 2025 — move it in `src/data/activity.js` if that's wrong
 - If the About board's "screen goes white" crash recurs despite the
   reliability pass above, the exact repro steps (browser, input device —
   mouse/trackpad/touch — and roughly what you were doing right before it
@@ -496,3 +616,83 @@ pairing (including the new accent/accent-strong/accent-on-ink split),
 sharp-corner and zero-shadow application across every component, dark-mode
 toggle + persistence, and responsive layout at mobile (375px) and desktop
 (1440px) widths.
+
+## Motion layer (2026-09 redesign pass)
+
+Same brand (sharp corners, hairlines, one coral accent, Departure Mono), now
+with a choreographed motion system. Dials: variance 7 / motion 8 / density 3.
+Everything collapses to static under `prefers-reduced-motion`.
+
+- **Type**: unchanged. Manrope + Departure Mono at the original sizes. A
+  larger display scale and a switch to Geist were tried and rejected by the
+  user: keep type modest and keep Manrope.
+- **Primitives** (`src/components/motion/`): `RevealText` (words rise out of
+  clipping masks; `*word*` marks the accent emphasis), `Magnetic` (pointer
+  pull via motion values, mouse only), `CountUp` (animates every number in a
+  stat string once in view, final string rendered from the start),
+  `SmoothScroll` + `scroll.js` (Lenis; `data-lenis-prevent` opts an element
+  out, which the About canvas uses so its wheel still zooms), and
+  `ScrollProgress` (2px accent bar).
+- **Transitions**: View Transitions API. Home ↔ case study wipes the new page
+  up over the old (`.vt-route`); the theme toggle grows the new theme out of
+  the button as a circle (`.vt-theme`).
+- **Nav**: always sticky, always frosted with a bottom hairline, never hides
+  (a hide-on-scroll version was tried and rejected); the active-section marker is one shared
+  `layoutId` square that springs between links; labels "roll" on hover.
+- **Hero**: headline rises word by word, the accent word gets a drawn-in
+  underline, the portrait sits inline in the greeting, a 40px hairline line
+  grid backs the hero and its lines light up in accent around the cursor, and copy/panel parallax out at different rates.
+- **Tools strip**: the original "Tools & craft" label + `.tag` badges, now
+  drifting as the page's only marquee, velocity-linked to scroll (speeds up,
+  reverses on scroll up, slows on hover).
+- **Work**: on desktop (≥1025px wide, ≥680px tall) cards pin in a sticky
+  stack; earlier cards scale down and dim as the next one covers them.
+  Image frames reveal through a clip-path, stats count up, the border lights
+  up around the pointer. Layout stays full-width, image-left, per earlier
+  feedback. The tag moved off the image into the body meta row; "Shipped at"
+  stays on the image.
+- **About**: board assembles frame by frame on first view, and a
+  "Chiranjeeb" collaborator cursor drifts between cards (board space, so it
+  pans/zooms with them). Entrance uses `translate`/`scale` properties, never
+  `transform`, so it composes with card drag offsets.
+- **Writing**: an index of full-width rows; the accent fill wipes in from the
+  edge the pointer entered.
+- **Footer**: original layout and sizes; the heading rises word by word and
+  the coffee tile is magnetic. (A giant name wordmark was tried and removed.)
+- **Key moments grid**: quiet days are a pale accent wash (`color-mix` of
+  `--accent` into the panel, 9% fill / 17% edge) instead of grey, so the
+  block reads as one warm field; upcoming days are a dashed outline. Milestones are
+  the only moving cells: brighter gold (`#f5b400` light / `#ffc83d` dark, darker
+  edge) plus a slow 2.8s ripple ring (line only; a fill/halo glow was tried and
+  rejected), staggered per cell. (A pulse on the latest event was removed so
+  it would not compete with the milestones.) Legend entries are
+  buttons: hovering or focusing one fades every other kind of cell, so the
+  three milestones can be found at a glance. The cell entrance animation
+  uses `animation-fill-mode: backwards` so it releases opacity for that fade.
+- **Milestone pages** (`pages/MilestonePage.jsx`, `data/milestones.js`,
+  route `#/moment/<slug>`): one page per gold milestone, chosen over a modal
+  so each is linkable, works with Back, and has room for photos and text.
+  Clicking a gold cell opens it (the event's `slug` in `activity.js`). Same
+  shell as a case study (header with "Back to key moments", footer). Layout:
+  a milestone switcher rail under the header, kind label, title, summary, a
+  Date / Time / Where row, a cover photo, heading-left/text-right sections,
+  a 2- or 3-image gallery, then previous/next cards; ← / → also switch.
+  Missing images render as dashed "Photo to be added" slots with their
+  caption. All three pages now carry the real stories, dates and photos.
+- The global scroll-progress bar is homepage-only; case study and milestone
+  headers already draw their own.
+- **Coffee game idle state**: attract mode. While idle or after game over
+  (and only while on screen), the canvas plays a demo round: an autopilot cup
+  chases and catches beans, never touching score/lives/best. A compact card
+  sits high over it (so the cup stays visible) with a "Mini game" badge, the
+  title, a Play button with a slow ring ripple, and a Space key hint. Reduced
+  motion shows a still frame. Canvas colours also refresh on the nav's
+  data-theme toggle, not just the OS setting.
+- **Case study pages, aligned with the homepage**: hero title lines rise
+  out of a clip in sequence, the tag/role text and stat tiles stagger up, and
+  the hero shot opens from a smaller frame (CSS in `CaseStudy.module.css`, so
+  all three pages share it). Every stat number (hero, insight, impact) uses
+  `CountUp`. The header uses the shared `useThemeSwitch` hook (same circular
+  reveal as the nav), a rolling "Back" label, and a motion-driven progress
+  bar instead of a scroll listener. "More work" cards get the homepage card
+  CTA: rolling label plus an arrow box that fills with accent and turns.

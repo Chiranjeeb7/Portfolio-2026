@@ -5,7 +5,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(32px, 5vw, 72px);
   align-items: start;
 }
@@ -31,7 +31,6 @@
 
 .heading {
   font-size: clamp(1.65rem, 1.6vw + 1.05rem, 2.15rem);
-  max-width: 12ch;
 }
 
 .copy {
@@ -47,6 +46,55 @@
   margin-top: 30px;
 }
 
+.emailRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.copyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--tracking-mono-loose);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background-color 0.15s;
+}
+
+.copyBtn:hover { color: var(--ink); border-color: var(--ink); }
+
+.copyBtnDone,
+.copyBtnDone:hover {
+  color: var(--sage);
+  border-color: var(--sage);
+  background: var(--sage-tint);
+}
+
+.contactText {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.external {
+  color: var(--ink-faint);
+  transition: transform 0.2s var(--ease-out-expo);
+}
+
+.contactLink:hover .external {
+  color: currentColor;
+  transform: translate(2px, -2px);
+}
+
 .contactLink {
   display: inline-flex;
   align-items: center;
@@ -58,6 +106,8 @@
   letter-spacing: var(--tracking-mono-tight);
   text-transform: uppercase;
   width: fit-content;
+  max-width: 100%;
+  min-height: 44px;
 }
 
 .iconTile {
@@ -96,6 +146,27 @@
   color: var(--ink-faint);
 }
 
-@media (max-width: 760px) {
-  .grid { grid-template-columns: 1fr; }
+.nowrap { white-space: nowrap; }
+
+.toTop {
+  padding: 8px 0;
+  background: none;
+  border: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.toTop:hover { color: var(--ink); }
+
+@media (max-width: 860px) {
+  .grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .contactLink { font-size: 0.82rem; gap: 10px; }
+  .bottom { letter-spacing: var(--tracking-mono-loose); font-size: 0.68rem; }
 }

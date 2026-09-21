@@ -21,9 +21,8 @@ export const projects = [
     tag: "B2B SaaS · Logistics",
     title: "Getting planners to trust the algorithm",
     description:
-      "Redesigned a planner clients were quietly bypassing — turned a black-box output into one planners actually shipped.",
+      "Redesigned a planner clients were quietly bypassing, turning a black-box output into one planners actually shipped.",
     stats: [
-      { value: "18% → 72%", label: "auto-plan acceptance" },
       { value: "19 min → <5 min", label: "daily planning time" },
     ],
     href: "#/planner",
@@ -36,8 +35,7 @@ export const projects = [
     description:
       "Took load acceptance and auction bidding out of the back office and onto transporters' phones.",
     stats: [
-      { value: "80%", label: "of load acceptance now on app" },
-      { value: "9–10% → 39%", label: "auction participation" },
+      { value: "9-10% → 39%", label: "auction participation" },
     ],
     href: "#/transporter",
   },
@@ -59,7 +57,7 @@ export const blogPosts = [
     id: "designing-for-kids",
     title: "Designing for Kids: Know your Target Audience",
     excerpt:
-      "Designing for kids means designing for parents and educators too — insights on diverse needs.",
+      "Designing for kids means designing for parents and educators too, with insights on diverse needs.",
     featuredIn: "Ed-Tech Talks",
     readTime: "5 min read",
     href: "https://medium.com/ed-tech-talks/designing-for-kids-know-your-target-audience-19fce8f24ee4",
@@ -77,7 +75,7 @@ export const blogPosts = [
     id: "sole-designer-startup",
     title: "How to Ace as the Sole Designer in a Startup? 5 Practical Tips",
     excerpt:
-      "Working as the sole designer in an organization can be a difficult mountain to climb — practices that help.",
+      "Working as the sole designer in an organization can be a difficult mountain to climb, with practices that help.",
     featuredIn: "Bootcamp",
     readTime: "6 min read",
     href: "https://medium.com/design-bootcamp/how-to-ace-as-the-sole-designer-in-a-startup-5-practical-tips-771b517036e3",
@@ -100,7 +98,7 @@ export const education = { degree: "M.Des", institute: "IIIT Jabalpur" };
 export const writingNote = "Also writes about design for UX Collective.";
 
 export const bio =
-  "Hi, I'm Chiranjeeb — a product designer who also ships code. I like problems where the interface has to hold up real operational complexity: fleets, planners, kids, and everything in between.";
+  "Hi, I'm Chiranjeeb, a product designer who also ships code. I like problems where the interface has to hold up real operational complexity: fleets, planners, kids, and everything in between.";
 
 // Real dates from the V1 site's About page. `logo` keys "current"/"previous"
 // map to companies above (via CompanyLogo); "omnirio" has its own asset
@@ -125,7 +123,7 @@ export const research = [
 export const community = {
   heading: "Growing with the community",
   description:
-    "From Interaction Design Foundation (IDF) to UX India to Executive Pack Collective — talks, workshops, and conversations with fellow designers.",
+    "From Interaction Design Foundation (IDF) to UX India to Executive Pack Collective: talks, workshops, and conversations with fellow designers.",
 };
 
 export const teaching = {

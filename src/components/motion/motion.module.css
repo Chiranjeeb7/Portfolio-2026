@@ -1,0 +1,11 @@
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-progress);
+  height: 2px;
+  background: var(--accent);
+  transform-origin: 0 50%;
+  pointer-events: none;
+}

@@ -22,10 +22,10 @@ export const hero = {
     { text: "Making auctions on the app", accent: false },
     { text: "feel like an auction", accent: true },
   ],
-  role: "I led the redesign of the spot and long-term auction experience in TransportOne's transporter app — turning a generic bidding flow into a live auction room that pulls auctions off WhatsApp and phone calls and onto the app.",
+  role: "I led the redesign of the spot and long-term auction experience in TransportOne's transporter app, turning a generic bidding flow into a live auction room that pulls auctions off WhatsApp and phone calls and onto the app.",
   stats: [
     { icon: "scope", value: "Spot + long term", label: "both auction types redesigned end to end" },
-    { icon: "typing", value: "Zero typing", label: "to place or revise a bid — tap +/– or a preset chip" },
+    { icon: "typing", value: "Zero typing", label: "to place or revise a bid: tap +/- or a preset chip" },
     {
       icon: "participation",
       value: "TBD",
@@ -51,8 +51,8 @@ export const context = {
   eyebrow: "A bit of context…",
   heading: "About TransportOne for transporters",
   paragraphs: [
-    "TransportOne is Delhivery's Transport Management System (TMS) for enterprise shippers. Transporters join the platform to work with those shippers — accepting loads, assigning trucks and bidding for new business.",
-    "We'd already shipped a transporter mobile app, and it was working: most load acceptance had moved onto it. Auctions were a different story — a lot of the bidding still happened offline, over WhatsApp and phone calls.",
+    "TransportOne is Delhivery's Transport Management System (TMS) for enterprise shippers. Transporters join the platform to work with those shippers: accepting loads, assigning trucks and bidding for new business.",
+    "We'd already shipped a transporter mobile app, and it was working: most load acceptance had moved onto it. Auctions were a different story: a lot of the bidding still happened offline, over WhatsApp and phone calls.",
   ],
   diagramHeading: "So, how does an auction work?",
   flow: [
@@ -69,7 +69,7 @@ export const context = {
     {
       icon: "trophy",
       title: "The winning bid is binding",
-      text: "Winning is a commitment to move the load at the quoted price — the right truck, on time, or penalties apply.",
+      text: "Winning is a commitment to move the load at the quoted price: the right truck, on time, or penalties apply.",
     },
   ],
 };
@@ -88,7 +88,7 @@ export const problem = {
     {
       icon: "gamepad",
       title: "It didn't feel like an auction",
-      text: "Many of them play online games like poker — they know what live competition feels like. The old flow felt like a form.",
+      text: "Many of them play online games like poker, so they know what live competition feels like. The old flow felt like a form.",
     },
     {
       icon: "eyeOff",
@@ -111,7 +111,7 @@ export const goals = {
   core: {
     tag: "Defined problem to solve",
     title: "The core problem",
-    text: "Bidding on the app took more effort and felt less alive than picking up the phone — so transporters picked up the phone.",
+    text: "Bidding on the app took more effort and felt less alive than picking up the phone, so transporters picked up the phone.",
   },
   businessGoals: {
     title: "Business goals",
@@ -140,7 +140,7 @@ export const solutions = [
     number: "Solution 1",
     title: "An auction room, not a form",
     problem:
-      "The old auction screen looked like every other page in the app — light, generic, and quiet. Nothing about it said a live auction was happening.",
+      "The old auction screen looked like every other page in the app: light, generic, and quiet. Nothing about it said a live auction was happening.",
     solution:
       "Entering an auction now takes transporters into a dedicated auction room with a dark-mode treatment. A big rank badge, a live countdown and copy like \"You're falling behind!\" create the urgency to place or revise a bid.",
     before: [{ src: "oldAuctionDetail", label: "Old auction details" }],
@@ -153,7 +153,7 @@ export const solutions = [
     number: "Solution 2",
     title: "Always one tap back into the room",
     problem:
-      "If a transporter tapped back or left the app mid-auction, there was no easy way back — the auction was out of sight, and out of mind.",
+      "If a transporter tapped back or left the app mid-auction, there was no easy way back. The auction was out of sight, and out of mind.",
     solution:
       "Designed notifications and a live-auction banner on the home page that shows their current rank and nudges them to revise, plus clearer live and upcoming tabs with \"ends in\" timers on the auction list.",
     before: [{ src: "oldHome", label: "Old home" }],
@@ -168,7 +168,7 @@ export const solutions = [
     problem:
       "Placing a bid meant working through fields that most bids didn't need, and starting the amount from scratch every time.",
     solution:
-      "Moved secondary inputs like remarks into additional actions, and prefilled the bid with the ceiling price — so a transporter can start bidding immediately instead of filling out a form.",
+      "Moved secondary inputs like remarks into additional actions, and prefilled the bid with the ceiling price, so a transporter can start bidding immediately instead of filling out a form.",
     before: [{ src: null, label: "Old place bid" }],
     after: [{ src: null, label: "New place bid" }],
   },
@@ -176,9 +176,9 @@ export const solutions = [
     number: "Solution 4",
     title: "A bid card built for mobile",
     problem:
-      "Bidding meant tapping into a field and typing an amount on the keyboard — slow and error-prone on a phone, especially mid-auction.",
+      "Bidding meant tapping into a field and typing an amount on the keyboard: slow and error-prone on a phone, especially mid-auction.",
     solution:
-      "Redesigned the place/revise bid card around mobile interactions: tap + or – to step the amount, or use predefined chips to drop it by a set value. No keyboard needed.",
+      "Redesigned the place/revise bid card around mobile interactions: tap + or - to step the amount, or use predefined chips to drop it by a set value. No keyboard needed.",
     before: [{ src: null, label: "Old place/revise bid" }],
     after: [{ src: "newBidCard", label: "New revise bid card", crop: true }],
   },
@@ -191,28 +191,28 @@ export const impact = {
       icon: "participation",
       value: "TBD",
       title: "Auction participation",
-      text: "Share of auctions transporters bid on through the app, before vs after the redesign — figure to be added.",
+      text: "Share of auctions transporters bid on through the app, before vs after the redesign. Figure to be added.",
       placeholder: true,
     },
     {
       icon: "offline",
       value: "TBD",
       title: "Offline auctions moved to the app",
-      text: "Bidding that used to happen over WhatsApp and phone calls, now on the app — figure to be added.",
+      text: "Bidding that used to happen over WhatsApp and phone calls, now on the app. Figure to be added.",
       placeholder: true,
     },
     {
       icon: "typing",
       value: "TBD",
       title: "Faster bids",
-      text: "Taps or time to place and revise a bid with the new bid card — figure to be added.",
+      text: "Taps or time to place and revise a bid with the new bid card. Figure to be added.",
       placeholder: true,
     },
     {
       icon: "revise",
       value: "TBD",
       title: "Bid revisions",
-      text: "How often transporters revise a bid once the room tells them they're falling behind — figure to be added.",
+      text: "How often transporters revise a bid once the room tells them they're falling behind. Figure to be added.",
       placeholder: true,
     },
   ],
@@ -227,7 +227,7 @@ export const learnings = {
     },
     {
       title: "On mobile, typing is friction",
-      text: "Replacing a keyboard field with +/– and preset chips is a small change on paper, but it's what makes bidding feel quick in the middle of someone's day.",
+      text: "Replacing a keyboard field with +/- and preset chips is a small change on paper, but it's what makes bidding feel quick in the middle of someone's day.",
     },
   ],
 };

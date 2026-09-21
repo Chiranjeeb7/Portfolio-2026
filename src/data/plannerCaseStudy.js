@@ -24,12 +24,12 @@ export const hero = {
     { text: "How we got planners to", accent: false },
     { text: "trust the algorithm", accent: true },
   ],
-  role: "As the lead designer for the planning revamp, I bridged a decade of proprietary logistics data with a user-friendly SaaS interface — and rebuilt planners' trust in an algorithm they'd been quietly working around for a year.",
+  role: "As the lead designer for the planning revamp, I bridged a decade of proprietary logistics data with a user-friendly SaaS interface, and rebuilt planners' trust in an algorithm they'd been quietly working around for a year.",
   stats: [
     {
       icon: "trust",
       value: "18% → 72%",
-      label: "auto-plan acceptance — planners choosing the algorithm's output over a manual plan",
+      label: "auto-plan acceptance: planners choosing the algorithm's output over a manual plan",
     },
     {
       icon: "cost",
@@ -54,17 +54,17 @@ export const context = {
     {
       icon: "orders",
       title: "Intelligent order orchestration",
-      text: "Fragmented orders enter the TMS as raw data points — weight, volume, delivery windows.",
+      text: "Fragmented orders enter the TMS as raw data points: weight, volume, delivery windows.",
     },
     {
       icon: "core",
       title: "The optimization core (our USP)",
-      text: 'A proprietary algorithm — built on 10 years of operational data — acts as the "brain." It instantly groups orders by customer split, weight/volume utilization, and route bundling.',
+      text: 'A proprietary algorithm (built on 10 years of operational data) acts as the "brain." It instantly groups orders by customer split, weight/volume utilization, and route bundling.',
     },
     {
       icon: "output",
       title: "An output planners had to decide whether to trust",
-      text: "The system replaced manual guesswork with ready-to-dispatch loads that maximized vehicle capacity and minimized cost — on paper. Whether planners actually shipped that output was a different question.",
+      text: "The system replaced manual guesswork with ready-to-dispatch loads that maximized vehicle capacity and minimized cost, at least on paper. Whether planners actually shipped that output was a different question.",
     },
   ],
 };
@@ -75,15 +75,15 @@ export const story = {
   beats: [
     {
       title: "The forgotten planner",
-      text: "The old team had built the planner about a year earlier and left it to gather dust — no updates since.",
+      text: "The old team had built the planner about a year earlier and left it to gather dust, with no updates since.",
     },
     {
       title: "A better algorithm, a few months back",
-      text: "Our data science team shipped a meaningfully sharper planning algorithm — better optimization under the hood, sitting behind the exact same old interface.",
+      text: "Our data science team shipped a meaningfully sharper planning algorithm: better optimization under the hood, sitting behind the exact same old interface.",
     },
     {
       title: "Leadership wanted to see it end to end",
-      text: "With a stronger algorithm in hand, leadership asked for a full walkthrough — from a planner's first click to a confirmed load.",
+      text: "With a stronger algorithm in hand, leadership asked for a full walkthrough, from a planner's first click to a confirmed load.",
     },
     {
       title: "The review didn't go well",
@@ -95,10 +95,10 @@ export const story = {
     },
     {
       title: "So what was the big problem?",
-      text: "Broken flows on the surface — but underneath, planners simply didn't trust the algorithm's output enough to act on it.",
+      text: "Broken flows on the surface, but underneath, planners simply didn't trust the algorithm's output enough to act on it.",
     },
     {
-      title: "Leadership wanted trust — and savings to prove it",
+      title: "Leadership wanted trust, and savings to prove it",
       text: "The brief was explicit: get planners to trust the algorithm's output, and show visible savings against planning loads by hand.",
     },
     {
@@ -120,13 +120,13 @@ export const insights = {
     "I interviewed 4 planners and 3 plant heads across current customers, and pulled in our own customer support, sales, and business teams for the full picture.",
   stats: [
     { icon: "gauge", value: "80%", label: "truck utilization plant heads wanted before cost improved" },
-    { icon: "clock", value: "15–20 min", label: "to plan, update, and confirm a single load" },
+    { icon: "clock", value: "15-20 min", label: "to plan, update, and confirm a single load" },
   ],
   points: [
     { icon: "eyeOff", title: "Orders were invisible", text: "Not visible inside TMS at all" },
     { icon: "box", title: "A black-box output", text: "No visibility into plan logic" },
     { icon: "sheet", title: "Excel still won", text: "Exported to SAP, grouped by hand" },
-    { icon: "tabs", title: "Tabs everywhere", text: "Orders, plan, loads — all separate" },
+    { icon: "tabs", title: "Tabs everywhere", text: "Orders, plan, loads: all separate" },
     { icon: "split", title: "Roles got blurred", text: "Planning and dispatch, one flow" },
     { icon: "swap", title: "Structured backwards", text: "Orders on top, plan below" },
   ],
@@ -145,7 +145,7 @@ export const problem = {
   core: {
     tag: "Defined problem to solve",
     title: "The core problem",
-    text: "Our powerful, 10-year proprietary optimization algorithm was trapped behind an over-engineered interface — one that made the product too complex to scale as SaaS, and its output too opaque to trust.",
+    text: "Our powerful, 10-year proprietary optimization algorithm was trapped behind an over-engineered interface, one that made the product too complex to scale as SaaS, and its output too opaque to trust.",
   },
   // Each problem statement above, broken into the concrete goals it implied —
   // same facts as business/user problem, restructured as a checklist.
@@ -160,8 +160,8 @@ export const problem = {
   designGoals: {
     title: "Design goals",
     items: [
-      { title: "Faster plan creation", text: "Get from raw orders to a usable plan in minutes, not 15–20." },
-      { title: "Persona-based tasks", text: "Planning and dispatch are two different jobs — the tool should treat them that way." },
+      { title: "Faster plan creation", text: "Get from raw orders to a usable plan in minutes, not 15-20." },
+      { title: "Persona-based tasks", text: "Planning and dispatch are two different jobs, and the tool should treat them that way." },
       { title: "An interface planners could trust", text: "Replace the black-box feeling with output planners understand and believe." },
     ],
   },
@@ -170,7 +170,7 @@ export const problem = {
 export const iterations = {
   heading: "Iterations",
   eyebrow: "Five concepts before this shipped",
-  intro: "Every pass circled the same two open questions: where do a planner's actions actually live, and can this scale without turning into a second control tower? Concept 5 was the first to answer both — so it's what shipped.",
+  intro: "Every pass circled the same two open questions: where do a planner's actions actually live, and can this scale without turning into a second control tower? Concept 5 was the first to answer both, so it's what shipped.",
   concepts: [
     {
       number: 1,
@@ -190,7 +190,7 @@ export const iterations = {
       title: "Loads up front, no analytics layer",
       pros: ["Dropped the reporting layer entirely and put loads straight in front of planners"],
       cons: [
-        "Failed orders sat in one tab, new ones in another — confusing to reconcile",
+        "Failed orders sat in one tab, new ones in another, confusing to reconcile",
         "Accepted and confirmed loads shared a tab, blurring what was actually approved",
       ],
       shipped: false,
@@ -200,7 +200,7 @@ export const iterations = {
       title: "Action center + performance graph",
       pros: ["Gave planners explicit next-step guidance instead of a passive table"],
       cons: [
-        "Duplicated the existing control tower — an action center for one module implied every module needed one",
+        "Duplicated the existing control tower: an action center for one module implied every module needed one",
         "Orders placed inside the planner tab still weren't shown clearly enough",
       ],
       shipped: false,
@@ -223,7 +223,7 @@ export const iterations = {
       title: "Dedicated orders tab, no action center",
       pros: [
         "Orders got their own tab from day one, so it scales without bolting on new sections later",
-        "Cut the redundant action center — the existing control tower plus pending-action indicators on each tab did that job already",
+        "Cut the redundant action center: the existing control tower plus pending-action indicators on each tab did that job already",
       ],
       cons: [],
       shipped: true,
@@ -237,7 +237,7 @@ export const solutions = [
     title: "A trustworthy quality signal",
     problem: "Planners had no way to tell whether a given output from the algorithm was actually good.",
     solution:
-      "Introduced freight cost as a percentage of order value — the lower the percentage, the better the plan — surfaced directly as green/yellow/red, so quality was legible at a glance instead of implied.",
+      "Introduced freight cost as a percentage of order value (the lower the percentage, the better the plan), surfaced directly as green/yellow/red, so quality was legible at a glance instead of implied.",
     image: "plan",
   },
   {
@@ -281,7 +281,7 @@ export const impact = {
       icon: "cost",
       value: "TBD",
       title: "Freight cost saved",
-      text: "The direct cost impact of planners actually shipping the algorithm's plan instead of re-planning by hand — figure to be added.",
+      text: "The direct cost impact of planners actually shipping the algorithm's plan instead of re-planning by hand. Figure to be added.",
       placeholder: true,
     },
     {
@@ -308,7 +308,7 @@ export const learnings = {
     },
     {
       title: "Trust your gut (and act)",
-      text: "Take initiative when your instincts nudge you. While reviewing old files, a hunch that a small change could help users turned out right — without acting on it, none of this impact would have happened.",
+      text: "Take initiative when your instincts nudge you. While reviewing old files, a hunch that a small change could help users turned out right. Without acting on it, none of this impact would have happened.",
     },
   ],
 };

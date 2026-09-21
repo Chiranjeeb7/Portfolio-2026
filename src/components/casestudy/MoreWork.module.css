@@ -1,0 +1,158 @@
+.section {
+  padding-block: clamp(48px, 6vw, 80px);
+  border-top: 1px solid var(--line);
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: var(--tracking-mono-loose);
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+
+.heading {
+  font-size: clamp(1.3rem, 1vw + 1.05rem, 1.7rem);
+  margin-bottom: 24px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  background: var(--bg-panel-raised);
+  overflow: hidden;
+  transition:
+    border-color 0.2s var(--ease-out-expo),
+    opacity 0.7s var(--ease-out-expo),
+    transform 0.9s var(--ease-out-expo);
+  transition-delay: 0s, calc(var(--reveal-i, 0) * 70ms), calc(var(--reveal-i, 0) * 70ms);
+}
+
+.card:hover { border-color: var(--ink); }
+
+.art {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: radial-gradient(130% 160% at 20% 10%, var(--accent) 0%, var(--accent-strong) 55%, var(--accent-hover) 100%);
+}
+
+.art img {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  max-width: 88%;
+  max-height: 88%;
+  transform-origin: bottom right;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+.artCover { background: #050608; }
+
+/* Matches the homepage card: BYJU'S purple screenshot on a tonal lavender. */
+.artLavender {
+  background: radial-gradient(130% 160% at 20% 10%, #e4e2fa 0%, #bcb9ef 55%, #9793e2 100%);
+}
+
+.artCover img {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  transform-origin: center;
+}
+
+.card:hover .art img { transform: scale(1.04) translate(-4px, -4px); }
+
+.body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 8px;
+  padding: 20px;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: var(--tracking-mono-loose);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.title {
+  font-size: 1.12rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.stat {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+}
+
+.statValue {
+  font-family: var(--font-mono);
+  color: var(--accent-strong);
+  white-space: nowrap;
+}
+
+.cta {
+  margin-top: auto;
+  padding-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+/* Same as the homepage Work cards: the arrow sits in a square that fills
+   with accent from the bottom and turns on hover. */
+.ctaIcon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.4s var(--ease-out-expo), color 0.4s var(--ease-out-expo);
+}
+.ctaIcon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--accent-strong);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+.ctaIcon svg { transition: transform 0.5s var(--ease-out-expo); }
+.card:hover .ctaIcon { border-color: var(--accent-strong); color: var(--accent-ink); }
+.card:hover .ctaIcon::before { transform: scaleY(1); }
+.card:hover .ctaIcon svg { transform: rotate(45deg); }
+
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+/* Full-bleed covers only zoom; a shift would expose the panel edge. */
+.card:hover .artCover img { transform: scale(1.04); }

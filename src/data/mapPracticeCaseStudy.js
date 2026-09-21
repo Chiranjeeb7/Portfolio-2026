@@ -23,7 +23,7 @@ export const hero = {
     { text: "Learning maps for kids,", accent: false },
     { text: "the phygital way", accent: true },
   ],
-  role: "I worked with the UX Research team to define the research scope, sat in on student and teacher interviews, and turned what we heard into actionable insights — then worked with the design team to build and ship a phygital (physical + digital) map-practice app for BYJU'S LearnStation.",
+  role: "I worked with the UX Research team to define the research scope, sat in on student and teacher interviews, and turned what we heard into actionable insights, then worked with the design team to build and ship a phygital (physical + digital) map-practice app for BYJU'S LearnStation.",
   stats: [
     { icon: "engagement", value: "90%", label: "of kids tested found map practice highly engaging" },
     { icon: "phygital", value: "Paper + screen", label: "interactions built for both the physical and digital world" },
@@ -37,14 +37,14 @@ export const context = {
   heading: "About BYJU'S LearnStation",
   paragraphs: [
     'The BYJU\'S LearnStation is a custom-built, "phygital" (physical + digital) learning tablet designed to give students in classes 4 to 10 a distraction-free, personalised place to learn.',
-    "It pairs a dedicated learning OS and pre-loaded BYJU'S content with hardware built for real study — most notably a downward-facing camera that lets the device see a student's workbook on the desk.",
+    "It pairs a dedicated learning OS and pre-loaded BYJU'S content with hardware built for real study, most notably a downward-facing camera that lets the device see a student's workbook on the desk.",
   ],
   diagramHeading: "So, how does map practice work?",
   flow: [
     {
       icon: "map",
       title: "Place a real map sheet",
-      text: "Students put a BYJU'S printed outline map — India political, India physical, or world — in front of LearnStation.",
+      text: "Students put a BYJU'S printed outline map (India political, India physical, or world) in front of LearnStation.",
     },
     {
       icon: "scan",
@@ -54,7 +54,7 @@ export const context = {
     {
       icon: "pencil",
       title: "Mark by hand, get feedback on screen",
-      text: "Students shade, draw or point on paper just like in an exam, then submit — with hints, a score and the correct answer on screen.",
+      text: "Students shade, draw or point on paper just like in an exam, then submit, with hints, a score and the correct answer on screen.",
     },
   ],
 };
@@ -63,13 +63,13 @@ export const stakes = {
   eyebrow: "Let's deep dive into the problem",
   heading: "Why map practice matters",
   paragraphs: [
-    "Map work is one of the most sought-after skills for students in grades 6 to 10 — it shows up in almost every social-studies paper, typically worth 2–4 marks each time.",
+    "Map work is one of the most sought-after skills for students in grades 6 to 10, and it shows up in almost every social-studies paper, typically worth 2-4 marks each time.",
     "Yet there was no established way to learn or practise it. The most common approach was simply trying to memorise every location and event.",
   ],
   stats: [
-    { icon: "marks", value: "2–4 marks", label: "per paper, across grades 6–10" },
+    { icon: "marks", value: "2-4 marks", label: "per paper, across grades 6-10" },
     { icon: "marks", value: "10 marks", label: "for map work in ICSE grade 10 geography" },
-    { icon: "marks", value: "5 + 3 marks", label: "in CBSE grade 10 — geography plus history" },
+    { icon: "marks", value: "5 + 3 marks", label: "in CBSE grade 10: geography plus history" },
   ],
   figureCaption: "Students get tested on three kinds of outline map.",
 };
@@ -101,24 +101,24 @@ export const insights = {
   heading: "Key insights",
   stats: [
     { icon: "clock", value: "4 in 5", label: "students leave map learning until right before the exam" },
-    { icon: "timer", value: "30–60 min", label: "spent on maps right before an exam, on average" },
+    { icon: "timer", value: "30-60 min", label: "spent on maps right before an exam, on average" },
   ],
   perceptionHeading: "Perception of students",
   grades: [
     {
       id: "younger",
       title: "Younger grades",
-      range: "Class 6–7",
+      range: "Class 6-7",
       points: [
         "Have a higher curiosity around map learning.",
         "The topic is new, and the content is simpler to explore and learn.",
-        "Classroom interaction is higher — they ask more doubts because they want to visualise.",
+        "Classroom interaction is higher: they ask more doubts because they want to visualise.",
       ],
     },
     {
       id: "elder",
       title: "Elder grades",
-      range: "Class 8–10",
+      range: "Class 8-10",
       points: [
         "Interest in map learning drops in higher grades.",
         "Map work starts to feel like an extra burden.",
@@ -127,7 +127,7 @@ export const insights = {
     },
   ],
   priorityCaption:
-    "Map learning sits at low priority for months, then spikes the day before the exam — when repetitive practice, quick tips and YouTube take over.",
+    "Map learning sits at low priority for months, then spikes the day before the exam, when repetitive practice, quick tips and YouTube take over.",
   methodsHeading: "How students learn maps today",
   methods: [
     { icon: "repeat", title: "Repeated practice", text: "Re-drawing the same topic on multiple blank sheets." },
@@ -141,16 +141,16 @@ export const problem = {
   eyebrow: "So the problem is clear now,",
   business: {
     title: "Business problem",
-    text: "Map work carries real marks from grade 6 to 10, yet there was no product to help students practise it — a clear gap for a device built to bring the workbook and the screen together.",
+    text: "Map work carries real marks from grade 6 to 10, yet there was no product to help students practise it: a clear gap for a device built to bring the workbook and the screen together.",
   },
   user: {
     title: "User problem",
-    text: "Students crammed maps by rote right before exams — they roughly knew where a place was but couldn't mark it accurately, mixed up rivers and states, and had nothing but blank sheets to practise on.",
+    text: "Students crammed maps by rote right before exams. They roughly knew where a place was but couldn't mark it accurately, mixed up rivers and states, and had nothing but blank sheets to practise on.",
   },
   core: {
     tag: "Defined problem to solve",
     title: "The core problem",
-    text: "Map work is a hands-on, spatial skill, but students were treating it as last-minute memorisation — with no feedback on whether a mark was actually right.",
+    text: "Map work is a hands-on, spatial skill, but students were treating it as last-minute memorisation, with no feedback on whether a mark was actually right.",
   },
   goalCards: [
     {
@@ -179,7 +179,7 @@ export const approach = {
   heading: "Getting buy-in from leadership",
   paragraphs: [
     "Before polishing anything, we built small prototypes and shared them with leadership for early reviews.",
-    "A working mock made the concept far easier to explain than a deck ever could — and it got us buy-in quickly.",
+    "A working mock made the concept far easier to explain than a deck ever could, and it got us buy-in quickly.",
   ],
   video: { id: "2tK-9OfaXpw", title: "Map Practice Mock", ratio: "16 / 9" },
   videoCaption: "The early mock we shared with leadership.",
@@ -188,7 +188,7 @@ export const approach = {
 export const solution = {
   eyebrow: "Crafting the final solution",
   heading: "Solution",
-  intro: "The prototype, end to end — from scanning a map sheet to marking an answer.",
+  intro: "The prototype, end to end: from scanning a map sheet to marking an answer.",
   video: { id: "4Q3oWsj8hJI", title: "Map Prototype", ratio: "4 / 3" },
 };
 
@@ -196,7 +196,7 @@ export const testing = {
   eyebrow: "Usability testing at BYJU'S Tuition Centre",
   heading: "Putting it in front of students",
   method:
-    "We ran a central-location test with a batch of students at a BYJU'S Tuition Centre in Bangalore, recording every session to observe how kids actually used map practice — and how they handled the device and the paper together.",
+    "We ran a central-location test with a batch of students at a BYJU'S Tuition Centre in Bangalore, recording every session to observe how kids actually used map practice, and how they handled the device and the paper together.",
   meta: [
     { label: "Method", value: "Central location test" },
     { label: "Goal", value: "How kids use map practice" },
@@ -223,7 +223,7 @@ export const testing = {
   results: [
     {
       title: "Content planning",
-      text: "Students found continent-level questions hard — content needed closer planning with the content team to stay targeted.",
+      text: "Students found continent-level questions hard. Content needed closer planning with the content team to stay targeted.",
     },
     {
       title: "Instruction clarity",
@@ -249,7 +249,7 @@ export const testing = {
       title: "A safe spot for the device, printed on the sheet",
       problem: "Lining the map up with the camera took time, and maps shifted mid-question.",
       solution:
-        'Added a "Place LearnStation here" band to the top of every map sheet — so the device and paper line up the same way every time, and the map stays flat and straight in front of it.',
+        'Added a "Place LearnStation here" band to the top of every map sheet, so the device and paper line up the same way every time, and the map stays flat and straight in front of it.',
       image: "sheet",
       tall: true,
     },
@@ -263,7 +263,7 @@ export const impact = {
       icon: "engagement",
       value: "90%",
       title: "Highly engaging",
-      text: "90% of the kids we tested found map practice highly engaging — most had fun marking maps question by question.",
+      text: "90% of the kids we tested found map practice highly engaging. Most had fun marking maps question by question.",
     },
     {
       icon: "phygital",
@@ -291,7 +291,7 @@ export const learnings = {
   items: [
     {
       title: "Research tells you when, not just what",
-      text: "Learning that students spend their map time right before exams — hunting for quick tips and visual aids — shaped the whole product, not just the screens.",
+      text: "Learning that students spend their map time right before exams (hunting for quick tips and visual aids) shaped the whole product, not just the screens.",
     },
     {
       title: "Content is half the product",
@@ -303,7 +303,7 @@ export const learnings = {
     },
     {
       title: "Design for the age group",
-      text: "An easy-to-use interface for grades 6–10, with rewards and a bit of gamification, is what keeps engagement up.",
+      text: "An easy-to-use interface for grades 6-10, with rewards and a bit of gamification, is what keeps engagement up.",
     },
   ],
 };

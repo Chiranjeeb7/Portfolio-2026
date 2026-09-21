@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Check, Minus } from "lucide-react";
 import styles from "./ConceptExplorer.module.css";
-import concept1 from "../../assets/photos/planner-concept-1.png";
-import concept2 from "../../assets/photos/planner-concept-2.png";
-import concept3 from "../../assets/photos/planner-concept-3.png";
-import concept4 from "../../assets/photos/planner-concept-4.png";
-import concept5 from "../../assets/photos/planner-concept-5.png";
+import concept1 from "../../assets/photos/planner-concept-1.webp";
+import concept2 from "../../assets/photos/planner-concept-2.webp";
+import concept3 from "../../assets/photos/planner-concept-3.webp";
+import concept4 from "../../assets/photos/planner-concept-4.webp";
+import concept5 from "../../assets/photos/planner-concept-5.webp";
 
 const CONCEPT_SCREENSHOTS = {
   1: concept1,

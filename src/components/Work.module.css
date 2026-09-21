@@ -1,43 +1,104 @@
 .section {
-  padding-block: clamp(40px, 6vw, 72px) clamp(64px, 10vw, 128px);
+  padding-block: clamp(56px, 8vw, 96px) clamp(64px, 10vw, 128px);
+}
+
+.header {
+  max-width: 900px;
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: var(--tracking-mono-loose);
+  text-transform: uppercase;
+  color: var(--accent-strong);
 }
 
 .heading {
-  font-size: clamp(1.5rem, 1.2vw + 1.1rem, 1.85rem);
+  font-size: clamp(1.6rem, 1.6vw + 1.1rem, 2.4rem);
+  line-height: 1.12;
+  max-width: 24ch;
 }
 
 .intro {
-  margin-top: 14px;
+  margin-top: 10px;
   color: var(--ink-muted);
   font-size: 1.05rem;
 }
 
 .list {
-  margin-top: 48px;
+  /* Same rhythm as the About board: 10px heading to intro, 36px to content. */
+  margin-top: 36px;
   display: flex;
   flex-direction: column;
   gap: 32px;
 }
 
+/* ---------- Pinned stack (desktop, enough height) ----------
+   Each card sits in normal flow at its natural height (same 48px/32px
+   spacing as the plain list) and only pins once it reaches the nav. The next
+   card, 32px behind it, slides up over it and pins a step lower, so a sliver
+   of every earlier card peeks out above, like a stack of prints. */
+.listStacked {
+  --stack-top: calc(var(--nav-h) + 24px);
+  --stack-step: 30px;
+}
+.listStacked .stackItem {
+  position: sticky;
+  top: calc(var(--stack-top) + var(--i) * var(--stack-step));
+}
+.listStacked .card {
+  transform-origin: 50% 0%;
+}
+
 .card {
+  position: relative;
   display: grid;
-  grid-template-columns: 1fr 1.15fr;
+  grid-template-columns: 1.08fr 1fr;
   width: 100%;
   min-height: 400px;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: var(--bg-panel-raised);
   overflow: hidden;
-  transition: border-color 0.2s var(--ease-out-expo);
+  cursor: pointer;
+  transition: border-color 0.4s var(--ease-out-expo);
 }
+.card:hover { border-color: var(--line-strong); }
 
-.card:hover {
-  border-color: var(--line-strong);
+/* Accent border that lights up around the pointer. A masked 1px ring, so
+   it reads as the edge catching light, not a glow. */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  padding: 1px;
+  pointer-events: none;
+  background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), var(--accent), transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out-expo);
+}
+.card:hover::after { opacity: 1; }
+
+/* Darkens a card as the next one covers it (opacity driven by scroll). */
+.dim {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: var(--bg);
+  pointer-events: none;
 }
 
 .art {
   position: relative;
-  min-height: 240px;
+  min-height: 260px;
   overflow: hidden;
   background: radial-gradient(130% 160% at 20% 10%, var(--accent) 0%, var(--accent-strong) 55%, var(--accent-hover) 100%);
 }
@@ -66,47 +127,38 @@
   width: auto;
   height: auto;
   transform-origin: bottom right;
-  transform: scale(1);
-  transition: transform 0.5s var(--ease-out-expo);
-}
-
-.card:hover .thumbnail {
-  transform: scale(1.06);
 }
 
 .thumbnailCover {
   position: absolute;
   inset: 0;
-  right: auto;
-  bottom: auto;
-  max-width: none;
-  max-height: none;
   width: 100%;
   height: 100%;
   object-fit: cover;
   transform-origin: center;
-  transform: scale(1);
-  transition: transform 0.5s var(--ease-out-expo);
 }
 
-.card:hover .thumbnailCover {
-  transform: scale(1.03);
+/* Hover zoom rides on `translate`/`scale` properties separate from the
+   entrance transform, so the two never overwrite each other. */
+.thumbnail,
+.thumbnailCover {
+  transition: translate 0.9s var(--ease-out-expo), rotate 0.9s var(--ease-out-expo);
 }
-
-.body {
-  padding: 32px clamp(24px, 3vw, 40px);
-  display: flex;
-  flex-direction: column;
+.card:hover .thumbnail {
+  translate: -10px -10px;
+  rotate: -1.5deg;
 }
+.card:hover .thumbnailCover { translate: 0 -8px; }
 
 .shippedAt {
   position: absolute;
-  left: 14px;
-  bottom: 14px;
+  left: 16px;
+  bottom: 16px;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 12px;
+  padding: 8px 12px;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
   background: var(--bg-panel-raised);
@@ -124,19 +176,39 @@
   opacity: 0.9;
 }
 
-.cardTag {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  z-index: 1;
-  background: var(--bg-panel-raised);
-  border-color: var(--line-strong);
+.body {
+  padding: 32px clamp(24px, 3vw, 40px);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: var(--tracking-mono-loose);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.index {
+  font-size: 0.8rem;
+  color: var(--accent-strong);
+}
+
+.tagText { text-align: right; }
+
 .cardTitle {
-  font-size: 1.5rem;
-  line-height: 1.2;
-  letter-spacing: -0.03em;
+  font-size: clamp(1.35rem, 0.8vw + 1.05rem, 1.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
 }
 
 .cardDescription {
@@ -145,28 +217,26 @@
   max-width: 46ch;
 }
 
+/* Outcomes as large figures: the number is what the eye should land on. */
 .stats {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px 28px;
+  margin: 22px 0 0;
 }
 
 .stat {
   display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 8px 12px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  background: var(--bg-panel);
+  flex-direction: column-reverse;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-strong);
 }
 
 .statValue {
-  flex: none;
-  font-size: 0.9rem;
+  margin: 0;
+  font-size: 1rem;
   line-height: 1.3;
-  font-weight: 400;
   letter-spacing: var(--tracking-mono-tight);
   color: var(--accent-strong);
   white-space: nowrap;
@@ -174,7 +244,7 @@
 
 .statLabel {
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: 0.66rem;
   letter-spacing: var(--tracking-mono-loose);
   text-transform: uppercase;
   color: var(--ink-muted);
@@ -185,28 +255,86 @@
   padding-top: 24px;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  align-self: flex-start;
+  gap: 14px;
   font-family: var(--font-mono);
-  font-weight: 400;
   font-size: 0.85rem;
   letter-spacing: var(--tracking-mono);
   text-transform: uppercase;
-  text-decoration: none;
   color: var(--ink);
-  transition: color 0.15s;
 }
 
-.link:hover { color: var(--sky); }
-.link svg { transition: transform 0.2s var(--ease-out-expo); }
-.link:hover svg { transform: translate(3px, -3px); }
+.linkIcon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.4s var(--ease-out-expo), color 0.4s var(--ease-out-expo);
+}
+.linkIcon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--accent-strong);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+.linkIcon svg { transition: transform 0.5s var(--ease-out-expo); }
+
+.card:hover .linkIcon {
+  border-color: var(--accent-strong);
+  color: var(--accent-ink);
+}
+.card:hover .linkIcon::before { transform: scaleY(1); }
+.card:hover .linkIcon svg { transform: rotate(45deg); }
+.card:hover .link .roll > span:first-child { transform: translateY(-110%); }
+.card:hover .link .roll > span + span { transform: none; }
+
+.link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+.link:focus-visible::after {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: -2px;
+}
 
 @media (max-width: 1024px) {
   .card {
     grid-template-columns: 1fr;
+    min-height: 0;
   }
-  .art { min-height: 220px; }
+  .art {
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
 }
 
-@media (max-width: 760px) {
-  .art { min-height: 160px; }
+@media (max-width: 560px) {
+  .body {
+    padding: 24px 20px 26px;
+  }
+  .art {
+    aspect-ratio: 4 / 3;
+  }
+  .shippedAt {
+    left: 10px;
+    bottom: 10px;
+    padding: 5px 9px;
+  }
+  .metaRow { font-size: 0.64rem; }
 }

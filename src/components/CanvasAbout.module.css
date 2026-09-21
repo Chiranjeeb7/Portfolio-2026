@@ -5,8 +5,10 @@
 }
 
 .heading {
-  font-size: clamp(1.5rem, 1.2vw + 1.1rem, 1.85rem);
+  font-size: clamp(1.5rem, 1.2vw + 1.1rem, 2rem);
 }
+
+.hintTouch { display: none; }
 
 .subheading {
   margin-top: 10px;
@@ -428,4 +430,96 @@
 
 @media (max-width: 720px) {
   .viewport { height: 520px; }
+}
+
+/* Touch: the board spans the whole phone width, so swallowing every touch
+   (touch-action: none) trapped visitors mid-page — a thumb scrolling down
+   would pan the board instead. Vertical swipes now go back to the page;
+   sideways drags still pan and two-finger pinches still zoom. */
+@media (hover: none) and (pointer: coarse) {
+  .viewport,
+  .card {
+    touch-action: pan-y;
+  }
+  .hintPointer { display: none; }
+  .hintTouch { display: inline; }
+}
+
+/* ---------- Board entrance ----------
+   Uses the individual translate/scale properties, never transform, so it
+   composes with each card's own drag offset (inline transform) instead of
+   overriding it. Held at the start state until .boardIn lands. */
+.introRow > *,
+.frame {
+  opacity: 0;
+  translate: 0 40px;
+  scale: 0.96;
+}
+.boardIn .introRow > *,
+.boardIn .frame {
+  animation: boardIn 0.9s var(--ease-out-expo) forwards;
+}
+.boardIn .introRow > :nth-child(2) { animation-delay: 80ms; }
+.boardIn .introRow > :nth-child(3) { animation-delay: 160ms; }
+.boardIn .frame:nth-child(1) { animation-delay: 240ms; }
+.boardIn .frame:nth-child(2) { animation-delay: 320ms; }
+.boardIn .frame:nth-child(3) { animation-delay: 400ms; }
+.boardIn .frame:nth-child(4) { animation-delay: 480ms; }
+@keyframes boardIn {
+  to { opacity: 1; translate: 0 0; scale: 1; }
+}
+
+/* ---------- Collaborator cursor ---------- */
+.presence {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 6;
+  display: flex;
+  align-items: flex-start;
+  pointer-events: none;
+  translate: 420px 90px;
+  opacity: 0;
+}
+.boardIn .presence {
+  animation:
+    presenceIn 0.6s var(--ease-out-expo) 1.2s forwards,
+    presencePath 26s var(--ease-in-out-quart) 1.2s infinite;
+}
+.presenceIcon {
+  color: var(--bg-panel-raised);
+  fill: var(--accent-strong);
+  stroke-width: 1.5;
+}
+.presenceName {
+  margin: 16px 0 0 -4px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--tracking-mono-loose);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+@keyframes presenceIn {
+  to { opacity: 1; }
+}
+/* Drifts between the bio, tools, experience, research, community and
+   teaching cards, lingering on each like someone reading over them. */
+@keyframes presencePath {
+  0%, 10% { translate: 420px 90px; }
+  18%, 28% { translate: 1180px 130px; }
+  36%, 46% { translate: 180px 400px; }
+  54%, 64% { translate: 580px 430px; }
+  72%, 82% { translate: 1000px 560px; }
+  90%, 96% { translate: 1380px 470px; }
+  100% { translate: 420px 90px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .introRow > *,
+  .frame { opacity: 1; translate: none; scale: none; }
+  .presence { display: none; }
 }

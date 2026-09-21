@@ -7,6 +7,11 @@
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   padding: 30px 22px 22px;
+
+  /* Shared by the grid gaps and the day-ruler maths, so a tick always sits
+     exactly above the column for that day. */
+  --cell-gap: 3px;
+  --rows: 11;
 }
 
 .header {
@@ -14,7 +19,7 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
 }
 
@@ -26,6 +31,11 @@
   text-transform: uppercase;
 }
 
+/* Touch screens have no hover, so don't promise a hover interaction there. */
+@media (hover: none) {
+  .subtitle { display: none; }
+}
+
 .subtitle {
   font-family: var(--font-mono);
   font-size: 0.68rem;
@@ -35,33 +45,32 @@
   white-space: nowrap;
 }
 
+/* ---------- Grid: horizontal day squares, a fortnight per column ---------- */
 .gridWrap {
   flex: 1;
+  min-width: 0;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(20px, 3vw, 32px);
   min-height: 0;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(24, 1fr);
-  column-gap: 3px;
-  padding-top: 20px;
-  width: 100%;
-}
-
-.column {
+.plot {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
   min-width: 0;
 }
 
-.yearLabel {
+/* Only the years are labelled, like the reference — no month row. */
+.yearRow {
+  position: relative;
+  height: 15px;
+  margin-bottom: 6px;
+}
+
+.yearTick {
   position: absolute;
-  top: -20px;
-  left: 0;
+  top: 0;
   font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: var(--tracking-mono-loose);
@@ -69,10 +78,28 @@
   white-space: nowrap;
 }
 
+/* Days flow top-to-bottom then left-to-right, so the row count alone decides
+   how tall the block is (and, with it, how wide each column ends up). Fewer
+   rows on a wide screen keeps it compact; more rows on a phone keeps the
+   squares from shrinking to specks. */
+.grid {
+  display: grid;
+  grid-auto-flow: column;
+  /* auto, not 1fr: 1fr rows stretch to whatever height the panel has and
+     leave the squares floating in tall tracks. Each row is just as tall as
+     a square. */
+  grid-template-rows: repeat(var(--rows), auto);
+  align-content: start;
+  grid-auto-columns: 1fr;
+  gap: var(--cell-gap);
+  min-width: 0;
+}
+
 .cell {
   width: 100%;
   aspect-ratio: 1;
-  border-radius: var(--radius-sm);
+  min-width: 0;
+  border-radius: 2px;
   border: none;
   background: var(--bg-panel);
   padding: 0;
@@ -80,55 +107,140 @@
   position: relative;
 }
 
-.cell.empty {
-  background: var(--bg-panel);
-  opacity: 0.6;
+/* ---------- One colour, plus gold for the three milestones ----------
+   Quiet days are a pale wash of the accent rather than grey, so the whole
+   block reads as one warm field that events punch through. Mixed from the
+   tokens, so it follows light/dark automatically. */
+.panel {
+  --quiet: color-mix(in srgb, var(--accent) 9%, var(--bg-panel-raised));
+  --quiet-edge: color-mix(in srgb, var(--accent) 17%, var(--bg-panel-raised));
 }
 
-.kind-design {
-  background: var(--violet);
+.empty {
+  background: var(--quiet);
+  box-shadow: inset 0 0 0 1px var(--quiet-edge);
 }
 
-.kind-ship {
-  background: var(--accent);
+/* Days later this week that haven't happened yet: an outline only. */
+.upcoming {
+  background: transparent;
+  outline: 1px dashed var(--quiet-edge);
+  outline-offset: -1px;
 }
 
-.kind-research {
-  background: var(--sky);
+.event { background: var(--accent); }
+.eventStacked { background: var(--accent-strong); }
+
+.milestone {
+  background: var(--gold);
+  box-shadow: inset 0 0 0 1px var(--gold-strong);
 }
 
-.kind-write {
-  background: var(--sage);
+/* Cells fill in day by day on load, like the year being logged. */
+.cell:not(.empty):not(.upcoming) {
+  /* backwards, not both: once it has played, the animation lets go of
+     opacity so the legend highlight below can transition it. */
+  animation: cellIn 0.45s var(--ease-out-expo) backwards;
+  animation-delay: calc(250ms + var(--i, 0) * 1.4ms);
 }
 
-.level-1 { opacity: 0.55; }
-.level-2 { opacity: 0.8; }
-.level-3 { opacity: 1; }
+@keyframes cellIn {
+  from { transform: scale(0.2); opacity: 0; }
+}
 
+button.cell:not(:disabled) {
+  cursor: default;
+  transition:
+    filter 0.15s var(--ease-out-expo),
+    box-shadow 0.15s var(--ease-out-expo),
+    opacity 0.35s var(--ease-out-expo);
+}
+
+/* Hover/focus reads via colour and a ring, not size — scaling the cell also
+   scaled its child tooltip (transforms compound down the DOM), which is what
+   made the tooltip text look blurred. */
 button.cell:not(:disabled):hover,
 button.cell:not(:disabled):focus-visible {
-  transform: scale(1.6);
   z-index: 2;
+  animation: none;
+  opacity: 1;
+  filter: brightness(1.3) saturate(1.15);
+  box-shadow: 0 0 0 2px var(--bg-panel-raised), 0 0 0 3px var(--ink-muted);
 }
 
+/* ---------- Milestones: the highlights, and the only cells that move ----------
+   Each milestone sends out a ripple ring (a line, no fill change) on a slow
+   2.8s cycle: calm enough to read as "look here", never a flash. Staggered
+   by the cell's position so the three don't pulse in unison. Hover/focus
+   stops it so the tooltip reads cleanly; reduced motion stops it via the
+   global override. */
+.cell.milestone {
+  z-index: 1; /* ring draws over neighbouring cells */
+}
+
+.cell.milestone::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border: 1.5px solid var(--gold);
+  border-radius: 3px;
+  pointer-events: none;
+  opacity: 0;
+  animation: milestoneRipple 2.8s var(--ease-out-expo) infinite;
+  animation-delay: calc(1.4s + var(--i, 0) * 6ms);
+}
+@keyframes milestoneRipple {
+  0% { opacity: 0.9; transform: scale(0.8); }
+  70%, 100% { opacity: 0; transform: scale(2.1); }
+}
+.cell.milestone:hover::after,
+.cell.milestone:focus-visible::after { animation: none; }
+
+/* ---------- Legend highlight ----------
+   While a legend entry is hovered, every other kind of cell fades back. */
+.cell { transition: opacity 0.35s var(--ease-out-expo); }
+.panel[data-focus="milestone"] .cell:not([data-kind="milestone"]),
+.panel[data-focus="event"] .cell:not([data-kind="event"]),
+.panel[data-focus="quiet"] .cell:not([data-kind="quiet"]) {
+  opacity: 0.15;
+}
+/* Highlighting some other kind hides the milestone ripple with its cell. */
+.panel[data-focus]:not([data-focus="milestone"]) .cell.milestone::after { animation: none; }
+
+/* ---------- Tooltip ---------- */
 .tooltip {
   position: absolute;
-  bottom: calc(100% + 8px);
+  bottom: calc(100% + 10px);
   left: 50%;
-  transform: translateX(-50%) translateY(4px);
+  transform: translate(-50%, 4px) scale(0.92);
+  transform-origin: bottom center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   background: var(--ink);
   color: var(--bg);
   font-size: 0.72rem;
   letter-spacing: -0.011em;
   line-height: 1.35;
-  padding: 8px 10px;
+  padding: 10px 12px;
   border-radius: var(--radius-sm);
+  box-shadow: 0 10px 24px -8px rgb(0 0 0 / 0.4);
   width: max-content;
-  max-width: 200px;
+  max-width: 220px;
   text-align: left;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.15s, transform 0.15s;
+  transition: opacity 0.15s var(--ease-out-expo), transform 0.15s var(--ease-out-expo);
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--ink);
 }
 
 .tooltipDate {
@@ -137,28 +249,71 @@ button.cell:not(:disabled):focus-visible {
   letter-spacing: var(--tracking-mono-loose);
   text-transform: uppercase;
   color: var(--accent-on-ink);
-  margin-bottom: 2px;
+}
+
+.tooltipRow {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Milestones open a detail page: say so, and show a pointer. */
+.tooltipCta {
+  padding-top: 6px;
+  border-top: 1px solid color-mix(in srgb, var(--bg) 25%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: var(--tracking-mono-loose);
+  text-transform: uppercase;
+  color: var(--accent-on-ink);
+}
+button.cell.milestone { cursor: pointer; }
+
+.tooltipKind {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: var(--tracking-mono-loose);
+  text-transform: uppercase;
+  opacity: 0.65;
 }
 
 button.cell:hover .tooltip,
 button.cell:focus-visible .tooltip {
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
+  transform: translate(-50%, 0) scale(1);
 }
 
+/* Edge columns anchor the tooltip to the cell's own edge so it never
+   pokes out past the panel (or the screen, on phones); the arrow follows. */
+.edgeStart .tooltip {
+  left: 0;
+  transform: translateY(4px) scale(0.92);
+  transform-origin: bottom left;
+}
+.edgeEnd .tooltip {
+  left: auto;
+  right: 0;
+  transform: translateY(4px) scale(0.92);
+  transform-origin: bottom right;
+}
+.edgeStart .tooltip::after { left: 10px; transform: none; }
+.edgeEnd .tooltip::after { left: auto; right: 10px; transform: none; }
+.edgeStart button.cell:hover .tooltip,
+.edgeStart button.cell:focus-visible .tooltip,
+.edgeEnd button.cell:hover .tooltip,
+.edgeEnd button.cell:focus-visible .tooltip {
+  transform: translateY(0) scale(1);
+}
+
+/* ---------- Legend ---------- */
 .legend {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   flex-wrap: wrap;
-  gap: 14px;
-  margin-top: 20px;
+  gap: 10px 16px;
+  margin-top: 22px;
   padding-top: 16px;
   border-top: 1px solid var(--line);
-}
-
-.legendItem {
-  display: flex;
-  align-items: center;
-  gap: 6px;
   font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: var(--tracking-mono-loose);
@@ -166,10 +321,56 @@ button.cell:focus-visible .tooltip {
   color: var(--ink-muted);
 }
 
+.legendCount { color: var(--ink); }
+
+.legendRight {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 0;
+  border: none;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: var(--ink-faint);
+  cursor: default;
+  transition: color 0.3s var(--ease-out-expo);
+}
+.legendItem:hover,
+.legendItemActive { color: var(--ink); }
+.legendItem .legendDot { transition: scale 0.3s var(--ease-out-expo); }
+.legendItemActive .legendDot { scale: 1.3; }
+
 .legendDot {
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
   border-radius: 2px;
   flex-shrink: 0;
 }
 
+/* Phones cannot fit 56 columns at a tappable size, so the timeline scrolls
+   sideways there (the same thing GitHub does with its own graph) while
+   staying one continuous row. Above this width it always fits, and the
+   scroll container would only risk a stray scrollbar from rounding. */
+/* Narrower screens trade height back for square size. */
+@media (max-width: 900px) {
+  .panel { --rows: 12; }
+}
+
+@media (max-width: 480px) {
+  .panel {
+    padding: 26px 16px 18px;
+    --cell-gap: 2px;
+    --rows: 14;
+  }
+  .yearTick { font-size: 0.6rem; }
+  .legend { gap: 8px 12px; }
+}

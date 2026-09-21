@@ -1,5 +1,5 @@
 .wrap {
-  overflow-x: auto;
+  overflow: hidden;
 }
 
 .inner {

@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  ArrowLeft,
-  ArrowUpRight,
   BookHeart,
   BookOpen,
   CalendarDays,
@@ -13,7 +11,6 @@ import {
   Layers,
   Map as MapIcon,
   MapPin,
-  Moon,
   Pencil,
   Repeat,
   Ruler,
@@ -22,12 +19,9 @@ import {
   Shapes,
   Smile,
   Sparkle,
-  Sun,
   Timer,
   Users,
 } from "lucide-react";
-import { useTheme } from "../hooks/useTheme";
-import { projects } from "../data/content";
 import {
   nav,
   hero,
@@ -42,18 +36,21 @@ import {
   impact,
   learnings,
 } from "../data/mapPracticeCaseStudy";
+import CaseStudyHeader from "../components/casestudy/CaseStudyHeader";
 import CaseStudySideNav from "../components/casestudy/CaseStudySideNav";
+import MoreWork from "../components/casestudy/MoreWork";
+import CountUp from "../components/motion/CountUp";
 import CornerMarks from "../components/CornerMarks";
 import Footer from "../components/Footer";
-import scanImg from "../assets/photos/map-practice-scan.png";
-import learnStationImg from "../assets/photos/map-practice-learnstation.png";
-import mapTypesImg from "../assets/photos/map-practice-map-types.png";
-import youngerGradesImg from "../assets/photos/map-practice-younger-grades.png";
+import scanImg from "../assets/photos/map-practice-scan.webp";
+import learnStationImg from "../assets/photos/map-practice-learnstation.webp";
+import mapTypesImg from "../assets/photos/map-practice-map-types.webp";
+import youngerGradesImg from "../assets/photos/map-practice-younger-grades.webp";
 import elderGradesImg from "../assets/photos/map-practice-elder-grades.png";
-import priorityCurveImg from "../assets/photos/map-practice-priority-curve.png";
-import usabilityTestImg from "../assets/photos/map-practice-usability-test.png";
-import questionScreenImg from "../assets/photos/map-practice-question-screen.png";
-import mapSheetImg from "../assets/photos/map-practice-map-sheet.png";
+import priorityCurveImg from "../assets/photos/map-practice-priority-curve.webp";
+import usabilityTestImg from "../assets/photos/map-practice-usability-test.webp";
+import questionScreenImg from "../assets/photos/map-practice-question-screen.webp";
+import mapSheetImg from "../assets/photos/map-practice-map-sheet.webp";
 import styles from "./CaseStudy.module.css";
 import local from "./MapPracticeCaseStudy.module.css";
 
@@ -85,7 +82,7 @@ function StatRow({ stats }) {
         return (
           <div key={s.label} className={styles.insightStat}>
             <Icon size={18} strokeWidth={1.6} className={styles.insightStatIcon} />
-            <span className={`numeric ${styles.insightStatValue}`}>{s.value}</span>
+            <CountUp value={s.value} className={`numeric ${styles.insightStatValue}`} />
             <span className={styles.insightStatLabel}>{s.label}</span>
           </div>
         );
@@ -196,33 +193,13 @@ function ProblemSolutionBlock({ block }) {
 }
 
 export default function MapPracticeCaseStudy() {
-  const { isDark, toggle } = useTheme();
-
-  // Arriving via a hash-route change doesn't reset scroll the way a fresh
-  // page load would.
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  const otherProjects = projects.filter((p) => p.id !== "map-practice");
+  const heroStats = hero.stats.filter((s) => !s.placeholder);
+  const impactStats = impact.stats.filter((s) => !s.placeholder);
+  const sections = nav.filter((item) => item.id !== "impact" || impactStats.length > 0);
 
   return (
     <>
-      <header className={styles.header}>
-        <div className={`container ${styles.headerInner}`}>
-          <a href="#" className={styles.back}>
-            <ArrowLeft size={16} /> Back to work
-          </a>
-          <button
-            type="button"
-            className={styles.themeToggle}
-            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-            onClick={toggle}
-          >
-            {isDark ? <Sun size={16} /> : <Moon size={16} />}
-          </button>
-        </div>
-      </header>
+      <CaseStudyHeader title="Map Practice" />
 
       <main>
         <section className={`container ${styles.hero}`}>
@@ -246,12 +223,12 @@ export default function MapPracticeCaseStudy() {
             <div className={styles.statGridWrap}>
               <CornerMarks />
               <div className={styles.statGrid}>
-                {hero.stats.map((s) => {
+                {heroStats.map((s) => {
                   const Icon = STAT_ICONS[s.icon];
                   return (
                     <div key={s.label} className={styles.statTile}>
                       <Icon size={17} strokeWidth={1.6} className={styles.statIcon} />
-                      <span className={`numeric ${styles.statValue}`}>{s.value}</span>
+                      <CountUp value={s.value} className={`numeric ${styles.statValue}`} />
                       <span className={styles.statLabel}>{s.label}</span>
                     </div>
                   );
@@ -264,18 +241,18 @@ export default function MapPracticeCaseStudy() {
             <CornerMarks />
             <img
               src={scanImg}
-              alt="Map Practice on LearnStation — the scan screen asking students to place an India map in front of the device"
+              alt="Map Practice on LearnStation: the scan screen asking students to place an India map in front of the device"
               className={`${styles.heroShotImg} ${local.heroCrop}`}
             />
           </div>
         </section>
 
         <div className={`container ${styles.body}`}>
-          <CaseStudySideNav items={nav} />
+          <CaseStudySideNav items={sections} />
 
           <div className={styles.content}>
             {/* Context */}
-            <section id="context" className={styles.section}>
+            <section id="context" className={styles.section} data-reveal>
               <span className={styles.eyebrowAccent}>{context.eyebrow}</span>
               <h2 className={styles.sectionTitle}>{context.heading}</h2>
               {context.paragraphs.map((p) => (
@@ -315,7 +292,7 @@ export default function MapPracticeCaseStudy() {
             </section>
 
             {/* Why map practice matters */}
-            <section id="stakes" className={styles.section}>
+            <section id="stakes" className={styles.section} data-reveal>
               <span className={styles.eyebrowAccent}>{stakes.eyebrow}</span>
               <h2 className={styles.sectionTitle}>{stakes.heading}</h2>
               {stakes.paragraphs.map((p) => (
@@ -334,7 +311,7 @@ export default function MapPracticeCaseStudy() {
             </section>
 
             {/* Research */}
-            <section id="research" className={styles.section}>
+            <section id="research" className={styles.section} data-reveal>
               <span className={styles.eyebrowAccent}>{research.eyebrow}</span>
               <h2 className={styles.sectionTitle}>{research.heading}</h2>
               <p className={styles.paragraph}>{research.method}</p>
@@ -353,7 +330,7 @@ export default function MapPracticeCaseStudy() {
             </section>
 
             {/* Insights */}
-            <section id="insights" className={styles.section}>
+            <section id="insights" className={styles.section} data-reveal>
               <span className={styles.eyebrowAccent}>{insights.eyebrow}</span>
               <h2 className={styles.sectionTitle}>{insights.heading}</h2>
 
@@ -393,7 +370,7 @@ export default function MapPracticeCaseStudy() {
             </section>
 
             {/* Problem */}
-            <section id="problem" className={styles.section}>
+            <section id="problem" className={styles.section} data-reveal>
               <h2 className={styles.sectionTitle}>{problem.eyebrow}</h2>
 
               <div className={styles.problemList}>
@@ -439,7 +416,7 @@ export default function MapPracticeCaseStudy() {
             </section>
 
             {/* Approach */}
-            <section id="approach" className={styles.section}>
+            <section id="approach" className={styles.section} data-reveal>
               <span className={styles.eyebrowAccent}>{approach.eyebrow}</span>
               <h2 className={styles.sectionTitle}>{approach.heading}</h2>
               {approach.paragraphs.map((p) => (
@@ -452,7 +429,7 @@ export default function MapPracticeCaseStudy() {
             </section>
 
             {/* Solution */}
-            <section id="solution" className={styles.section}>
+            <section id="solution" className={styles.section} data-reveal>
               <span className={styles.eyebrowAccent}>{solution.eyebrow}</span>
               <h2 className={styles.sectionTitle}>{solution.heading}</h2>
               <p className={styles.paragraph}>{solution.intro}</p>
@@ -461,7 +438,7 @@ export default function MapPracticeCaseStudy() {
             </section>
 
             {/* Testing */}
-            <section id="testing" className={styles.section}>
+            <section id="testing" className={styles.section} data-reveal>
               <span className={styles.eyebrowAccent}>{testing.eyebrow}</span>
               <h2 className={styles.sectionTitle}>{testing.heading}</h2>
               <p className={styles.paragraph}>{testing.method}</p>
@@ -519,16 +496,17 @@ export default function MapPracticeCaseStudy() {
             </section>
 
             {/* Impact */}
-            <section id="impact" className={styles.section}>
+            {impactStats.length > 0 && (
+            <section id="impact" className={styles.section} data-reveal>
               <h2 className={styles.sectionTitle}>{impact.heading}</h2>
 
               <div className={styles.impactGrid}>
-                {impact.stats.map((s) => {
+                {impactStats.map((s) => {
                   const Icon = STAT_ICONS[s.icon];
                   return (
                     <div key={s.title} className={styles.impactTile}>
                       <Icon size={20} strokeWidth={1.6} className={styles.impactIcon} />
-                      <span className={`numeric ${styles.impactValue}`}>{s.value}</span>
+                      <CountUp value={s.value} className={`numeric ${styles.impactValue}`} />
                       <h3 className={styles.impactTitle}>{s.title}</h3>
                       <p className={styles.impactText}>{s.text}</p>
                     </div>
@@ -536,9 +514,10 @@ export default function MapPracticeCaseStudy() {
                 })}
               </div>
             </section>
+            )}
 
             {/* Learnings */}
-            <section id="learnings" className={styles.section}>
+            <section id="learnings" className={styles.section} data-reveal>
               <h2 className={styles.sectionTitle}>{learnings.heading}</h2>
               <div className={styles.twoCol}>
                 {learnings.items.map((l) => (
@@ -550,23 +529,7 @@ export default function MapPracticeCaseStudy() {
               </div>
             </section>
 
-            {/* Other work */}
-            <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>Other work</h2>
-              <div className={styles.otherList}>
-                {otherProjects.map((p) =>
-                  p.href.startsWith("#") ? (
-                    <a key={p.id} className={styles.otherLink} href={p.href}>
-                      {p.title} <ArrowUpRight size={16} />
-                    </a>
-                  ) : (
-                    <a key={p.id} className={styles.otherLink} href={p.href} target="_blank" rel="noreferrer">
-                      {p.title} <ArrowUpRight size={16} />
-                    </a>
-                  )
-                )}
-              </div>
-            </section>
+            <MoreWork currentId="map-practice" />
           </div>
         </div>
       </main>

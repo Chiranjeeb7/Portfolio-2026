@@ -46,17 +46,19 @@ export function useTheme() {
     return () => mq.removeEventListener("change", onChange);
   }, [theme]);
 
+  // Applies to the DOM synchronously (not only via the effect above), so a
+  // view transition wrapped around the toggle captures the new theme.
   const toggle = useCallback(() => {
-    setThemeState((prev) => {
-      const current = prev ?? (getSystemPrefersDark() ? "dark" : "light");
-      const next = current === "dark" ? "light" : "dark";
-      try {
-        localStorage.setItem(STORAGE_KEY, next);
-      } catch {
-        /* private mode / storage unavailable — theme just won't persist */
-      }
-      return next;
-    });
+    const current = document.documentElement.getAttribute("data-theme") ?? (getSystemPrefersDark() ? "dark" : "light");
+    const next = current === "dark" ? "light" : "dark";
+    applyTheme(next);
+    try {
+      localStorage.setItem(STORAGE_KEY, next);
+    } catch {
+      /* private mode / storage unavailable — theme just won't persist */
+    }
+    setThemeState(next);
+    setIsDark(next === "dark");
   }, []);
 
   return { isDark, toggle };

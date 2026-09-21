@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from "react";
 import { Package } from "lucide-react";
 import styles from "./PlannerDiagram.module.css";
 
@@ -16,6 +17,11 @@ const ORDER_NODES = [
   { id: 6, x: 19, y: 87, tint: "#ebf3ff", icon: "#0b6ffd" },
   { id: 5, x: 26, y: 80, tint: "#e3fcec", icon: "#30674f" },
 ];
+
+// The node labels are fixed-size, so below this width the layout would
+// collide. Instead of a sideways scroll on phones, the whole diagram is laid
+// out at this width and scaled down to fit — it stays whole and readable.
+const DESIGN_W = 680;
 
 const PLANNER_IN = { x: 45, y: 50 };
 const PLANNER_OUT = { x: 55, y: 50 };
@@ -38,9 +44,31 @@ function loadLine(x2, y2) {
 }
 
 export default function PlannerDiagram() {
+  const wrapRef = useRef(null);
+  const [scale, setScale] = useState(1);
+
+  useLayoutEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const measure = () => setScale(Math.min(1, el.clientWidth / DESIGN_W));
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const scaled = scale < 1;
+
   return (
-    <div className={styles.wrap}>
-      <div className={styles.inner}>
+    <div
+      ref={wrapRef}
+      className={styles.wrap}
+      style={scaled ? { height: (DESIGN_W * 300) / 880 * scale } : undefined}
+    >
+      <div
+        className={styles.inner}
+        style={scaled ? { width: DESIGN_W, transform: `scale(${scale})`, transformOrigin: "0 0" } : undefined}
+      >
         <svg className={styles.lines} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
           {ORDER_NODES.map((n) => (
             <g key={n.id}>

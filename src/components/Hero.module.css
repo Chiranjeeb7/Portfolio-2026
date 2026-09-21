@@ -1,10 +1,57 @@
 .hero {
+  position: relative;
+  isolation: isolate;
   padding-block: clamp(40px, 6vw, 72px) clamp(32px, 4vw, 56px);
+  --mx: 50%;
+  --my: 40%;
+}
+
+/* Blueprint line grid: hairlines every 40px, faint everywhere and fading
+   out toward the bottom so the hero hands off cleanly to the tools strip.
+   Both layers share the same box and tile origin so their lines coincide. */
+.lines,
+.spotlight {
+  position: absolute;
+  inset: calc(var(--nav-h) * -1) 0 0 0;
+  z-index: -1;
+  pointer-events: none;
+  --cell: 40px;
+  background-size: var(--cell) var(--cell);
+  background-position: -1px -1px;
+}
+.lines {
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  opacity: 0.45;
+  mask-image: linear-gradient(to bottom, #000 10%, transparent 75%);
+}
+/* The same grid, inked in accent, visible only in a soft circle that
+   follows the cursor (position written to --mx/--my by Hero.jsx, relative
+   to the hero, hence the nav-height shift). */
+.spotlight {
+  background-image:
+    linear-gradient(to right, var(--accent) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--accent) 1px, transparent 1px);
+  mask-image: radial-gradient(
+    140px circle at var(--mx) calc(var(--my) + var(--nav-h)),
+    #000 0%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out-expo);
+}
+.hero:hover .spotlight { opacity: 0.16; }
+@media (hover: none) {
+  .spotlight { display: none; }
 }
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* minmax(0, …) not 1fr: the activity panel scrolls its timeline sideways
+     on phones, and a plain 1fr track would take that content min-width as
+     its own floor and widen the whole page instead. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(28px, 4vw, 56px);
   align-items: stretch;
 }
@@ -14,9 +61,22 @@
   flex-direction: column;
   justify-content: space-between;
   gap: 32px;
+  will-change: transform;
+}
+
+.panelCol {
+  perspective: 1200px;
+}
+.panelEnter {
+  height: 100%;
+  transform-origin: 50% 100%;
 }
 
 .greeting {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
   font-family: var(--font-mono);
   font-size: clamp(0.95rem, 0.5vw + 0.8rem, 1.05rem);
   letter-spacing: var(--tracking-mono);
@@ -24,43 +84,94 @@
   color: var(--ink-muted);
 }
 
-.heading {
-  margin-top: 6px;
-  font-size: clamp(1.65rem, 1.6vw + 1.05rem, 2.35rem);
-  line-height: 1.12;
-  letter-spacing: -0.04em;
-  max-width: 19ch;
+/* The portrait sits inline in the sentence, like a word. */
+.avatar {
+  display: inline-block;
+  width: 1.9em;
+  height: 1.9em;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong);
+  background: var(--bg-panel);
+  transition: scale 0.6s var(--ease-out-expo), rotate 0.6s var(--ease-out-expo);
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.greeting:hover .avatar {
+  scale: 1.9;
+  rotate: -6deg;
 }
 
-.heading em {
+.heading {
+  margin-top: 6px;
+  font-size: clamp(2rem, 2.1vw + 1.2rem, 3.25rem);
+  line-height: 1.06;
+  letter-spacing: -0.045em;
+  max-width: 17ch;
+}
+
+/* The one accent word, underscored by a bar that draws itself in after
+   the headline lands. */
+.emphasis {
+  position: relative;
   font-style: normal;
   color: var(--accent);
 }
+.emphasis::after {
+  content: "";
+  position: absolute;
+  left: 0.02em;
+  right: 0.02em;
+  bottom: 0.02em;
+  height: 0.07em;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: underline 1s var(--ease-out-expo) 1.25s forwards;
+}
+@keyframes underline {
+  to { transform: scaleX(1); }
+}
 
 .subhead {
-  margin-top: 18px;
-  font-size: 1rem;
+  margin-top: 20px;
+  font-size: clamp(1rem, 0.3vw + 0.92rem, 1.1rem);
   color: var(--ink-muted);
   max-width: 46ch;
 }
 
 .roleChips {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
 .roleChip {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
+  gap: 10px;
+  padding: 10px 18px;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  backdrop-filter: blur(6px);
   font-size: 0.85rem;
   color: var(--ink-muted);
   white-space: nowrap;
   min-width: 0;
+  transition: border-color 0.4s var(--ease-out-expo), translate 0.4s var(--ease-out-expo);
 }
+.roleChip:hover {
+  border-color: var(--ink);
+  translate: 0 -2px;
+}
+.roleChip img {
+  transition: scale 0.5s var(--ease-out-expo);
+}
+.roleChip:hover img { scale: 1.08; }
 
 .logo {
   height: 0.85rem;
@@ -94,16 +205,16 @@
 
 @media (max-width: 880px) {
   .grid {
-    grid-template-columns: 1fr;
-  }
-  .textCol {
-    gap: 40px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 480px) {
   .roleChips {
     flex-direction: column;
-    align-items: flex-start;
+  }
+  .roleChip {
+    justify-content: space-between;
   }
 }

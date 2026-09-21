@@ -1,9 +1,6 @@
-import { useEffect } from "react";
 import {
   AppWindow,
-  ArrowLeft,
   ArrowRight,
-  ArrowUpRight,
   EyeOff,
   Gamepad2,
   Gavel,
@@ -11,18 +8,17 @@ import {
   ImagePlus,
   Layers,
   MessageCircle,
-  Moon,
   RefreshCw,
   Sparkle,
-  Sun,
   TrendingDown,
   Trophy,
   Users,
 } from "lucide-react";
-import { useTheme } from "../hooks/useTheme";
-import { projects } from "../data/content";
 import { nav, hero, context, problem, goals, solutions, impact, learnings } from "../data/transporterCaseStudy";
+import CaseStudyHeader from "../components/casestudy/CaseStudyHeader";
 import CaseStudySideNav from "../components/casestudy/CaseStudySideNav";
+import MoreWork from "../components/casestudy/MoreWork";
+import CountUp from "../components/motion/CountUp";
 import CornerMarks from "../components/CornerMarks";
 import Footer from "../components/Footer";
 import newHome from "../assets/photos/transporter-new-home.png";
@@ -30,8 +26,8 @@ import newSpotList from "../assets/photos/transporter-new-spot-list.png";
 import newAcceptTerms from "../assets/photos/transporter-new-accept-terms.png";
 import newAuctionRoom from "../assets/photos/transporter-new-auction-room.png";
 import newBidCard from "../assets/photos/transporter-new-bid-card.png";
-import oldHome from "../assets/photos/transporter-old-home.png";
-import oldAuctionDetail from "../assets/photos/transporter-old-auction-detail.png";
+import oldHome from "../assets/photos/transporter-old-home.webp";
+import oldAuctionDetail from "../assets/photos/transporter-old-auction-detail.webp";
 import styles from "./CaseStudy.module.css";
 import local from "./TransporterCaseStudy.module.css";
 
@@ -84,13 +80,30 @@ function Screen({ screen }) {
   );
 }
 
+// Slots whose screen hasn't been supplied yet are left out rather than shown
+// as an empty frame; a side with nothing left drops out entirely.
 function Compare({ before, after }) {
+  const shownBefore = before.filter((s) => s.src);
+  const shownAfter = after.filter((s) => s.src);
+  if (shownAfter.length === 0) return null;
+  if (shownBefore.length === 0) {
+    return (
+      <div className={local.compareGroup}>
+        <span className={`${local.compareTag} ${local.compareTagAfter}`}>Redesign</span>
+        <div className={local.compareScreens}>
+          {shownAfter.map((s) => (
+            <Screen key={s.label} screen={s} />
+          ))}
+        </div>
+      </div>
+    );
+  }
   return (
     <div className={local.compare}>
       <div className={local.compareGroup}>
         <span className={`${local.compareTag} ${local.compareTagBefore}`}>Before</span>
         <div className={local.compareScreens}>
-          {before.map((s) => (
+          {shownBefore.map((s) => (
             <Screen key={s.label} screen={s} />
           ))}
         </div>
@@ -101,7 +114,7 @@ function Compare({ before, after }) {
       <div className={local.compareGroup}>
         <span className={`${local.compareTag} ${local.compareTagAfter}`}>After</span>
         <div className={local.compareScreens}>
-          {after.map((s) => (
+          {shownAfter.map((s) => (
             <Screen key={s.label} screen={s} />
           ))}
         </div>
@@ -132,33 +145,13 @@ function GoalCard({ card }) {
 }
 
 export default function TransporterCaseStudy() {
-  const { isDark, toggle } = useTheme();
-
-  // Arriving via a hash-route change doesn't reset scroll the way a fresh
-  // page load would.
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  const otherProjects = projects.filter((p) => p.id !== "transporter-mobile-app");
+  const heroStats = hero.stats.filter((s) => !s.placeholder);
+  const impactStats = impact.stats.filter((s) => !s.placeholder);
+  const sections = nav.filter((item) => item.id !== "impact" || impactStats.length > 0);
 
   return (
     <>
-      <header className={styles.header}>
-        <div className={`container ${styles.headerInner}`}>
-          <a href="#" className={styles.back}>
-            <ArrowLeft size={16} /> Back to work
-          </a>
-          <button
-            type="button"
-            className={styles.themeToggle}
-            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-            onClick={toggle}
-          >
-            {isDark ? <Sun size={16} /> : <Moon size={16} />}
-          </button>
-        </div>
-      </header>
+      <CaseStudyHeader title="Transporter auctions" />
 
       <main>
         <section className={`container ${styles.hero}`}>
@@ -182,7 +175,7 @@ export default function TransporterCaseStudy() {
             <div className={styles.statGridWrap}>
               <CornerMarks />
               <div className={styles.statGrid}>
-                {hero.stats.map((s) => {
+                {heroStats.map((s) => {
                   const Icon = STAT_ICONS[s.icon];
                   return (
                     <div
@@ -190,7 +183,7 @@ export default function TransporterCaseStudy() {
                       className={`${styles.statTile} ${s.placeholder ? styles.statTilePlaceholder : ""}`}
                     >
                       <Icon size={17} strokeWidth={1.6} className={styles.statIcon} />
-                      <span className={`numeric ${styles.statValue}`}>{s.value}</span>
+                      <CountUp value={s.value} className={`numeric ${styles.statValue}`} />
                       <span className={styles.statLabel}>{s.label}</span>
                     </div>
                   );
@@ -210,11 +203,11 @@ export default function TransporterCaseStudy() {
         </section>
 
         <div className={`container ${styles.body}`}>
-          <CaseStudySideNav items={nav} />
+          <CaseStudySideNav items={sections} />
 
           <div className={styles.content}>
             {/* Context */}
-            <section id="context" className={styles.section}>
+            <section id="context" className={styles.section} data-reveal>
               <span className={styles.eyebrowAccent}>{context.eyebrow}</span>
               <h2 className={styles.sectionTitle}>{context.heading}</h2>
               {context.paragraphs.map((p) => (
@@ -245,7 +238,7 @@ export default function TransporterCaseStudy() {
             </section>
 
             {/* Problem */}
-            <section id="problem" className={styles.section}>
+            <section id="problem" className={styles.section} data-reveal>
               <span className={styles.eyebrowAccent}>{problem.eyebrow}</span>
               <h2 className={styles.sectionTitle}>{problem.heading}</h2>
               <p className={styles.paragraph}>{problem.intro}</p>
@@ -267,7 +260,7 @@ export default function TransporterCaseStudy() {
             </section>
 
             {/* Goals */}
-            <section id="goals" className={styles.section}>
+            <section id="goals" className={styles.section} data-reveal>
               <h2 className={styles.sectionTitle}>{goals.eyebrow}</h2>
 
               <div className={styles.problemList}>
@@ -297,15 +290,17 @@ export default function TransporterCaseStudy() {
             </section>
 
             {/* Solution */}
-            <section id="solution" className={styles.section}>
+            <section id="solution" className={styles.section} data-reveal>
               <h2 className={styles.sectionTitle}>Solution</h2>
-              <p className={styles.paragraph}>Four problems, and how the redesign fixed each one — old screens next to new.</p>
+              <p className={styles.paragraph}>Four problems, and how the redesign fixed each one, old screens next to new where we have them.</p>
 
               {solutions.map((sol) => (
                 <div key={sol.title} className={styles.solutionBlock}>
-                  <div className={styles.solutionMedia}>
-                    <Compare before={sol.before} after={sol.after} />
-                  </div>
+                  {sol.after.some((s) => s.src) && (
+                    <div className={styles.solutionMedia}>
+                      <Compare before={sol.before} after={sol.after} />
+                    </div>
+                  )}
 
                   <div className={styles.solutionBody}>
                     <span className={styles.eyebrow}>{sol.number}</span>
@@ -325,11 +320,12 @@ export default function TransporterCaseStudy() {
             </section>
 
             {/* Impact */}
-            <section id="impact" className={styles.section}>
+            {impactStats.length > 0 && (
+            <section id="impact" className={styles.section} data-reveal>
               <h2 className={styles.sectionTitle}>{impact.heading}</h2>
 
               <div className={styles.impactGrid}>
-                {impact.stats.map((s) => {
+                {impactStats.map((s) => {
                   const Icon = STAT_ICONS[s.icon];
                   return (
                     <div
@@ -337,7 +333,7 @@ export default function TransporterCaseStudy() {
                       className={`${styles.impactTile} ${s.placeholder ? styles.impactTilePlaceholder : ""}`}
                     >
                       <Icon size={20} strokeWidth={1.6} className={styles.impactIcon} />
-                      <span className={`numeric ${styles.impactValue}`}>{s.value}</span>
+                      <CountUp value={s.value} className={`numeric ${styles.impactValue}`} />
                       <h3 className={styles.impactTitle}>{s.title}</h3>
                       <p className={styles.impactText}>{s.text}</p>
                     </div>
@@ -345,9 +341,10 @@ export default function TransporterCaseStudy() {
                 })}
               </div>
             </section>
+            )}
 
             {/* Learnings */}
-            <section id="learnings" className={styles.section}>
+            <section id="learnings" className={styles.section} data-reveal>
               <h2 className={styles.sectionTitle}>{learnings.heading}</h2>
               <div className={styles.twoCol}>
                 {learnings.items.map((l) => (
@@ -359,17 +356,7 @@ export default function TransporterCaseStudy() {
               </div>
             </section>
 
-            {/* Other work */}
-            <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>Other work</h2>
-              <div className={styles.otherList}>
-                {otherProjects.map((p) => (
-                  <a key={p.id} className={styles.otherLink} href={p.href}>
-                    {p.title} <ArrowUpRight size={16} />
-                  </a>
-                ))}
-              </div>
-            </section>
+            <MoreWork currentId="transporter-mobile-app" />
           </div>
         </div>
       </main>

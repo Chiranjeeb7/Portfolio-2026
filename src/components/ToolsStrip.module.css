@@ -9,12 +9,12 @@
   display: flex;
   align-items: center;
   gap: 24px;
-  flex-wrap: wrap;
 }
 
 .label {
   font-family: var(--font-mono);
   font-size: 0.72rem;
+  font-weight: 400;
   letter-spacing: var(--tracking-mono-loose);
   text-transform: uppercase;
   color: var(--ink-faint);
@@ -22,8 +22,49 @@
   flex-shrink: 0;
 }
 
-.list {
+/* The badges drift inside this window; soft edges so they slide in and out
+   instead of being cut off. */
+.viewport {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.group {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+  padding-right: 8px;
+}
+
+.group :global(.tag) {
+  white-space: nowrap;
+  transition: color 0.3s var(--ease-out-expo), border-color 0.3s var(--ease-out-expo);
+}
+.group :global(.tag):hover {
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+
+.still {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+@media (max-width: 560px) {
+  .inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding-block: 22px;
+  }
+  .viewport { width: 100%; flex: none; }
 }

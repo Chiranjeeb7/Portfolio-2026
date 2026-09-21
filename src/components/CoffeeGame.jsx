@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Coffee } from "lucide-react";
+import { Coffee, Gamepad2, Play } from "lucide-react";
 import CoffeeIcon from "./icons/CoffeeIcon";
 import styles from "./CoffeeGame.module.css";
 
@@ -55,6 +55,26 @@ function freshGame() {
   };
 }
 
+// Attract mode: while nobody is playing, the stage plays itself (the cup
+// chases and catches beans) so it reads as a game at a glance. Nothing in a
+// demo round touches the score, lives or best.
+function demoGame() {
+  return { ...freshGame(), running: true, demo: true, spawnEvery: 720, fallSpeed: 120 };
+}
+
+// Reduced motion gets one still frame of the same scene instead.
+function stillGame() {
+  return {
+    ...freshGame(),
+    cupX: LOGICAL_W * 0.56,
+    beans: [
+      { x: LOGICAL_W * 0.22, y: 70, rot: 0.4, spin: 0 },
+      { x: LOGICAL_W * 0.48, y: 150, rot: -0.3, spin: 0 },
+      { x: LOGICAL_W * 0.78, y: 96, rot: 0.9, spin: 0 },
+    ],
+  };
+}
+
 export default function CoffeeGame() {
   const canvasRef = useRef(null);
   const rafRef = useRef(null);
@@ -67,6 +87,8 @@ export default function CoffeeGame() {
   const [lives, setLives] = useState(START_LIVES);
   const [combo, setCombo] = useState(0);
   const [best, setBest] = useState(loadBest);
+  const [inView, setInView] = useState(false);
+  const wrapRef = useRef(null);
 
   const draw = useCallback((ctx) => {
     const g = gameRef.current;
@@ -216,13 +238,23 @@ export default function CoffeeGame() {
 
       const speed = 3.8 * (dt / 16);
       let dir = 0;
-      if (keysRef.current.has("ArrowLeft")) {
-        g.cupX -= speed;
-        dir = -1;
-      }
-      if (keysRef.current.has("ArrowRight")) {
-        g.cupX += speed;
-        dir = 1;
+      if (g.demo) {
+        // Autopilot: glide under whichever bean will land first.
+        const target = g.beans.reduce((low, b) => (!low || b.y > low.y ? b : low), null);
+        if (target) {
+          const delta = target.x - (g.cupX + CUP_W / 2);
+          g.cupX += Math.max(-speed * 0.9, Math.min(speed * 0.9, delta * 0.12));
+          dir = Math.abs(delta) > 4 ? Math.sign(delta) : 0;
+        }
+      } else {
+        if (keysRef.current.has("ArrowLeft")) {
+          g.cupX -= speed;
+          dir = -1;
+        }
+        if (keysRef.current.has("ArrowRight")) {
+          g.cupX += speed;
+          dir = 1;
+        }
       }
       g.cupX = Math.min(Math.max(g.cupX, 0), LOGICAL_W - CUP_W);
       g.tilt += (dir * 0.16 - g.tilt) * 0.25;
@@ -237,7 +269,7 @@ export default function CoffeeGame() {
           rot: 0,
           spin: (Math.random() - 0.5) * 0.08,
         });
-        g.spawnEvery = Math.max(380, g.spawnEvery - 14);
+        if (!g.demo) g.spawnEvery = Math.max(380, g.spawnEvery - 14);
       }
 
       const groundY = LOGICAL_H - GROUND_H;
@@ -252,12 +284,14 @@ export default function CoffeeGame() {
           b.x > g.cupX - 6 &&
           b.x < g.cupX + CUP_W + 6;
         if (caught) {
-          g.score += 1;
-          g.streak += 1;
           g.squish = 1;
-          g.fallSpeed = Math.min(260, g.fallSpeed + 4);
-          setScore(g.score);
-          setCombo(g.streak);
+          if (!g.demo) {
+            g.score += 1;
+            g.streak += 1;
+            g.fallSpeed = Math.min(260, g.fallSpeed + 4);
+            setScore(g.score);
+            setCombo(g.streak);
+          }
           for (let i = 0; i < 6; i++) {
             const a = Math.random() * Math.PI * 2;
             g.particles.push({
@@ -275,11 +309,13 @@ export default function CoffeeGame() {
           continue;
         }
         if (b.y > groundY) {
-          g.lives -= 1;
-          g.streak = 0;
-          g.missFlash = 1;
-          setLives(g.lives);
-          setCombo(0);
+          if (!g.demo) {
+            g.lives -= 1;
+            g.streak = 0;
+            g.missFlash = 1;
+            setLives(g.lives);
+            setCombo(0);
+          }
           for (let i = 0; i < 5; i++) {
             g.particles.push({
               x: b.x,
@@ -313,7 +349,7 @@ export default function CoffeeGame() {
 
       draw(ctx);
 
-      if (g.lives <= 0) {
+      if (!g.demo && g.lives <= 0) {
         g.running = false;
         setStatus("over");
         setBest((prevBest) => {
@@ -336,6 +372,7 @@ export default function CoffeeGame() {
   const start = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
     colorsRef.current = readColors(canvas);
     gameRef.current = { ...freshGame(), running: true };
     setScore(0);
@@ -346,6 +383,39 @@ export default function CoffeeGame() {
   }, [loop]);
 
   useEffect(() => stop, [stop]);
+
+  // Only animate while the game is on screen.
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el || !("IntersectionObserver" in window)) return;
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.2 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // Idle or game over: run the attract-mode demo behind the card (or show
+  // the still frame under reduced motion). Playing: the real loop owns it.
+  useEffect(() => {
+    if (status === "playing") return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    colorsRef.current = readColors(canvas);
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !inView) {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      gameRef.current = reduce ? stillGame() : { ...gameRef.current, running: false };
+      if (reduce) draw(canvas.getContext("2d"));
+      return;
+    }
+    gameRef.current = demoGame();
+    rafRef.current = requestAnimationFrame(loop);
+    return () => {
+      if (gameRef.current.demo) {
+        gameRef.current.running = false;
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, [status, inView, loop, draw]);
 
   useEffect(() => {
     const onKeyDown = (e) => {
@@ -368,7 +438,7 @@ export default function CoffeeGame() {
   }, [status, start]);
 
   const onPointerMove = useCallback((e) => {
-    if (!gameRef.current.running) return;
+    if (!gameRef.current.running || gameRef.current.demo) return;
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
     const ratio = LOGICAL_W / rect.width;
@@ -393,12 +463,18 @@ export default function CoffeeGame() {
       if (!gameRef.current.running) draw(ctx);
     };
     mq.addEventListener("change", onThemeChange);
-    return () => mq.removeEventListener("change", onThemeChange);
+    // The nav toggle flips data-theme without a media change; watch it too.
+    const themeObserver = new MutationObserver(onThemeChange);
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => {
+      mq.removeEventListener("change", onThemeChange);
+      themeObserver.disconnect();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className={styles.wrap}>
+    <div className={styles.wrap} ref={wrapRef}>
       <div className={styles.hud}>
         <div className={styles.hudScores}>
           <span className="numeric">Score {score}</span>
@@ -424,24 +500,38 @@ export default function CoffeeGame() {
 
         {status !== "playing" && (
           <div className={styles.overlay}>
-            <span className={styles.overlayIcon}>
-              <CoffeeIcon size={30} />
-            </span>
-            <p className={styles.overlayTitle}>
-              {status === "idle" ? "Catch the Coffee" : `Game over — you caught ${score}`}
-            </p>
-            <p className={styles.overlaySubtitle}>
-              Move the cup with ← → (or drag) and catch as many drops as you can. Miss three and
-              it's game over.
-            </p>
-            <button type="button" className="btn btn-primary" onClick={start}>
-              {status === "idle" ? "Play" : "Play again"}
-            </button>
+            <div className={styles.card}>
+              <span className={styles.badge}>
+                <Gamepad2 size={13} /> Mini game
+              </span>
+              <div className={styles.titleRow}>
+                <span className={styles.overlayIcon}>
+                  <CoffeeIcon size={24} />
+                </span>
+                <p className={styles.overlayTitle}>
+                  {status === "idle" ? "Catch the Coffee" : `You caught ${score}`}
+                </p>
+              </div>
+              <p className={styles.overlaySubtitle}>
+                {status === "idle"
+                  ? "Catch the falling beans. Miss three and it's over."
+                  : score > 0 && score >= best
+                    ? "New best score. Can you beat it?"
+                    : `Your best is ${best}. One more round?`}
+              </p>
+              <button type="button" className={`btn btn-primary ${styles.playBtn}`} onClick={start}>
+                <Play size={14} fill="currentColor" /> {status === "idle" ? "Play" : "Play again"}
+              </button>
+              <span className={`${styles.keyHint} ${styles.hintPointer}`}>
+                or press <kbd>Space</kbd>
+              </span>
+            </div>
           </div>
         )}
       </div>
 
-      <p className={styles.hint}>← → or drag to move · space to (re)start</p>
+      <p className={`${styles.hint} ${styles.hintPointer}`}>← → or drag to move · space to (re)start</p>
+      <p className={`${styles.hint} ${styles.hintTouch}`}>Drag across the stage to move the cup</p>
     </div>
   );
 }

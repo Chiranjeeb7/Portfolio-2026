@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { BookOpen, GraduationCap, Maximize2, Move, Users, ZoomIn, ZoomOut } from "lucide-react";
+import { BookOpen, GraduationCap, Maximize2, MousePointer2, Move, Users, ZoomIn, ZoomOut } from "lucide-react";
 import byjusIcon from "../assets/logos/byjus-icon.svg";
 import delhiveryIcon from "../assets/logos/delhivery-icon-onlight.png";
 import omnirioLogo from "../assets/logos/omnirio-logo.png";
 import communityPhoto from "../assets/photos/community-extended-pack.jpg";
-import profilePhoto from "../assets/photos/profile.png";
+import profilePhoto from "../assets/photos/profile.webp";
 import workshopPhoto from "../assets/photos/workshop-ai-design.jpg";
 import { bio, community, education, research, skills, teaching, workExperience, writingNote } from "../data/content";
+import RevealText from "./motion/RevealText";
 import styles from "./CanvasAbout.module.css";
 
 // Icon-only marks (as opposed to CompanyLogo's wordmarks used elsewhere) for
@@ -119,6 +120,7 @@ export default function CanvasAbout() {
   const [isPanning, setIsPanning] = useState(false);
   const [selectedIds, setSelectedIds] = useState(() => new Set());
   const [offsets, setOffsets] = useState({});
+  const [boardIn, setBoardIn] = useState(false);
   const contentSize = useRef({ w: 1560, h: 900 });
   const pointers = useRef(new Map());
   const panState = useRef(null);
@@ -269,6 +271,27 @@ export default function CanvasAbout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // The board assembles itself (frames and cards settling in one after
+  // another) the first time it scrolls into view.
+  useEffect(() => {
+    const vp = viewportRef.current;
+    if (!vp || !("IntersectionObserver" in window)) {
+      setBoardIn(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setBoardIn(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.25 }
+    );
+    io.observe(vp);
+    return () => io.disconnect();
+  }, []);
+
   // Button-driven zoom, for visitors without a wheel/trackpad (or who'd
   // rather click than scroll). Same anchor-under-a-point math as the wheel
   // handler below, just anchored at the viewport's center instead of the
@@ -416,23 +439,26 @@ export default function CanvasAbout() {
 
   return (
     <section id="about" className={`container section ${styles.section}`}>
-      <div>
-        <h2 className={styles.heading}>Who I am, off the record</h2>
-        <p className={styles.subheading}>
-          Everything from the "About" page, sorted into a board instead of an accordion.
-        </p>
-      </div>
+      <RevealText className={styles.heading} text="Who I am, off the record" />
+      <p className={styles.subheading} data-reveal>
+        Everything from the &quot;About&quot; page, sorted into a board instead of an accordion.
+      </p>
 
+      {/* data-lenis-prevent: the wheel zooms this board, so page smoothing
+          must not also claim it. */}
       <div
-        className={`${styles.viewport} ${isPanning ? styles.panning : ""}`}
+        className={`${styles.viewport} ${isPanning ? styles.panning : ""} ${boardIn ? styles.boardIn : ""}`}
         ref={viewportRef}
+        data-lenis-prevent
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
       >
         <div className={styles.hint}>
-          <Move size={12} /> drag to pan · scroll to zoom
+          <Move size={12} />
+          <span className={styles.hintPointer}>drag to pan · scroll to zoom</span>
+          <span className={styles.hintTouch}>swipe sideways to pan · pinch to zoom</span>
         </div>
 
         <div className={styles.viewportToolbar}>
@@ -467,6 +493,15 @@ export default function CanvasAbout() {
           ref={contentRef}
           style={{ transform: `translate(${view.pan.x}px, ${view.pan.y}px) scale(${view.zoom})` }}
         >
+          {/* A collaborator cursor wandering the board, Figma-style: it tells
+              a first-time visitor "this is a live canvas, you can touch it"
+              before they read the hint. Lives in board space, so it pans and
+              zooms with the cards. */}
+          <div className={styles.presence} aria-hidden="true">
+            <MousePointer2 size={20} className={styles.presenceIcon} />
+            <span className={styles.presenceName}>Chiranjeeb</span>
+          </div>
+
           <div className={styles.introRow}>
             {card(
               "photo",
@@ -478,7 +513,7 @@ export default function CanvasAbout() {
               `${styles.card} ${styles.cardBio}`,
               <>
                 <span className={styles.cardName}>{"Hi, I'm Chiranjeeb Deb"}</span>
-                {bio.replace("Hi, I'm Chiranjeeb — ", "")}
+                {bio.replace("Hi, I'm Chiranjeeb, ", "")}
               </>
             )}
             {card(
@@ -516,7 +551,7 @@ export default function CanvasAbout() {
                         {w.role}, {w.company}
                       </span>
                       <span className={styles.workDates}>
-                        {w.start} – {w.end}
+                        {w.start} - {w.end}
                       </span>
                     </span>
                   </>
