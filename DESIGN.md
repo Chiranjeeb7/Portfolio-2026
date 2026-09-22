@@ -696,3 +696,21 @@ Everything collapses to static under `prefers-reduced-motion`.
   reveal as the nav), a rolling "Back" label, and a motion-driven progress
   bar instead of a scroll listener. "More work" cards get the homepage card
   CTA: rolling label plus an arrow box that fills with accent and turns.
+- **Intro loader** (`components/intro/`), "the page shatters into the
+  timeline", ~4.2s with overlapping, eased phases (earlier versions felt
+  rushed and linear): (1) a plain page in the site background with the name
+  breathing in at the centre; (2) the page cracks into a grid of ~26px tiles
+  in a wave from the centre outward; tiles loosen, shrink, tilt and take a
+  faint line tint, over a plain background (the page stays hidden: nothing
+  else competes with the timeline forming); (3) one tile
+  per timeline day, drawn from all over the screen, glides on a soft curve
+  into its exact cell, shrinking to cell size and shifting to its real
+  colour, while the other tiles drift and dissolve; (4) the finished timeline holds ~300ms alone, then the rest of the page
+  fades in around it (~900ms) and the real cells (hidden
+  via `[data-intro-hide]` while `html[data-intro="running"]`) take over, then
+  the hero copy plays (`IntroContext.ready`). The merge waits for fonts +
+  load (6s cap); targets re-measure every 250ms. Colour parsing handles
+  `color(srgb ...)` (what color-mix() tokens compute to). Plays on every
+  homepage load or refresh, including section anchors (cleared so it starts
+  at the top); not for case study / milestone pages or reduced motion.
+  Click/key skips; resize ends it.

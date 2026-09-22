@@ -22,6 +22,7 @@ export default function RevealText({
   delay = 0,
   stagger = 0.055,
   trigger = "view",
+  play: canPlay = true,
   emClassName,
   ...rest
 }) {
@@ -42,7 +43,7 @@ export default function RevealText({
     );
   }
 
-  const play = trigger === "mount" ? { animate: "shown" } : { whileInView: "shown", viewport: { once: true, amount: 0.6 } };
+  const play = trigger === "mount" ? { animate: canPlay ? "shown" : "hidden" } : { whileInView: "shown", viewport: { once: true, amount: 0.6 } };
 
   return createElement(
     motion[as],

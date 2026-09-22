@@ -8,18 +8,23 @@ import profilePhoto from "../assets/photos/profile.webp";
 import { profile } from "../data/content";
 import MilestonesGrid from "./MilestonesGrid";
 import RevealText from "./motion/RevealText";
+import { useIntro } from "./intro/introState";
 import styles from "./Hero.module.css";
 
 const EASE = [0.16, 1, 0.3, 1];
-const rise = (delay) => ({
+// `play` false holds the element at its start pose (while the intro runs).
+const rise = (delay, play = true) => ({
   initial: { opacity: 0, y: 24 },
-  animate: { opacity: 1, y: 0 },
+  animate: play ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 },
   transition: { duration: 1.1, ease: EASE, delay },
 });
 
 export default function Hero() {
   const ref = useRef(null);
   const reduce = useReducedMotion();
+  // After the intro loader, the copy plays its entrance once the pixels
+  // have landed; the timeline panel needs none (the pixels built it).
+  const { ready, played } = useIntro();
 
   // As the hero scrolls away, the copy drifts up faster than the activity
   // panel and fades: a depth cue that hands focus to the next section.
@@ -47,7 +52,7 @@ export default function Hero() {
       <div className={`container ${styles.grid}`}>
         <motion.div className={styles.textCol} style={motionOff ? undefined : { y: textY, opacity: fade }}>
           <div className={styles.intro}>
-            <motion.p className={styles.greeting} {...(motionOff ? {} : rise(0.05))}>
+            <motion.p className={styles.greeting} {...(motionOff ? {} : rise(0.05, ready))}>
               Hey, I'm
               <span className={styles.avatar}>
                 <img src={profilePhoto} alt="" width="64" height="64" />
@@ -57,18 +62,19 @@ export default function Hero() {
             <RevealText
               as="h1"
               trigger="mount"
+              play={ready}
               delay={0.2}
               stagger={0.06}
               className={styles.heading}
               emClassName={styles.emphasis}
               text="curious by default, and I build until it's *trusted*."
             />
-            <motion.p className={styles.subhead} {...(motionOff ? {} : rise(0.85))}>
+            <motion.p className={styles.subhead} {...(motionOff ? {} : rise(0.85, ready))}>
               Product Designer &amp; Builder
             </motion.p>
           </div>
 
-          <motion.div className={styles.roleChips} {...(motionOff ? {} : rise(1))}>
+          <motion.div className={styles.roleChips} {...(motionOff ? {} : rise(1, ready))}>
             <div className={styles.roleChip}>
               <span>Currently Working with</span>
               <img
@@ -103,7 +109,7 @@ export default function Hero() {
         <motion.div className={styles.panelCol} style={motionOff ? undefined : { y: panelY }}>
           <motion.div
             className={styles.panelEnter}
-            {...(motionOff
+            {...(motionOff || played
               ? {}
               : {
                   initial: { opacity: 0, y: 48, rotateX: 14 },

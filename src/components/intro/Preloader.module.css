@@ -1,0 +1,45 @@
+/* Opaque the whole time the timeline forms, so no other section of the
+   page is visible (or distracting) until every pixel has landed; only
+   then does the canvas fade its own backdrop to reveal the page. */
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-intro);
+  background: var(--bg);
+  cursor: progress;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* The name breathes in at the centre of the plain page, then fades as the
+   page starts to break. */
+.name {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: var(--tracking-mono-wide);
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ink-muted);
+  pointer-events: none;
+  animation: nameIn 0.55s ease-out 0.05s both;
+  transition:
+    opacity 0.7s ease-in-out,
+    filter 0.7s ease-in-out;
+}
+.nameOut {
+  opacity: 0;
+  filter: blur(4px);
+}
+
+@keyframes nameIn {
+  from { opacity: 0; filter: blur(4px); }
+}

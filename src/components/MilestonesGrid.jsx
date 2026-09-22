@@ -79,7 +79,9 @@ export default function MilestonesGrid() {
           {/* One flat list of days; `grid-auto-flow: column` fills it top to
               bottom then left to right, and the row count is a CSS variable
               so the block can be shorter on wide screens. */}
-          <div className={styles.grid}>
+          {/* data-intro-hide: hidden while the intro loader's pixels fly into
+              these exact cells, then revealed underneath them. */}
+          <div className={styles.grid} data-intro-hide>
             {days.map((day) => (
               <button
                 type="button"

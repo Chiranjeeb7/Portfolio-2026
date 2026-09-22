@@ -73,6 +73,7 @@
   --z-nav: 50;
   --z-progress: 60;
   --z-grain: 70;
+  --z-intro: 90;
   --z-skip: 100;
 
   color-scheme: light;
@@ -270,6 +271,11 @@ body::after {
   opacity: 1;
   transform: none;
 }
+
+/* First-visit intro: the Key Moments cells stay hidden while the loader's
+   pixels fly into their exact positions, then show the instant it ends. */
+:root[data-intro="running"] [data-intro-hide] { opacity: 0; }
+:root:is([data-intro="running"], [data-intro="played"]) [data-intro-hide] > * { animation: none !important; }
 
 /* ---------- Kinetic type helpers ---------- */
 /* A word sits inside a clipping mask and rises into it (see RevealText).

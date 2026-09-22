@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import ToolsStrip from "./components/ToolsStrip";
@@ -8,7 +8,9 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import Writing from "./components/Writing";
 import Footer from "./components/Footer";
 import SmoothScroll from "./components/motion/SmoothScroll";
-import { scrollToTarget } from "./components/motion/scroll";
+import { scrollToTarget, setScrollLocked } from "./components/motion/scroll";
+import Preloader from "./components/intro/Preloader";
+import { clearSectionAnchor, IntroContext, shouldPlayIntro } from "./components/intro/introState";
 import ScrollProgress from "./components/motion/ScrollProgress";
 import PlannerCaseStudy from "./pages/PlannerCaseStudy";
 import MapPracticeCaseStudy from "./pages/MapPracticeCaseStudy";
@@ -29,6 +31,22 @@ const HOME_TITLE = `${profile.name}: ${profile.role}`;
 
 function App() {
   const route = useHashRoute();
+
+  // Intro loader (every homepage load or refresh). "running" hides
+  // the timeline cells and holds the hero entrance until the pixels land.
+  const [introPlayed] = useState(() => {
+    const play = shouldPlayIntro();
+    if (play) clearSectionAnchor();
+    return play;
+  });
+  const [introRunning, setIntroRunning] = useState(introPlayed);
+  const intro = useMemo(() => ({ ready: !introRunning, played: introPlayed }), [introRunning, introPlayed]);
+  useLayoutEffect(() => {
+    // "played" (vs "done") tells CSS the loader placed the timeline cells,
+    // so they skip their own pop-in entrance.
+    document.documentElement.dataset.intro = introRunning ? "running" : introPlayed ? "played" : "done";
+    setScrollLocked(introRunning);
+  }, [introRunning, introPlayed]);
   // "#/moment/<slug>" routes to a milestone page; any other "#/<id>" to a
   // case study. Unknown ids fall through to the homepage.
   const milestone = route?.startsWith("moment/") ? milestoneBySlug[route.slice(7)] : null;
@@ -89,8 +107,15 @@ function App() {
   }
 
   return (
-    <>
+    <IntroContext.Provider value={intro}>
       {chrome}
+      {introRunning && (
+        // A crash in the loader must never blank the site or leave scroll
+        // locked: it just steps aside and the page shows as if it had ended.
+        <ErrorBoundary silent onError={() => setIntroRunning(false)}>
+          <Preloader onDone={() => setIntroRunning(false)} />
+        </ErrorBoundary>
+      )}
       {/* Case study and milestone headers carry their own progress bar. */}
       <ScrollProgress />
       <Nav />
@@ -104,7 +129,7 @@ function App() {
         <Writing />
       </main>
       <Footer />
-    </>
+    </IntroContext.Provider>
   );
 }
 

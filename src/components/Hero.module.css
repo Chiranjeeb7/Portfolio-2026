@@ -135,6 +135,10 @@
 @keyframes underline {
   to { transform: scaleX(1); }
 }
+/* Hold the underline until the intro loader hands the page over. */
+:global(:root[data-intro="running"]) .emphasis::after {
+  animation-play-state: paused;
+}
 
 .subhead {
   margin-top: 20px;

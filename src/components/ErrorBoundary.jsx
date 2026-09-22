@@ -7,6 +7,10 @@ import styles from "./ErrorBoundary.module.css";
 // the whole app) so a crash in one — e.g. the canvas's pointer/gesture
 // math — degrades to a small inline fallback instead of taking the entire
 // page to a blank screen that needs a hard reload.
+//
+// `silent` renders nothing on a crash (for purely decorative layers, like the
+// intro loader, that should just step aside); `onError` lets the owner
+// clean up after it (e.g. unlock scroll the crashed layer was holding).
 export default class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
@@ -19,6 +23,7 @@ export default class ErrorBoundary extends Component {
 
   componentDidCatch(error, info) {
     console.error("Section crashed:", error, info);
+    this.props.onError?.(error);
   }
 
   reset = () => {
@@ -27,6 +32,7 @@ export default class ErrorBoundary extends Component {
 
   render() {
     if (this.state.hasError) {
+      if (this.props.silent) return null;
       return (
         <div className={`container ${styles.fallback}`}>
           <p className={styles.message}>{this.props.message || "This section hit a snag."}</p>
