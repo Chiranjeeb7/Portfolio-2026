@@ -1,0 +1,87 @@
+/* Stage colours are matched to each product's screenshots, not to the page
+   chrome, so they stay fixed across themes. */
+.stage {
+  position: absolute;
+  /* Bleeds 1px past the frame so no backdrop shows at anti-aliased edges. */
+  inset: -1px;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 55% at 50% 18%, rgba(255, 255, 255, 0.6), transparent 70%),
+    linear-gradient(150deg, var(--stage-from) 0%, var(--stage-mid) 55%, var(--stage-to) 100%);
+}
+
+/* Transporter: warm sand picked up from the bronze rank medal on the
+   auction-room hero screen; the dark phone reads strongest against it, and
+   it breaks up the two cool purple-toned cards either side. */
+.sand {
+  --stage-from: #fbf6f0;
+  --stage-mid: #f0e3d3;
+  --stage-to: #dcc2a3;
+  --shade: #f2e8dd;
+}
+
+/* The hero phone is deliberately tall: anchored near the top and left to run
+   off the bottom edge, like the screen stacks. */
+.rail {
+  position: absolute;
+  left: 50%;
+  top: 12%;
+  width: clamp(150px, 32%, 250px);
+  aspect-ratio: 376 / 816;
+  translate: -50% 0;
+}
+
+.phone {
+  position: absolute;
+  inset: 0;
+  padding: 8px;
+  border-radius: 36px;
+  background: #121317;
+  box-shadow:
+    inset 0 0 0 1.5px #3a3c43,
+    0 2px 6px rgba(70, 45, 20, 0.12),
+    0 24px 48px -16px rgba(70, 45, 20, 0.45);
+  transform-origin: 50% 0%;
+  /* Own compositor layer so the scaled screenshot doesn't shimmer. */
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.screen {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 28px;
+  background: #fff;
+}
+
+.screen img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* Phones further from the hero wash out toward the stage colour. */
+.shade {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--shade);
+  pointer-events: none;
+}
+
+@media (max-width: 560px) {
+  .rail {
+    top: 10%;
+    width: 36%;
+  }
+  .phone {
+    padding: 5px;
+    border-radius: 24px;
+  }
+  .screen {
+    border-radius: 19px;
+  }
+}

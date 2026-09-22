@@ -42,6 +42,39 @@
   pointer-events: none;
 }
 
+/* Flashed when a plain wheel passes over the board: the page keeps
+   scrolling, this just says how to zoom instead. */
+.zoomHint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 6;
+  translate: -50% calc(-50% + 6px);
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--ink) 86%, transparent);
+  backdrop-filter: blur(4px);
+  color: var(--bg);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out-expo), translate 0.4s var(--ease-out-expo);
+}
+.zoomHintOn {
+  opacity: 1;
+  translate: -50% -50%;
+}
+.zoomHint kbd {
+  display: inline-block;
+  margin: 0 2px;
+  padding: 1px 6px;
+  border: 1px solid color-mix(in srgb, var(--bg) 40%, transparent);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
 .viewportToolbar {
   position: absolute;
   bottom: 12px;

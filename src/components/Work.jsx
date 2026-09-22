@@ -7,7 +7,9 @@ import CompanyLogo from "./CompanyLogo";
 import CountUp from "./motion/CountUp";
 import RevealText from "./motion/RevealText";
 import ThumbnailPlaceholder from "./ThumbnailPlaceholder";
-import { COVER_THUMBNAILS, THUMBNAILS } from "./projectArt";
+import PhoneCarousel from "./PhoneCarousel";
+import ScreenStack from "./ScreenStack";
+import { COVER_THUMBNAILS, SCREEN_STACKS, THUMBNAILS } from "./projectArt";
 import styles from "./Work.module.css";
 
 // Per-project backdrop overrides for screenshots whose colours clash with the
@@ -24,7 +26,9 @@ const STACK_STEP = 30;
 
 function ProjectCard({ project: p, index, total, progress, stacked, reduce }) {
   const external = !p.href.startsWith("#");
-  const isCover = COVER_THUMBNAILS.has(p.id);
+  const stack = SCREEN_STACKS[p.id];
+  const isCover = !stack && COVER_THUMBNAILS.has(p.id);
+  const [hovered, setHovered] = useState(false);
   const last = index === total - 1;
 
   // While pinned, each earlier card sinks back (smaller, dimmer) as the
@@ -63,12 +67,20 @@ function ProjectCard({ project: p, index, total, progress, stacked, reduce }) {
         className={styles.card}
         style={stacked && !last ? { scale } : undefined}
         onPointerMove={onPointerMove}
+        onPointerEnter={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
       >
         <motion.div
-          className={`${styles.art} ${isCover ? styles.artFlat : ""} ${ART_BACKGROUNDS[p.id] ?? ""}`}
+          className={`${styles.art} ${isCover ? styles.artFlat : ""} ${stack ? styles.artStack : ""} ${ART_BACKGROUNDS[p.id] ?? ""}`}
           {...artReveal}
         >
-          {THUMBNAILS[p.id] ? (
+          {stack ? (
+            stack.phones ? (
+              <PhoneCarousel {...stack} hovered={hovered} eager={index === 0} />
+            ) : (
+              <ScreenStack {...stack} hovered={hovered} eager={index === 0} />
+            )
+          ) : THUMBNAILS[p.id] ? (
             <motion.img
               src={THUMBNAILS[p.id]}
               alt=""

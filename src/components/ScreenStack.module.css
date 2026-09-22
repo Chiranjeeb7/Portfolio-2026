@@ -1,0 +1,82 @@
+/* Stage colours are matched to each product's screenshots, not to the page
+   chrome, so they stay fixed across themes. */
+.stage {
+  position: absolute;
+  /* Bleeds 1px past the frame so no backdrop shows at anti-aliased edges. */
+  inset: -1px;
+  overflow: hidden;
+  background:
+    radial-gradient(70% 60% at 70% 20%, rgba(255, 255, 255, 0.55), transparent 70%),
+    linear-gradient(150deg, var(--stage-from) 0%, var(--stage-mid) 55%, var(--stage-to) 100%);
+}
+
+/* Planner: cool periwinkle from the UI's own blue, so the white screens pop. */
+.periwinkle {
+  --stage-from: #e9ebfb;
+  --stage-mid: #c9cef4;
+  --stage-to: #a9b0ec;
+  --shade: #dfe2fa;
+}
+
+/* Map Practice: the screens are saturated BYJU'S purple, so a pale tonal
+   lavender lets them read as the darker focal point. */
+.lavender {
+  --stage-from: #efeefc;
+  --stage-mid: #d6d4f6;
+  --stage-to: #b3b0ec;
+  --shade: #e4e2fa;
+}
+
+/* The hero screen is deliberately oversized: anchored near the top so the
+   cards behind can peek out above it, and left to run off the bottom edge. */
+.pile {
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  width: 90%;
+  translate: -50% 0;
+}
+
+.card {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #fff;
+  /* Scale from the top edge so smaller cards behind stay top-aligned and
+     peek out above the one in front. */
+  transform-origin: 50% 0%;
+  box-shadow:
+    0 0 0 1px rgba(40, 48, 110, 0.08),
+    0 2px 6px rgba(40, 48, 110, 0.08),
+    0 18px 40px -12px rgba(40, 48, 110, 0.35);
+  /* Own compositor layer so the scaled screenshot doesn't repaint (and
+     shimmer) every frame it moves. */
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top left;
+}
+
+/* Cards further back wash out toward the stage colour. */
+.shade {
+  position: absolute;
+  inset: 0;
+  background: var(--shade);
+  pointer-events: none;
+}
+
+@media (max-width: 560px) {
+  .pile {
+    top: 16%;
+  }
+  .card {
+    border-radius: 6px;
+  }
+}

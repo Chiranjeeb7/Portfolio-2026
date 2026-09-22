@@ -25,6 +25,11 @@ const MAX_ZOOM = 1.6;
 const ZOOM_SPEED = 0.0016;
 const ZOOM_STEP = 1.25;
 const PAN_SLACK = 120;
+const ZOOM_HINT_MS = 1400;
+// Trackpad pinches already arrive as ctrl+wheel in every major browser, so
+// only the mouse-wheel shortcut needs a platform-specific label.
+const IS_MAC = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+const ZOOM_KEY = IS_MAC ? "⌘" : "Ctrl";
 const ZERO_OFFSET = { x: 0, y: 0 };
 
 function clamp(v, min, max) {
@@ -121,6 +126,7 @@ export default function CanvasAbout() {
   const [selectedIds, setSelectedIds] = useState(() => new Set());
   const [offsets, setOffsets] = useState({});
   const [boardIn, setBoardIn] = useState(false);
+  const [zoomHint, setZoomHint] = useState(false);
   const contentSize = useRef({ w: 1560, h: 900 });
   const pointers = useRef(new Map());
   const panState = useRef(null);
@@ -318,11 +324,28 @@ export default function CanvasAbout() {
 
   // Native (non-passive) wheel listener — React's synthetic onWheel is
   // registered passive, so preventDefault() there is silently ignored.
+  //
+  // A plain wheel belongs to the page: capturing it trapped anyone scrolling
+  // past the board. Zoom takes ctrl/⌘ + wheel instead (which is also what a
+  // trackpad pinch sends), the Google Maps convention; a plain wheel over the
+  // board just flashes a hint saying so and scrolls on by.
   useEffect(() => {
     const vp = viewportRef.current;
     if (!vp) return;
+    let hintTimer = null;
     const onWheel = (e) => {
+      if (!e.ctrlKey && !e.metaKey) {
+        setZoomHint(true);
+        clearTimeout(hintTimer);
+        hintTimer = setTimeout(() => setZoomHint(false), ZOOM_HINT_MS);
+        return;
+      }
+      // Keeps the browser from page-zooming, and Lenis from also scrolling
+      // on ⌘ (it already skips ctrl).
       e.preventDefault();
+      e.stopPropagation();
+      clearTimeout(hintTimer);
+      setZoomHint(false);
       const rect = vp.getBoundingClientRect();
       const cx = e.clientX - rect.left;
       const cy = e.clientY - rect.top;
@@ -340,7 +363,10 @@ export default function CanvasAbout() {
       });
     };
     vp.addEventListener("wheel", onWheel, { passive: false });
-    return () => vp.removeEventListener("wheel", onWheel);
+    return () => {
+      vp.removeEventListener("wheel", onWheel);
+      clearTimeout(hintTimer);
+    };
   }, [clampPanFor, commitView]);
 
   const onPointerDown = useCallback(
@@ -444,12 +470,9 @@ export default function CanvasAbout() {
         Everything from the &quot;About&quot; page, sorted into a board instead of an accordion.
       </p>
 
-      {/* data-lenis-prevent: the wheel zooms this board, so page smoothing
-          must not also claim it. */}
       <div
         className={`${styles.viewport} ${isPanning ? styles.panning : ""} ${boardIn ? styles.boardIn : ""}`}
         ref={viewportRef}
-        data-lenis-prevent
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -457,8 +480,12 @@ export default function CanvasAbout() {
       >
         <div className={styles.hint}>
           <Move size={12} />
-          <span className={styles.hintPointer}>drag to pan · scroll to zoom</span>
+          <span className={styles.hintPointer}>drag to pan · {ZOOM_KEY} + scroll to zoom</span>
           <span className={styles.hintTouch}>swipe sideways to pan · pinch to zoom</span>
+        </div>
+
+        <div className={`${styles.zoomHint} ${zoomHint ? styles.zoomHintOn : ""}`} aria-hidden="true">
+          Hold <kbd>{ZOOM_KEY}</kbd> and scroll to zoom
         </div>
 
         <div className={styles.viewportToolbar}>

@@ -111,6 +111,12 @@
   background: #050608;
 }
 
+/* Screen stacks and phone rows paint their own stage (bled 1px past the
+   edges), so the accent gradient must not show through underneath. */
+.artStack {
+  background: none;
+}
+
 /* Map Practice: the screenshot is BYJU'S purple (#5351c6), which fights the
    orange accent. A lighter tonal lavender lets the screen read as the darker
    focal point. Fixed across themes since it's matched to the image. */
