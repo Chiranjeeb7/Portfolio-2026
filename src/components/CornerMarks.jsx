@@ -1,6 +1,6 @@
 import styles from "./CornerMarks.module.css";
 
-// Small blueprint-style "+" marks at the four corners of a bordered panel —
+// Small blueprint-style "+" marks at the four corners of a bordered panel -
 // the parent must be position:relative with room in its padding for them.
 export default function CornerMarks({ accentCorner = "br" }) {
   return (

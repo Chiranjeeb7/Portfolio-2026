@@ -15,7 +15,7 @@
   color: var(--ink-muted);
 }
 
-/* Floating overlays inside .viewport — fixed to the window, not panned/
+/* Floating overlays inside .viewport - fixed to the window, not panned/
    zoomed with .content, so they need their own backdrop to stay legible
    over whatever board content sits underneath them. pointer-events:none
    on .hint (pure caption, no controls) so a drag starting on it still
@@ -141,7 +141,7 @@
 
 /* Viewport: the fixed-size window onto the pannable/zoomable board. Left and
    bottom margin around it (via .section padding + the shared .container
-   gutters) is intentional — since a wheel over the canvas now zooms instead
+   gutters) is intentional - since a wheel over the canvas now zooms instead
    of scrolling the page, visitors need somewhere just outside the canvas to
    rest the cursor and keep scrolling normally down to the next section. */
 .viewport {
@@ -248,7 +248,7 @@
   border-color: var(--accent-strong);
 }
 
-/* Figma-style selection handles — decorative (nothing here resizes), but
+/* Figma-style selection handles - decorative (nothing here resizes), but
    the same immediately-legible "this is selected" language, in our own
    sharp-cornered squares rather than Figma's circular ones. */
 .handle {
@@ -466,7 +466,7 @@
 }
 
 /* Touch: the board spans the whole phone width, so swallowing every touch
-   (touch-action: none) trapped visitors mid-page — a thumb scrolling down
+   (touch-action: none) trapped visitors mid-page - a thumb scrolling down
    would pan the board instead. Vertical swipes now go back to the page;
    sideways drags still pan and two-finger pinches still zoom. */
 @media (hover: none) and (pointer: coarse) {

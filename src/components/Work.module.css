@@ -107,7 +107,7 @@
 
 /* For thumbnails that are flat, self-contained compositions (their own
    background baked into the raster) rather than a screenshot floating over
-   the accent gradient — fixed regardless of theme so it always matches the
+   the accent gradient - fixed regardless of theme so it always matches the
    image underneath, and avoids an orange flash while the image decodes. */
 .artFlat {
   background: #050608;

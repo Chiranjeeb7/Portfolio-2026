@@ -357,7 +357,7 @@ export default function CoffeeGame() {
           try {
             localStorage.setItem(STORAGE_KEY, String(newBest));
           } catch {
-            /* storage unavailable — best score just won't persist */
+            /* storage unavailable - best score just won't persist */
           }
           return newBest;
         });

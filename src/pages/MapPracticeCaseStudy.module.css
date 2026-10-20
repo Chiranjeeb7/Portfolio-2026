@@ -1,4 +1,4 @@
-/* Map Practice–only pieces. Everything shared with the Planner page
+/* Map Practice - only pieces. Everything shared with the Planner page
    (header, hero, sections, stat rows, solution blocks, impact…) lives in
    CaseStudy.module.css. */
 
@@ -24,7 +24,7 @@
   border: 1px solid var(--line);
 }
 
-/* Research visuals are light-background exports — keep them on a fixed white
+/* Research visuals are light-background exports - keep them on a fixed white
    mat in both themes rather than floating on a dark panel. */
 .figureImg {
   display: block;

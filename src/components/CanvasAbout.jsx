@@ -12,7 +12,7 @@ import RevealText from "./motion/RevealText";
 import styles from "./CanvasAbout.module.css";
 
 // Icon-only marks (as opposed to CompanyLogo's wordmarks used elsewhere) for
-// the compact Experience & Education timeline — same "badge on a white chip"
+// the compact Experience & Education timeline - same "badge on a white chip"
 // treatment as the existing Omnirio icon, now applied consistently to all
 // three so the row reads as one system instead of two mismatched styles.
 const WORK_ICONS = {
@@ -45,7 +45,7 @@ function dist(a, b) {
 // selection), draggable (click + drag, scaled by the canvas's current zoom
 // so it tracks the cursor 1:1), and resettable (double-click drops it back
 // to its sorted position). Selection renders a Figma-style accent outline
-// with four corner handles — decorative (there's no resize here), but the
+// with four corner handles - decorative (there's no resize here), but the
 // same instantly-recognizable "this is selected" language.
 function DraggableCard({ id, className, children, selected, offset, zoomRef, onSelect, onMove, onReset }) {
   const dragRef = useRef(null);
@@ -57,7 +57,7 @@ function DraggableCard({ id, className, children, selected, offset, zoomRef, onS
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
     } catch {
-      /* invalid/inactive pointer id — capture is a nicety, not required */
+      /* invalid/inactive pointer id - capture is a nicety, not required */
     }
     dragRef.current = { startX: e.clientX, startY: e.clientY, startOffset: offset };
     setIsDragging(true);
@@ -138,7 +138,7 @@ export default function CanvasAbout() {
   // Wheel and pointermove can fire far more often than the screen repaints
   // (a fast trackpad flick or a high-poll-rate mouse can outpace 60fps by a
   // lot). Committing a fresh setState on every single one of those events
-  // means a full re-render of the whole board per event — under sustained
+  // means a full re-render of the whole board per event - under sustained
   // interaction that piles up fast enough to make the tab stutter or hang.
   // These two refs coalesce any number of updates within one frame into a
   // single commit, so render count is capped at the display's refresh
@@ -323,7 +323,7 @@ export default function CanvasAbout() {
     [clampPanFor, flushView]
   );
 
-  // Native (non-passive) wheel listener — React's synthetic onWheel is
+  // Native (non-passive) wheel listener - React's synthetic onWheel is
   // registered passive, so preventDefault() there is silently ignored.
   //
   // A plain wheel belongs to the page: capturing it trapped anyone scrolling
@@ -378,7 +378,7 @@ export default function CanvasAbout() {
       try {
         vp.setPointerCapture(e.pointerId);
       } catch {
-        /* invalid/inactive pointer id — capture is a nicety, not required */
+        /* invalid/inactive pointer id - capture is a nicety, not required */
       }
       const current = pendingView.current ?? viewRef.current;
       pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });

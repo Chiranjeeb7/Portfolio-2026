@@ -5,7 +5,7 @@
 // on the ground until the redesign made the output legible enough to trust.
 // Every fact/quote below is carried over unchanged from the V1 page; only
 // emphasis and ordering changed. The cost-savings figure is a real follow-up
-// item — marked as a placeholder, not fabricated.
+// item - marked as a placeholder, not fabricated.
 
 export const nav = [
   { id: "context", label: "Context" },
@@ -108,7 +108,7 @@ export const story = {
 
 // Distilled from real interviews (4 planners, 3 plant heads across current
 // customers) plus internal conversations with customer support, sales, and
-// business teams — short, scannable findings rather than quotes or full
+// business teams - short, scannable findings rather than quotes or full
 // sentences, since the point here is what the research surfaced, not how
 // any one person phrased it.
 export const insights = {
@@ -144,7 +144,7 @@ export const problem = {
     title: "The core problem",
     text: "A strong 10-year algorithm was trapped behind an interface too complex to scale and **too opaque to trust**.",
   },
-  // Each problem statement above, broken into the concrete goals it implied —
+  // Each problem statement above, broken into the concrete goals it implied -
   // same facts as business/user problem, restructured as a checklist.
   businessGoals: {
     title: "Business goals",

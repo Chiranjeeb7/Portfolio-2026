@@ -2,7 +2,7 @@
    Reverse-engineered from som.design's own computed styles: cool near-white
    ground, slate ink (never black), hairline borders, near-zero radius,
    zero shadow, and one coral accent used only at decorative/large scale
-   (logo, corner marks) — never as button fill or body text. */
+   (logo, corner marks) - never as button fill or body text. */
 :root {
   --bg: #fafcfd;
   --bg-panel: #f1f4f6;
@@ -13,7 +13,7 @@
   --line: #e5e8eb;
   --line-strong: #c7ced4;
 
-  /* Decorative/large-scale only (logo, corner marks, hero emphasis word) —
+  /* Decorative/large-scale only (logo, corner marks, hero emphasis word) -
      this is som's own accent value, which only clears WCAG large-text
      contrast (3:1), not normal-text (4.5:1). --accent-strong is the AA-safe
      shade for anywhere accent touches small text or a filled surface. */
@@ -23,11 +23,11 @@
   --accent-ink: #fff8f2;
   --accent-tint: #fbe4dc;
   /* For accent text sitting on a var(--ink)-colored surface (e.g. the
-     inverted tooltip chip) — bright in light mode since --ink is dark there,
+     inverted tooltip chip) - bright in light mode since --ink is dark there,
      dark in dark mode since --ink flips light. */
   --accent-on-ink: #ff8a5c;
 
-  /* Teal — the only colour besides the accent in the activity grid, marking
+  /* Teal - the only colour besides the accent in the activity grid, marking
      the three milestone cells (first Figma plugin, first PR, the AI workshop). */
   --milestone: #13897a;
   --milestone-strong: #0b5e53;
@@ -47,7 +47,7 @@
   --tracking-label-loose: 0.06em;
   --tracking-label-wide: 0.1em;
 
-  /* Sharp, technical — matches som's 0px panels / 2px chips exactly. */
+  /* Sharp, technical - matches som's 0px panels / 2px chips exactly. */
   --radius-sm: 2px;
   --radius-md: 2px;
   --radius-lg: 0px;
@@ -71,7 +71,7 @@
 
 /* Dark tokens apply by system preference (unless the visitor forced light),
    and again, identically, when the visitor explicitly picked dark via the
-   nav toggle — see src/hooks/useTheme.js. */
+   nav toggle - see src/hooks/useTheme.js. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #12161b;

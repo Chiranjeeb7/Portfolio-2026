@@ -1,14 +1,14 @@
-// Real activity for the hero grid — replaces the earlier seeded placeholder
+// Real activity for the hero grid - replaces the earlier seeded placeholder
 // data. Dates the user gave as "N months back" are recorded at month
 // precision (plus which week of that month the cell sits in), never as an
 // invented exact day, and tooltips only ever claim the month.
 //
-// Grid shape: a horizontal contribution grid — one square per day, running
+// Grid shape: a horizontal contribution grid - one square per day, running
 // left to right across the window, with only the years labelled along the
 // top. The days come out as one flat list and CSS decides how many rows to
 // wrap them into (grid-auto-flow: column), so the block can be shorter on a
-// wide screen and taller on a phone — where fewer rows would mean more
-// columns and unreadably small squares — without the data changing at all.
+// wide screen and taller on a phone - where fewer rows would mean more
+// columns and unreadably small squares - without the data changing at all.
 
 export const WINDOW_WEEKS = 58;
 export const TOTAL_DAYS = WINDOW_WEEKS * 7;
@@ -22,7 +22,7 @@ export const TOTAL_DAYS = WINDOW_WEEKS * 7;
 //
 // `milestone: true` is the only thing that changes a cell's colour (teal).
 export const activityEvents = [
-  // — Sep 2025: where the code story starts
+  // - Sep 2025: where the code story starts
   { month: "2025-09", week: 1, kind: "Community", label: "EPC dinner" },
   { month: "2025-09", week: 2, kind: "Figma plugin", label: "First plugin: Spacing Checker", milestone: true, slug: "spacing-checker" },
   { month: "2025-09", week: 3, kind: "Community", label: "ServiceNow summit" },
@@ -44,7 +44,7 @@ export const activityEvents = [
 
   { month: "2026-05", week: 2, kind: "Code", label: "Commits" },
 
-  // — The ramp: more shipping, more often, from here on
+  // - The ramp: more shipping, more often, from here on
   { month: "2026-06", week: 0, kind: "Code", label: "Commits" },
   { month: "2026-06", week: 1, kind: "Build", label: "SaaS app" },
   { month: "2026-06", week: 3, kind: "Pull request", label: "Pull request merged" },
@@ -64,7 +64,7 @@ export const activityEvents = [
   { month: "2026-09", week: 1, kind: "Pull request", label: "Pull request merged" },
   { month: "2026-09", week: 2, kind: "Code", label: "Commits" },
 
-  // — Design work at Delhivery. The activities come from the Planner and
+  // - Design work at Delhivery. The activities come from the Planner and
   // Transporter case studies (and the animations in assets/photos), but
   // the MONTHS BELOW ARE PLACEHOLDERS spread across the window: confirm or
   // correct each one, since the case studies don't give dates.
@@ -105,7 +105,7 @@ function hash(text) {
 
 // A day-grid needs a day, but the brief only gave months. Each event is
 // placed inside the week it belongs to, deterministically, so the square
-// never moves between renders — the tooltip still says only the month,
+// never moves between renders - the tooltip still says only the month,
 // which is all we actually know.
 function placeEvent(event) {
   const [year, month] = event.month.split("-").map(Number);

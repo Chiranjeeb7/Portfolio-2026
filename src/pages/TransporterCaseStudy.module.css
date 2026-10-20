@@ -3,7 +3,7 @@
    CaseStudy.module.css. */
 
 /* ---------- Hero: row of new screens ---------- */
-/* Fixed dark stage in both themes — matches the thumbnail and gives the
+/* Fixed dark stage in both themes - matches the thumbnail and gives the
    dark auction room screen something to sit against. */
 .heroStage {
   display: grid;

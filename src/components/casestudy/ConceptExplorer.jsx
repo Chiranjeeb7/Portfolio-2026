@@ -16,7 +16,7 @@ const CONCEPT_SCREENSHOTS = {
   5: concept5,
 };
 
-// Tabbed concept browser for the Iterations section — one tab per concept,
+// Tabbed concept browser for the Iterations section - one tab per concept,
 // each swapping in its own screenshot slot + pros/cons with a quick crossfade
 // so flipping through five iterations feels like paging through a real
 // design-review deck rather than scrolling a wall of cards.

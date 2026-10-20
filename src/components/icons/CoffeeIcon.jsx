@@ -1,7 +1,7 @@
 import styles from "./CoffeeIcon.module.css";
 
 // Hand-authored to match the site's single-stroke icon grammar (see
-// SocialIcons.jsx) — a cup + saucer with three looping steam wisps animated
+// SocialIcons.jsx) - a cup + saucer with three looping steam wisps animated
 // via CSS (rise, curl, fade). Respects prefers-reduced-motion.
 export default function CoffeeIcon({ size = 28, animate = true, className = "" }) {
   return (

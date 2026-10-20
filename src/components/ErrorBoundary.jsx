@@ -2,10 +2,10 @@ import { Component } from "react";
 import { RotateCcw } from "lucide-react";
 import styles from "./ErrorBoundary.module.css";
 
-// Error boundaries must be class components — no hooks equivalent exists.
+// Error boundaries must be class components - no hooks equivalent exists.
 // Scoped around individual experimental/interactive sections (rather than
-// the whole app) so a crash in one — e.g. the canvas's pointer/gesture
-// math — degrades to a small inline fallback instead of taking the entire
+// the whole app) so a crash in one - e.g. the canvas's pointer/gesture
+// math - degrades to a small inline fallback instead of taking the entire
 // page to a blank screen that needs a hard reload.
 //
 // `silent` renders nothing on a crash (for purely decorative layers, like the

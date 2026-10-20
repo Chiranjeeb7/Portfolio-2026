@@ -1,7 +1,7 @@
 import { ImageIcon } from "lucide-react";
 import styles from "./ThumbnailPlaceholder.module.css";
 
-// Stands in for a real project thumbnail/screenshot until one is supplied —
+// Stands in for a real project thumbnail/screenshot until one is supplied -
 // deliberately marked as a placeholder rather than an illustration someone
 // could mistake for finished art.
 export default function ThumbnailPlaceholder() {

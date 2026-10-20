@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./CaseStudySideNav.module.css";
 
-// Sticky section nav with scrollspy — highlights whichever section is
+// Sticky section nav with scrollspy - highlights whichever section is
 // currently most visible, same pattern the V1 Framer case study used to
 // make a long page feel navigable rather than like one big scroll.
 export default function CaseStudySideNav({ items }) {
@@ -30,7 +30,7 @@ export default function CaseStudySideNav({ items }) {
   }, [items]);
 
   // Scrolls to the section directly (rather than an `href="#id"` anchor) so
-  // clicking a section link never touches window.location.hash — this page
+  // clicking a section link never touches window.location.hash - this page
   // is itself reached via a "#/planner" route hash, and changing it to a
   // plain "#context" would make useHashRoute think we'd navigated home.
   const scrollToSection = (e, id) => {

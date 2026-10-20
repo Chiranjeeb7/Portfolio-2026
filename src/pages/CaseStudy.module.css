@@ -548,7 +548,7 @@
   min-width: 0;
 }
 
-/* Fixed light "paper" surface regardless of page theme — same reasoning as
+/* Fixed light "paper" surface regardless of page theme - same reasoning as
    the Delhivery/BYJU'S logo backing chips: these read as physical cards
    sitting on the panel, not a themed UI surface. */
 .goalCard {

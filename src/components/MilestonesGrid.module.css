@@ -61,7 +61,7 @@
   min-width: 0;
 }
 
-/* Only the years are labelled, like the reference — no month row. */
+/* Only the years are labelled, like the reference - no month row. */
 .yearRow {
   position: relative;
   height: 15px;
@@ -156,7 +156,7 @@ button.cell:not(:disabled) {
     opacity 0.35s var(--ease-out-expo);
 }
 
-/* Hover/focus reads via colour and a ring, not size — scaling the cell also
+/* Hover/focus reads via colour and a ring, not size - scaling the cell also
    scaled its child tooltip (transforms compound down the DOM), which is what
    made the tooltip text look blurred. */
 button.cell:not(:disabled):hover,

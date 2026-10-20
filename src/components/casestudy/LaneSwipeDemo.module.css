@@ -27,8 +27,8 @@
   height: 100%;
 }
 
-/* Blanks the screenshot's own lane card (y 126–756) and redraws the
-   stacked card behind it (x 9–351, y 163–715). */
+/* Blanks the screenshot's own lane card (y 126-756) and redraws the
+   stacked card behind it (x 9-351, y 163-715). */
 .backdrop {
   position: absolute;
   left: 0;
@@ -47,7 +47,7 @@
   background: #3f3f5e;
 }
 
-/* One lane card: the screenshot cropped to x 16–344, y 126–756. */
+/* One lane card: the screenshot cropped to x 16-344, y 126-756. */
 .card {
   position: absolute;
   left: 4.444%;
@@ -64,7 +64,7 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  /* Cut to the card's real outline (8px corners, y 133–751) plus the
+  /* Cut to the card's real outline (8px corners, y 133-751) plus the
      bookmark poking above its top edge, so a card sliding over another
      never shows the page-coloured corners of its rectangular crop. The
      crop box keeps a fixed 328×630 shape, so the mask scales uniformly. */
@@ -89,7 +89,7 @@
   max-width: none;
 }
 
-/* The pager under the card (dots and "n / 12" pill, x 120–240, y 760–790),
+/* The pager under the card (dots and "n / 12" pill, x 120-240, y 760-790),
    cropped from each screen so the real one shows for the current lane. */
 .pager {
   position: absolute;

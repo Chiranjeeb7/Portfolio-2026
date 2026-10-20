@@ -2,10 +2,10 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { Package } from "lucide-react";
 import styles from "./PlannerDiagram.module.css";
 
-// Node-diagram explaining what the planner algorithm does — rebuilt against
+// Node-diagram explaining what the planner algorithm does - rebuilt against
 // the real DOM/colors of the V1 Framer illustration (colors/shapes pulled
 // directly from the live site's computed styles), with the zone headings
-// and criteria labels dropped and the frame cropped down to match — the
+// and criteria labels dropped and the frame cropped down to match - the
 // nodes/pill/loads tell the story on their own without the extra copy.
 const ORDER_NODES = [
   { id: 1, x: 12, y: 20, tint: "#f9f0ff", icon: "#390f85" },
@@ -20,7 +20,7 @@ const ORDER_NODES = [
 
 // The node labels are fixed-size, so below this width the layout would
 // collide. Instead of a sideways scroll on phones, the whole diagram is laid
-// out at this width and scaled down to fit — it stays whole and readable.
+// out at this width and scaled down to fit - it stays whole and readable.
 const DESIGN_W = 680;
 
 const PLANNER_IN = { x: 45, y: 50 };
