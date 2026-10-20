@@ -70,7 +70,7 @@ export default function Hero() {
               text="curious by default, and I build until it's *trusted*."
             />
             <motion.p className={styles.subhead} {...(motionOff ? {} : rise(0.85, ready))}>
-              Product Designer &amp; Builder
+              Product Designer &amp; Builder with about 6 years of experience
             </motion.p>
           </div>
 
