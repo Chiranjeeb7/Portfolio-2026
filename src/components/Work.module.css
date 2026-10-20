@@ -9,9 +9,9 @@
 .eyebrow {
   display: block;
   margin-bottom: 10px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.78rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--accent-strong);
 }
@@ -85,7 +85,9 @@
   opacity: 0;
   transition: opacity 0.5s var(--ease-out-expo);
 }
-.card:hover::after { opacity: 1; }
+@media (hover: hover) {
+  .card:hover::after { opacity: 1; }
+}
 
 /* Darkens a card as the next one covers it (opacity driven by scroll). */
 .dim {
@@ -171,9 +173,9 @@
 }
 
 .shippedAt span {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.64rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-faint);
 }
@@ -197,9 +199,9 @@
   padding-bottom: 18px;
   margin-bottom: 18px;
   border-bottom: 1px solid var(--line);
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.72rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-faint);
 }
@@ -214,7 +216,7 @@
 .cardTitle {
   font-size: clamp(1.35rem, 0.8vw + 1.05rem, 1.75rem);
   line-height: 1.15;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.015em;
 }
 
 .cardDescription {
@@ -243,15 +245,15 @@
   margin: 0;
   font-size: 1rem;
   line-height: 1.3;
-  letter-spacing: var(--tracking-mono-tight);
+  letter-spacing: var(--tracking-label-tight);
   color: var(--accent-strong);
   white-space: nowrap;
 }
 
 .statLabel {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.66rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-muted);
 }
@@ -263,9 +265,9 @@
   align-items: center;
   align-self: flex-start;
   gap: 14px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.85rem;
-  letter-spacing: var(--tracking-mono);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--ink);
 }
@@ -294,14 +296,24 @@
 }
 .linkIcon svg { transition: transform 0.5s var(--ease-out-expo); }
 
-.card:hover .linkIcon {
+/* Hover only where hover is real: on touch screens :hover sticks to the last
+   tapped card, leaving its button filled after coming back from the case
+   study. A tap gets the same fill for as long as the finger is down. */
+@media (hover: hover) {
+  .card:hover .linkIcon {
+    border-color: var(--accent-strong);
+    color: var(--accent-ink);
+  }
+  .card:hover .linkIcon::before { transform: scaleY(1); }
+  .card:hover .linkIcon svg { transform: rotate(45deg); }
+  .card:hover .link .roll > span:first-child { transform: translateY(-110%); }
+  .card:hover .link .roll > span + span { transform: none; }
+}
+.card:active .linkIcon {
   border-color: var(--accent-strong);
   color: var(--accent-ink);
 }
-.card:hover .linkIcon::before { transform: scaleY(1); }
-.card:hover .linkIcon svg { transform: rotate(45deg); }
-.card:hover .link .roll > span:first-child { transform: translateY(-110%); }
-.card:hover .link .roll > span + span { transform: none; }
+.card:active .linkIcon::before { transform: scaleY(1); }
 
 .link::after {
   content: "";

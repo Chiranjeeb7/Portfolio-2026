@@ -24,10 +24,10 @@
 }
 
 .title {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.92rem;
   font-weight: 400;
-  letter-spacing: var(--tracking-mono-tight);
+  letter-spacing: var(--tracking-label-tight);
   text-transform: uppercase;
 }
 
@@ -37,9 +37,9 @@
 }
 
 .subtitle {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.68rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-faint);
   white-space: nowrap;
@@ -71,9 +71,9 @@
 .yearTick {
   position: absolute;
   top: 0;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.68rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   color: var(--ink-faint);
   white-space: nowrap;
 }
@@ -107,7 +107,7 @@
   position: relative;
 }
 
-/* ---------- One colour, plus gold for the three milestones ----------
+/* ---------- One colour, plus teal for the three milestones ----------
    Quiet days are a pale wash of the accent rather than grey, so the whole
    block reads as one warm field that events punch through. Mixed from the
    tokens, so it follows light/dark automatically. */
@@ -132,8 +132,8 @@
 .eventStacked { background: var(--accent-strong); }
 
 .milestone {
-  background: var(--gold);
-  box-shadow: inset 0 0 0 1px var(--gold-strong);
+  background: var(--milestone);
+  box-shadow: inset 0 0 0 1px var(--milestone-strong);
 }
 
 /* Cells fill in day by day on load, like the year being logged. */
@@ -182,7 +182,7 @@ button.cell:not(:disabled):focus-visible {
   content: "";
   position: absolute;
   inset: -2px;
-  border: 1.5px solid var(--gold);
+  border: 1.5px solid var(--milestone);
   border-radius: 3px;
   pointer-events: none;
   opacity: 0;
@@ -245,8 +245,8 @@ button.cell:not(:disabled):focus-visible {
 
 .tooltipDate {
   display: block;
-  font-family: var(--font-mono);
-  letter-spacing: var(--tracking-mono-loose);
+  font-family: var(--font-display);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--accent-on-ink);
 }
@@ -260,18 +260,18 @@ button.cell:not(:disabled):focus-visible {
 .tooltipCta {
   padding-top: 6px;
   border-top: 1px solid color-mix(in srgb, var(--bg) 25%, transparent);
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.6rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--accent-on-ink);
 }
 button.cell.milestone { cursor: pointer; }
 
 .tooltipKind {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.6rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   opacity: 0.65;
 }
@@ -314,9 +314,9 @@ button.cell:focus-visible .tooltip {
   margin-top: 22px;
   padding-top: 16px;
   border-top: 1px solid var(--line);
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.68rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-muted);
 }

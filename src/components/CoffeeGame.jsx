@@ -208,7 +208,7 @@ export default function CoffeeGame() {
     for (const p of g.floats) {
       ctx.globalAlpha = Math.max(p.life / p.maxLife, 0);
       ctx.fillStyle = c.accentStrong;
-      ctx.font = "600 15px 'Departure Mono', monospace";
+      ctx.font = "600 15px 'Anek Latin', sans-serif";
       ctx.textAlign = "center";
       ctx.fillText(p.text, p.x, p.y);
     }

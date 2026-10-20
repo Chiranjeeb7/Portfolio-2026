@@ -34,9 +34,9 @@
   border-radius: var(--radius-sm);
   background: color-mix(in srgb, var(--bg-panel-raised) 70%, transparent);
   backdrop-filter: blur(3px);
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.64rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-faint);
   pointer-events: none;
@@ -71,7 +71,7 @@
   padding: 1px 6px;
   border: 1px solid color-mix(in srgb, var(--bg) 40%, transparent);
   border-radius: 4px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.78rem;
 }
 
@@ -94,9 +94,9 @@
   padding: 8px 14px;
   background: color-mix(in srgb, var(--bg-panel-raised) 92%, transparent);
   backdrop-filter: blur(3px);
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.78rem;
-  letter-spacing: var(--tracking-mono);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--ink-muted);
   cursor: pointer;
@@ -215,9 +215,9 @@
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
   padding: 4px 10px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.66rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-muted);
   white-space: nowrap;
@@ -269,10 +269,10 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.66rem;
   text-transform: uppercase;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   color: var(--ink-faint);
   margin-bottom: 12px;
 }
@@ -371,14 +371,14 @@
 
 .workRole {
   font-size: 0.88rem;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
   color: var(--ink);
 }
 
 .workDates {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.62rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-faint);
 }
@@ -395,9 +395,9 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.62rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--accent-strong);
 }
@@ -405,7 +405,7 @@
 .researchTitle {
   font-size: 0.82rem;
   line-height: 1.4;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
   color: var(--ink);
 }
 
@@ -425,7 +425,7 @@
   display: block;
   font-size: 1rem;
   font-weight: 500;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
   margin-bottom: 8px;
   color: var(--ink);
 }
@@ -530,9 +530,9 @@
   border-radius: var(--radius-sm);
   background: var(--accent-strong);
   color: var(--accent-ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.7rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   white-space: nowrap;
 }

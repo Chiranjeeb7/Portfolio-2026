@@ -1,3 +1,4 @@
+import { rich } from "../components/rich";
 import {
   ArrowUpDown,
   Banknote,
@@ -77,16 +78,18 @@ export default function PlannerCaseStudy() {
             <div className={styles.heroLeft}>
               <span className="tag">{hero.tag}</span>
               <h1 className={styles.title}>
-                {hero.titleLines.map((line) => (
+                {hero.titleLines.map((line, i) => (
                   <span key={line.text} className={line.accent ? styles.accentLine : styles.titleLine}>
                     {line.text}
+                    {/* Keeps the lines apart in the accessible name. */}
+                    {i < hero.titleLines.length - 1 && " "}
                   </span>
                 ))}
               </h1>
 
               <div className={styles.roleBlock}>
                 <span className={styles.eyebrow}>My role</span>
-                <p className={`measure ${styles.roleText}`}>{hero.role}</p>
+                <p className={`measure ${styles.roleText}`}>{rich(hero.role)}</p>
               </div>
             </div>
 
@@ -126,11 +129,11 @@ export default function PlannerCaseStudy() {
           <div className={styles.content}>
             {/* Context */}
             <section id="context" className={styles.section} data-reveal>
-              <span className={styles.eyebrowAccent}>{context.eyebrow}</span>
+              {context.eyebrow && <span className={styles.eyebrowAccent}>{context.eyebrow}</span>}
               <h2 className={styles.sectionTitle}>{context.heading}</h2>
               {context.paragraphs.map((p) => (
                 <p key={p} className={styles.paragraph}>
-                  {p}
+                  {rich(p)}
                 </p>
               ))}
 
@@ -149,7 +152,7 @@ export default function PlannerCaseStudy() {
                         </span>
                         <span className={`numeric ${styles.flowIndex}`}>{String(i + 1).padStart(2, "0")}</span>
                         <h3 className={styles.flowTitle}>{step.title}</h3>
-                        <p className={styles.flowText}>{step.text}</p>
+                        <p className={styles.flowText}>{rich(step.text)}</p>
                       </div>
                     );
                   })}
@@ -159,7 +162,7 @@ export default function PlannerCaseStudy() {
 
             {/* Story */}
             <section id="story" className={styles.section} data-reveal>
-              <span className={styles.eyebrowAccent}>{story.eyebrow}</span>
+              {story.eyebrow && <span className={styles.eyebrowAccent}>{story.eyebrow}</span>}
               <h2 className={styles.sectionTitle}>{story.heading}</h2>
 
               <ol className={styles.timeline}>
@@ -170,7 +173,7 @@ export default function PlannerCaseStudy() {
                     </span>
                     <div className={styles.timelineBody}>
                       <h3 className={styles.timelineTitle}>{beat.title}</h3>
-                      <p className={styles.timelineText}>{beat.text}</p>
+                      <p className={styles.timelineText}>{rich(beat.text)}</p>
                     </div>
                   </li>
                 ))}
@@ -179,9 +182,9 @@ export default function PlannerCaseStudy() {
 
             {/* Insights */}
             <section id="insights" className={styles.section} data-reveal>
-              <span className={styles.eyebrowAccent}>{insights.eyebrow}</span>
+              {insights.eyebrow && <span className={styles.eyebrowAccent}>{insights.eyebrow}</span>}
               <h2 className={styles.sectionTitle}>{insights.heading}</h2>
-              <p className={styles.paragraph}>{insights.method}</p>
+              <p className={styles.paragraph}>{rich(insights.method)}</p>
 
               <div className={styles.insightStatRow}>
                 {insights.stats.map((s) => {
@@ -205,7 +208,7 @@ export default function PlannerCaseStudy() {
                         <Icon size={17} strokeWidth={1.6} />
                       </span>
                       <h3 className={styles.insightPointTitle}>{p.title}</h3>
-                      <p className={styles.insightPointText}>{p.text}</p>
+                      <p className={styles.insightPointText}>{rich(p.text)}</p>
                     </div>
                   );
                 })}
@@ -221,14 +224,14 @@ export default function PlannerCaseStudy() {
                   <span className={styles.problemLabel}>{problem.business.title}:</span>
                   <p className={styles.problemText}>
                     <Sparkle size={13} strokeWidth={1.8} className={styles.problemIcon} />
-                    {problem.business.text}
+                    {rich(problem.business.text)}
                   </p>
                 </div>
                 <div className={styles.problemRow}>
                   <span className={styles.problemLabel}>{problem.user.title}:</span>
                   <p className={styles.problemText}>
                     <Sparkle size={13} strokeWidth={1.8} className={styles.problemIcon} />
-                    {problem.user.text}
+                    {rich(problem.user.text)}
                   </p>
                 </div>
               </div>
@@ -237,13 +240,13 @@ export default function PlannerCaseStudy() {
                 <div className={styles.corePanelText}>
                   <span className={styles.coreTag}>{problem.core.tag}</span>
                   <h3 className={styles.corePanelTitle}>{problem.core.title}</h3>
-                  <p className={styles.corePanelBody}>{problem.core.text}</p>
+                  <p className={styles.corePanelBody}>{rich(problem.core.text)}</p>
                 </div>
 
                 <div className={styles.goalCardsRow}>
                   <div className={styles.goalCard}>
                     <h4 className={styles.goalCardTitle}>
-                      {problem.businessGoals.title} <span aria-hidden="true">📝</span>
+                      {problem.businessGoals.title}
                     </h4>
                     <ul className={styles.goalList}>
                       {problem.businessGoals.items.map((g) => (
@@ -251,7 +254,7 @@ export default function PlannerCaseStudy() {
                           <Sparkle size={13} strokeWidth={1.8} className={styles.goalIcon} />
                           <div>
                             <strong>{g.title}</strong>
-                            <p>{g.text}</p>
+                            <p>{rich(g.text)}</p>
                           </div>
                         </li>
                       ))}
@@ -259,7 +262,7 @@ export default function PlannerCaseStudy() {
                   </div>
                   <div className={styles.goalCard}>
                     <h4 className={styles.goalCardTitle}>
-                      {problem.designGoals.title} <span aria-hidden="true">🎨</span>
+                      {problem.designGoals.title}
                     </h4>
                     <ul className={styles.goalList}>
                       {problem.designGoals.items.map((g) => (
@@ -267,7 +270,7 @@ export default function PlannerCaseStudy() {
                           <Sparkle size={13} strokeWidth={1.8} className={styles.goalIcon} />
                           <div>
                             <strong>{g.title}</strong>
-                            <p>{g.text}</p>
+                            <p>{rich(g.text)}</p>
                           </div>
                         </li>
                       ))}
@@ -279,22 +282,22 @@ export default function PlannerCaseStudy() {
 
             {/* Iterations */}
             <section id="iterations" className={styles.section} data-reveal>
-              <span className={styles.eyebrowAccent}>{iterations.eyebrow}</span>
+              {iterations.eyebrow && <span className={styles.eyebrowAccent}>{iterations.eyebrow}</span>}
               <h2 className={styles.sectionTitle}>{iterations.heading}</h2>
-              <p className={styles.paragraph}>Flip through each pass to see how the layout evolved.</p>
+              <p className={styles.paragraph}>Flip through to see how the layout evolved.</p>
 
               <ConceptExplorer concepts={iterations.concepts} />
 
               <div className={styles.whyChosen}>
                 <span className={styles.eyebrow}>Why concept 5 won</span>
-                <p className={styles.whyChosenText}>{iterations.intro}</p>
+                <p className={styles.whyChosenText}>{rich(iterations.intro)}</p>
               </div>
             </section>
 
             {/* Solution */}
             <section id="solution" className={styles.section} data-reveal>
               <h2 className={styles.sectionTitle}>Solution</h2>
-              <p className={styles.paragraph}>Four problems, and what we shipped to fix each one.</p>
+              <p className={styles.paragraph}>Four problems, four fixes.</p>
 
               {solutions.map((sol) => (
                 <div key={sol.title} className={styles.solutionBlock}>
@@ -330,11 +333,11 @@ export default function PlannerCaseStudy() {
 
                     <div className={styles.solutionRow}>
                       <h4 className={styles.miniLabel}>Problem</h4>
-                      <p className={styles.solutionText}>{sol.problem}</p>
+                      <p className={styles.solutionText}>{rich(sol.problem)}</p>
                     </div>
                     <div className={styles.solutionRow}>
                       <h4 className={styles.miniLabel}>Solution</h4>
-                      <p className={styles.solutionText}>{sol.solution}</p>
+                      <p className={styles.solutionText}>{rich(sol.solution)}</p>
                     </div>
                   </div>
                 </div>
@@ -357,7 +360,7 @@ export default function PlannerCaseStudy() {
                       <Icon size={20} strokeWidth={1.6} className={styles.impactIcon} />
                       <CountUp value={s.value} className={`numeric ${styles.impactValue}`} />
                       <h3 className={styles.impactTitle}>{s.title}</h3>
-                      <p className={styles.impactText}>{s.text}</p>
+                      <p className={styles.impactText}>{rich(s.text)}</p>
                     </div>
                   );
                 })}
@@ -372,7 +375,7 @@ export default function PlannerCaseStudy() {
                 {learnings.items.map((l) => (
                   <div key={l.title} className={styles.card}>
                     <h3 className={styles.cardTitle}>{l.title}</h3>
-                    <p className={styles.cardText}>{l.text}</p>
+                    <p className={styles.cardText}>{rich(l.text)}</p>
                   </div>
                 ))}
               </div>

@@ -23,9 +23,9 @@
   left: 50%;
   top: 50%;
   translate: -50% -50%;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.82rem;
-  letter-spacing: var(--tracking-mono-wide);
+  letter-spacing: var(--tracking-label-wide);
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--ink-muted);

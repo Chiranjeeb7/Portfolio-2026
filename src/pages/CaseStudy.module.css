@@ -33,9 +33,9 @@
 
 .eyebrow {
   display: block;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.78rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-faint);
   margin-bottom: 10px;
@@ -43,13 +43,12 @@
 
 .eyebrowAccent {
   display: block;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.78rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--accent-strong);
   margin-bottom: 10px;
-  font-style: italic;
 }
 
 .roleBlock {
@@ -79,7 +78,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  transition: background-color 0.15s;
+  transition: background-color 0.3s var(--ease-out-expo);
 }
 
 .statTile:last-child:nth-child(odd),
@@ -106,6 +105,10 @@
 }
 
 .statValue {
+  text-transform: none;
+  font-weight: 600;
+  font-stretch: 112%;
+  letter-spacing: -0.02em;
   font-size: 1.3rem;
   line-height: 1.2;
   color: var(--ink);
@@ -259,6 +262,10 @@
 }
 
 .insightStatValue {
+  text-transform: none;
+  font-weight: 600;
+  font-stretch: 112%;
+  letter-spacing: -0.02em;
   font-size: 1.3rem;
   color: var(--ink);
 }
@@ -281,7 +288,7 @@
 .insightPoint {
   background: var(--bg-panel-raised);
   padding: 18px;
-  transition: background-color 0.15s;
+  transition: background-color 0.3s var(--ease-out-expo);
 }
 
 .insightPoint:hover {
@@ -318,7 +325,7 @@
   min-width: 0;
   padding: 20px 22px;
   background: var(--bg-panel-raised);
-  transition: background-color 0.15s;
+  transition: background-color 0.3s var(--ease-out-expo);
 }
 
 .flowStep:not(:last-child) {
@@ -403,7 +410,7 @@
   background: var(--bg-panel-raised);
   color: var(--accent-strong);
   font-size: 0.7rem;
-  transition: border-color 0.15s, background-color 0.15s;
+  transition: border-color 0.3s var(--ease-out-expo), background-color 0.3s var(--ease-out-expo);
 }
 
 .timelineItem:hover .timelineIndex {
@@ -509,14 +516,13 @@
   padding: 5px 12px;
   background: color-mix(in srgb, var(--accent-ink) 16%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent-ink) 35%, transparent);
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.68rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
 }
 
 .corePanelTitle {
-  font-style: italic;
   font-size: 1.5rem;
   margin-bottom: 14px;
 }
@@ -526,6 +532,13 @@
   font-size: 0.95rem;
   line-height: 1.55;
   opacity: 0.92;
+}
+
+/* On the accent panel, a highlight keeps the panel's light text colour and
+   leans on weight alone; dark ink would lose contrast against the orange. */
+.corePanelBody :global(.hl) {
+  color: inherit;
+  font-weight: 700;
 }
 
 .goalCardsRow {
@@ -547,7 +560,7 @@
   border-radius: 6px;
   color: #32404f;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.5s var(--ease-out-expo), box-shadow 0.5s var(--ease-out-expo);
 }
 
 .corePanel:hover .goalCard {
@@ -654,9 +667,9 @@
 }
 
 .solutionPlaceholder span {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.72rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
 }
 
@@ -685,9 +698,9 @@
 }
 
 .miniLabel {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.72rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-faint);
   margin-bottom: 6px;
@@ -705,7 +718,7 @@
 .impactTile {
   background: var(--bg-panel-raised);
   padding: 24px;
-  transition: background-color 0.15s;
+  transition: background-color 0.3s var(--ease-out-expo);
 }
 
 .impactTile:hover {
@@ -727,6 +740,10 @@
 }
 
 .impactValue {
+  text-transform: none;
+  font-weight: 600;
+  font-stretch: 112%;
+  letter-spacing: -0.02em;
   display: block;
   font-size: 1.5rem;
   color: var(--accent-strong);
@@ -763,7 +780,7 @@
   padding: 18px 20px;
   background: var(--bg-panel-raised);
   font-size: 1rem;
-  transition: background-color 0.15s;
+  transition: background-color 0.3s var(--ease-out-expo);
 }
 
 .otherLink:hover {

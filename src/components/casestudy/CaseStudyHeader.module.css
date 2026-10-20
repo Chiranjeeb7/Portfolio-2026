@@ -21,12 +21,12 @@
   gap: 8px;
   flex-shrink: 0;
   padding: 8px 0;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.85rem;
-  letter-spacing: var(--tracking-mono);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--ink-muted);
-  transition: color 0.15s;
+  transition: color 0.3s var(--ease-out-expo);
 }
 
 .back svg { transition: transform 0.2s var(--ease-out-expo); }
@@ -38,9 +38,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.72rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-faint);
 }
@@ -59,7 +59,7 @@
   background: transparent;
   color: var(--ink-muted);
   cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
+  transition: color 0.3s var(--ease-out-expo), border-color 0.3s var(--ease-out-expo);
 }
 
 .themeToggle { overflow: hidden; }

@@ -132,7 +132,19 @@ export default function Nav() {
           aria-label={open ? "Close menu" : "Open menu"}
           onClick={() => setOpen((v) => !v)}
         >
-          {open ? <X size={22} /> : <Menu size={22} />}
+          {/* Same icon swap as the theme toggle, so the two read as a set. */}
+          <AnimatePresence mode="popLayout" initial={false}>
+            <motion.span
+              key={open ? "close" : "menu"}
+              className={styles.themeIcon}
+              initial={{ rotate: -90, scale: 0.4, opacity: 0 }}
+              animate={{ rotate: 0, scale: 1, opacity: 1 }}
+              exit={{ rotate: 90, scale: 0.4, opacity: 0 }}
+              transition={{ duration: 0.4, ease: EASE }}
+            >
+              {open ? <X size={22} /> : <Menu size={22} />}
+            </motion.span>
+          </AnimatePresence>
         </button>
       </div>
 

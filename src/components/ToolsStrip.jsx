@@ -30,15 +30,23 @@ export default function ToolsStrip() {
   const { scrollY } = useScroll();
   const velocity = useSpring(useVelocity(scrollY), { damping: 50, stiffness: 400 });
   const boost = useTransform(velocity, [-1500, 0, 1500], [-5, 0, 5], { clamp: false });
+  // Direction and hover speed each ease toward their target, like a belt
+  // with some weight: a reversal slows through zero instead of flipping in
+  // one frame, and hover coasts down to a crawl instead of braking dead.
   const direction = useRef(-1);
+  const dirTarget = useRef(-1);
   const pace = useRef(1);
+  const paceTarget = useRef(1);
   const x = useTransform(baseX, (v) => `${wrap(-100 / COPIES, 0, v)}%`);
 
   useAnimationFrame((_, delta) => {
     if (reduce) return;
     const b = boost.get();
-    if (b < 0) direction.current = 1;
-    else if (b > 0) direction.current = -1;
+    if (b < 0) dirTarget.current = 1;
+    else if (b > 0) dirTarget.current = -1;
+    const ease = (ms) => 1 - Math.exp(-delta / ms);
+    direction.current += (dirTarget.current - direction.current) * ease(120);
+    pace.current += (paceTarget.current - pace.current) * ease(160);
     let move = direction.current * BASE_SPEED * (delta / 1000);
     move += move * Math.abs(b);
     baseX.set(baseX.get() + move * pace.current);
@@ -61,8 +69,8 @@ export default function ToolsStrip() {
         ) : (
           <div
             className={styles.viewport}
-            onPointerEnter={() => (pace.current = 0.15)}
-            onPointerLeave={() => (pace.current = 1)}
+            onPointerEnter={() => (paceTarget.current = 0.15)}
+            onPointerLeave={() => (paceTarget.current = 1)}
           >
             <motion.div className={styles.track} style={{ x }}>
               {Array.from({ length: COPIES }, (_, i) => (

@@ -1,3 +1,4 @@
+import { rich } from "../components/rich";
 import { useEffect, useRef, useState } from "react";
 import {
   BookHeart,
@@ -46,7 +47,7 @@ import scanImg from "../assets/photos/map-practice-scan.webp";
 import learnStationImg from "../assets/photos/map-practice-learnstation.webp";
 import mapTypesImg from "../assets/photos/map-practice-map-types.webp";
 import youngerGradesImg from "../assets/photos/map-practice-younger-grades.webp";
-import elderGradesImg from "../assets/photos/map-practice-elder-grades.png";
+import elderGradesImg from "../assets/photos/map-practice-elder-grades.webp";
 import priorityCurveImg from "../assets/photos/map-practice-priority-curve.webp";
 import usabilityTestImg from "../assets/photos/map-practice-usability-test.webp";
 import questionScreenImg from "../assets/photos/map-practice-question-screen.webp";
@@ -102,7 +103,7 @@ function PointGrid({ points, className = "" }) {
               <Icon size={17} strokeWidth={1.6} />
             </span>
             <h3 className={styles.insightPointTitle}>{p.title}</h3>
-            <p className={styles.insightPointText}>{p.text}</p>
+            <p className={styles.insightPointText}>{rich(p.text)}</p>
           </div>
         );
       })}
@@ -149,7 +150,13 @@ function VideoEmbed({ video, caption }) {
 
   return (
     <figure className={local.figure}>
-      <div ref={frameRef} className={local.videoFrame} style={{ aspectRatio: video.ratio }}>
+      <div
+        ref={frameRef}
+        className={local.videoFrame}
+        // The video's own thumbnail stands in until the player loads, so the
+        // slot never sits as a blank black box.
+        style={{ aspectRatio: video.ratio, backgroundImage: `url(https://i.ytimg.com/vi/${video.id}/hqdefault.jpg)` }}
+      >
         {inView && (
           <iframe
             src={`https://www.youtube-nocookie.com/embed/${video.id}?${params}`}
@@ -181,11 +188,11 @@ function ProblemSolutionBlock({ block }) {
         <h3 className={styles.solutionTitle}>{block.title}</h3>
         <div className={styles.solutionRow}>
           <h4 className={styles.miniLabel}>Problem</h4>
-          <p className={styles.solutionText}>{block.problem}</p>
+          <p className={styles.solutionText}>{rich(block.problem)}</p>
         </div>
         <div className={styles.solutionRow}>
           <h4 className={styles.miniLabel}>Solution</h4>
-          <p className={styles.solutionText}>{block.solution}</p>
+          <p className={styles.solutionText}>{rich(block.solution)}</p>
         </div>
       </div>
     </div>
@@ -207,16 +214,18 @@ export default function MapPracticeCaseStudy() {
             <div className={styles.heroLeft}>
               <span className="tag">{hero.tag}</span>
               <h1 className={styles.title}>
-                {hero.titleLines.map((line) => (
+                {hero.titleLines.map((line, i) => (
                   <span key={line.text} className={line.accent ? styles.accentLine : styles.titleLine}>
                     {line.text}
+                    {/* Keeps the lines apart in the accessible name. */}
+                    {i < hero.titleLines.length - 1 && " "}
                   </span>
                 ))}
               </h1>
 
               <div className={styles.roleBlock}>
                 <span className={styles.eyebrow}>My role</span>
-                <p className={`measure ${styles.roleText}`}>{hero.role}</p>
+                <p className={`measure ${styles.roleText}`}>{rich(hero.role)}</p>
               </div>
             </div>
 
@@ -253,11 +262,11 @@ export default function MapPracticeCaseStudy() {
           <div className={styles.content}>
             {/* Context */}
             <section id="context" className={styles.section} data-reveal>
-              <span className={styles.eyebrowAccent}>{context.eyebrow}</span>
+              {context.eyebrow && <span className={styles.eyebrowAccent}>{context.eyebrow}</span>}
               <h2 className={styles.sectionTitle}>{context.heading}</h2>
               {context.paragraphs.map((p) => (
                 <p key={p} className={styles.paragraph}>
-                  {p}
+                  {rich(p)}
                 </p>
               ))}
 
@@ -283,7 +292,7 @@ export default function MapPracticeCaseStudy() {
                         </span>
                         <span className={`numeric ${styles.flowIndex}`}>{String(i + 1).padStart(2, "0")}</span>
                         <h3 className={styles.flowTitle}>{step.title}</h3>
-                        <p className={styles.flowText}>{step.text}</p>
+                        <p className={styles.flowText}>{rich(step.text)}</p>
                       </div>
                     );
                   })}
@@ -293,11 +302,11 @@ export default function MapPracticeCaseStudy() {
 
             {/* Why map practice matters */}
             <section id="stakes" className={styles.section} data-reveal>
-              <span className={styles.eyebrowAccent}>{stakes.eyebrow}</span>
+              {stakes.eyebrow && <span className={styles.eyebrowAccent}>{stakes.eyebrow}</span>}
               <h2 className={styles.sectionTitle}>{stakes.heading}</h2>
               {stakes.paragraphs.map((p) => (
                 <p key={p} className={styles.paragraph}>
-                  {p}
+                  {rich(p)}
                 </p>
               ))}
 
@@ -312,9 +321,9 @@ export default function MapPracticeCaseStudy() {
 
             {/* Research */}
             <section id="research" className={styles.section} data-reveal>
-              <span className={styles.eyebrowAccent}>{research.eyebrow}</span>
+              {research.eyebrow && <span className={styles.eyebrowAccent}>{research.eyebrow}</span>}
               <h2 className={styles.sectionTitle}>{research.heading}</h2>
-              <p className={styles.paragraph}>{research.method}</p>
+              <p className={styles.paragraph}>{rich(research.method)}</p>
 
               <div className={local.findingGrid}>
                 {research.findings.map((f) => (
@@ -331,7 +340,7 @@ export default function MapPracticeCaseStudy() {
 
             {/* Insights */}
             <section id="insights" className={styles.section} data-reveal>
-              <span className={styles.eyebrowAccent}>{insights.eyebrow}</span>
+              {insights.eyebrow && <span className={styles.eyebrowAccent}>{insights.eyebrow}</span>}
               <h2 className={styles.sectionTitle}>{insights.heading}</h2>
 
               <StatRow stats={insights.stats} />
@@ -352,7 +361,7 @@ export default function MapPracticeCaseStudy() {
                     />
                     <ol className={local.gradePoints}>
                       {g.points.map((pt) => (
-                        <li key={pt}>{pt}</li>
+                        <li key={pt}>{rich(pt)}</li>
                       ))}
                     </ol>
                   </div>
@@ -379,7 +388,7 @@ export default function MapPracticeCaseStudy() {
                     <span className={styles.problemLabel}>{row.title}:</span>
                     <p className={styles.problemText}>
                       <Sparkle size={13} strokeWidth={1.8} className={styles.problemIcon} />
-                      {row.text}
+                      {rich(row.text)}
                     </p>
                   </div>
                 ))}
@@ -389,14 +398,14 @@ export default function MapPracticeCaseStudy() {
                 <div className={styles.corePanelText}>
                   <span className={styles.coreTag}>{problem.core.tag}</span>
                   <h3 className={styles.corePanelTitle}>{problem.core.title}</h3>
-                  <p className={styles.corePanelBody}>{problem.core.text}</p>
+                  <p className={styles.corePanelBody}>{rich(problem.core.text)}</p>
                 </div>
 
                 <div className={styles.goalCardsRow}>
                   {problem.goalCards.map((card) => (
                     <div key={card.title} className={styles.goalCard}>
                       <h4 className={styles.goalCardTitle}>
-                        {card.title} <span aria-hidden="true">{card.emoji}</span>
+                        {card.title}
                       </h4>
                       <ul className={styles.goalList}>
                         {card.items.map((g) => (
@@ -404,7 +413,7 @@ export default function MapPracticeCaseStudy() {
                             <Sparkle size={13} strokeWidth={1.8} className={styles.goalIcon} />
                             <div>
                               <strong>{g.title}</strong>
-                              <p>{g.text}</p>
+                              <p>{rich(g.text)}</p>
                             </div>
                           </li>
                         ))}
@@ -417,11 +426,11 @@ export default function MapPracticeCaseStudy() {
 
             {/* Approach */}
             <section id="approach" className={styles.section} data-reveal>
-              <span className={styles.eyebrowAccent}>{approach.eyebrow}</span>
+              {approach.eyebrow && <span className={styles.eyebrowAccent}>{approach.eyebrow}</span>}
               <h2 className={styles.sectionTitle}>{approach.heading}</h2>
               {approach.paragraphs.map((p) => (
                 <p key={p} className={styles.paragraph}>
-                  {p}
+                  {rich(p)}
                 </p>
               ))}
 
@@ -430,18 +439,18 @@ export default function MapPracticeCaseStudy() {
 
             {/* Solution */}
             <section id="solution" className={styles.section} data-reveal>
-              <span className={styles.eyebrowAccent}>{solution.eyebrow}</span>
+              {solution.eyebrow && <span className={styles.eyebrowAccent}>{solution.eyebrow}</span>}
               <h2 className={styles.sectionTitle}>{solution.heading}</h2>
-              <p className={styles.paragraph}>{solution.intro}</p>
+              <p className={styles.paragraph}>{rich(solution.intro)}</p>
 
               <VideoEmbed video={solution.video} />
             </section>
 
             {/* Testing */}
             <section id="testing" className={styles.section} data-reveal>
-              <span className={styles.eyebrowAccent}>{testing.eyebrow}</span>
+              {testing.eyebrow && <span className={styles.eyebrowAccent}>{testing.eyebrow}</span>}
               <h2 className={styles.sectionTitle}>{testing.heading}</h2>
-              <p className={styles.paragraph}>{testing.method}</p>
+              <p className={styles.paragraph}>{rich(testing.method)}</p>
 
               <dl className={local.metaRow}>
                 {testing.meta.map((m) => (
@@ -471,7 +480,7 @@ export default function MapPracticeCaseStudy() {
                         />
                         <div>
                           <h3 className={local.testFindingTitle}>{f.title}</h3>
-                          <p className={local.testFindingText}>{f.text}</p>
+                          <p className={local.testFindingText}>{rich(f.text)}</p>
                         </div>
                       </li>
                     );
@@ -484,7 +493,7 @@ export default function MapPracticeCaseStudy() {
                 {testing.results.map((r) => (
                   <div key={r.title} className={styles.card}>
                     <h4 className={styles.cardTitle}>{r.title}</h4>
-                    <p className={styles.cardText}>{r.text}</p>
+                    <p className={styles.cardText}>{rich(r.text)}</p>
                   </div>
                 ))}
               </div>
@@ -508,7 +517,7 @@ export default function MapPracticeCaseStudy() {
                       <Icon size={20} strokeWidth={1.6} className={styles.impactIcon} />
                       <CountUp value={s.value} className={`numeric ${styles.impactValue}`} />
                       <h3 className={styles.impactTitle}>{s.title}</h3>
-                      <p className={styles.impactText}>{s.text}</p>
+                      <p className={styles.impactText}>{rich(s.text)}</p>
                     </div>
                   );
                 })}
@@ -523,7 +532,7 @@ export default function MapPracticeCaseStudy() {
                 {learnings.items.map((l) => (
                   <div key={l.title} className={styles.card}>
                     <h3 className={styles.cardTitle}>{l.title}</h3>
-                    <p className={styles.cardText}>{l.text}</p>
+                    <p className={styles.cardText}>{rich(l.text)}</p>
                   </div>
                 ))}
               </div>

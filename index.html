@@ -9,22 +9,34 @@
     <title>Chiranjeeb Deb: Product Designer & Design Engineer</title>
     <meta name="description" content="Chiranjeeb Deb, product designer & design engineer with 6 years shaping B2B SaaS, enterprise, ed-tech and logistics platforms." />
     <meta name="author" content="Chiranjeeb Deb" />
-    <meta name="theme-color" content="#fafcfd" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#12161b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fafcfd" />
+
+    <!-- Every load starts in light mode, even with the system set to dark,
+         so the intro loader never samples dark colours and then flips. The
+         nav toggle can switch to dark for the visit. See useTheme.js. -->
+    <script>
+      document.documentElement.setAttribute("data-theme", "light");
+    </script>
 
     <!-- Link previews (LinkedIn, Slack, iMessage, X) -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Chiranjeeb Deb" />
     <meta property="og:title" content="Chiranjeeb Deb: Product Designer & Design Engineer" />
     <meta property="og:description" content="I design products that turn complexity into confidence. Case studies from Delhivery and BYJU'S, with the numbers to show for it." />
-    <meta name="twitter:card" content="summary" />
+    <!-- Most link scrapers need an absolute URL here: once the site has its
+         domain, prefix it (e.g. https://example.com/og-image.jpg). -->
+    <meta property="og:image" content="/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Chiranjeeb Deb, product designer and design engineer" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="/og-image.jpg" />
     <meta name="twitter:title" content="Chiranjeeb Deb: Product Designer & Design Engineer" />
     <meta name="twitter:description" content="I design products that turn complexity into confidence. Case studies from Delhivery and BYJU'S, with the numbers to show for it." />
 
-    <link rel="preload" href="/fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wdth,wght@75..125,400..700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
 
 
 

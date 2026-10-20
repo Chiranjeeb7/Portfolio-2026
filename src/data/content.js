@@ -21,7 +21,7 @@ export const projects = [
     tag: "B2B SaaS · Logistics",
     title: "Getting planners to trust the algorithm",
     description:
-      "Redesigned a planner clients were quietly bypassing, turning a black-box output into one planners actually shipped.",
+      "Turned a black-box planner clients were bypassing into one planners **actually ship**.",
     stats: [
       { value: "19 min → <5 min", label: "daily planning time" },
     ],
@@ -30,12 +30,12 @@ export const projects = [
   {
     id: "transporter-mobile-app",
     company: "current", // Delhivery
-    tag: "B2B SaaS · Logistics",
-    title: "A transporter app, shipped in 30 days",
+    tag: "B2B SaaS · Logistics · Mobile",
+    title: "Making auctions work on mobile for transporters",
     description:
-      "Took load acceptance and auction bidding out of the back office and onto transporters' phones.",
+      "Turned a bidding form into a **live auction room**, moving bids off the web and WhatsApp.",
     stats: [
-      { value: "9-10% → 39%", label: "auction participation" },
+      { value: "6% → 50%", label: "of auction usage on the app" },
     ],
     href: "#/transporter",
   },
@@ -45,7 +45,7 @@ export const projects = [
     tag: "Ed-tech",
     title: "Learning maps for kids, the phygital way",
     description:
-      "A phygital (physical + digital) application for practicing maps, built for how young kids actually learn.",
+      "Map practice on **real paper and a screen**, built for how kids actually learn.",
     stats: [{ value: "90%", label: "of kids tested found it highly engaging" }],
     href: "#/map-practice",
   },
@@ -57,7 +57,7 @@ export const blogPosts = [
     id: "designing-for-kids",
     title: "Designing for Kids: Know your Target Audience",
     excerpt:
-      "Designing for kids means designing for parents and educators too, with insights on diverse needs.",
+      "Designing for kids means designing for parents and teachers too.",
     featuredIn: "Ed-Tech Talks",
     readTime: "5 min read",
     href: "https://medium.com/ed-tech-talks/designing-for-kids-know-your-target-audience-19fce8f24ee4",
@@ -66,7 +66,7 @@ export const blogPosts = [
     id: "designing-for-genz",
     title: "Designing for GenZ: The Impact of Short Attention Span",
     excerpt:
-      "How the short attention span of GenZ is shaping most of the digital products we use today.",
+      "How GenZ's short attention span is shaping the products we use.",
     featuredIn: "UX Collective",
     readTime: "4 min read",
     href: "https://medium.com/user-experience-design-1/designing-for-genz-the-impact-of-short-attention-span-5e1e5a5041c7",
@@ -75,7 +75,7 @@ export const blogPosts = [
     id: "sole-designer-startup",
     title: "How to Ace as the Sole Designer in a Startup? 5 Practical Tips",
     excerpt:
-      "Working as the sole designer in an organization can be a difficult mountain to climb, with practices that help.",
+      "Practices that help when you're the only designer in the room.",
     featuredIn: "Bootcamp",
     readTime: "6 min read",
     href: "https://medium.com/design-bootcamp/how-to-ace-as-the-sole-designer-in-a-startup-5-practical-tips-771b517036e3",
@@ -98,7 +98,7 @@ export const education = { degree: "M.Des", institute: "IIIT Jabalpur" };
 export const writingNote = "Also writes about design for UX Collective.";
 
 export const bio =
-  "Hi, I'm Chiranjeeb, a product designer who also ships code. I like problems where the interface has to hold up real operational complexity: fleets, planners, kids, and everything in between.";
+  "Hi, I'm Chiranjeeb, a product designer who also ships code. I like interfaces that hold up **real operational complexity**: fleets, planners, kids and more.";
 
 // Real dates from the V1 site's About page. `logo` keys "current"/"previous"
 // map to companies above (via CompanyLogo); "omnirio" has its own asset
@@ -123,11 +123,11 @@ export const research = [
 export const community = {
   heading: "Growing with the community",
   description:
-    "From Interaction Design Foundation (IDF) to UX India to Executive Pack Collective: talks, workshops, and conversations with fellow designers.",
+    "Talks and workshops at IDF, UX India and Executive Pack Collective.",
 };
 
 export const teaching = {
   heading: "Sharing knowledge across",
   description:
-    "Conducted workshops through GrowthSchool and within Delhivery, sharing practical design insights and real-world strategies with designers.",
+    "Workshops for designers at GrowthSchool and inside Delhivery.",
 };

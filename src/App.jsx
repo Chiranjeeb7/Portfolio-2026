@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import ToolsStrip from "./components/ToolsStrip";
@@ -12,10 +12,13 @@ import { scrollToTarget, setScrollLocked } from "./components/motion/scroll";
 import Preloader from "./components/intro/Preloader";
 import { clearSectionAnchor, IntroContext, shouldPlayIntro } from "./components/intro/introState";
 import ScrollProgress from "./components/motion/ScrollProgress";
-import PlannerCaseStudy from "./pages/PlannerCaseStudy";
-import MapPracticeCaseStudy from "./pages/MapPracticeCaseStudy";
-import TransporterCaseStudy from "./pages/TransporterCaseStudy";
-import MilestonePage from "./pages/MilestonePage";
+import {
+  MapPracticeCaseStudy,
+  MilestonePage,
+  PlannerCaseStudy,
+  preloadAllPages,
+  TransporterCaseStudy,
+} from "./routes";
 import { milestoneBySlug } from "./data/milestones";
 import { useHashRoute } from "./hooks/useHashRoute";
 import { useReveal } from "./hooks/useReveal";
@@ -40,7 +43,13 @@ function App() {
     return play;
   });
   const [introRunning, setIntroRunning] = useState(introPlayed);
-  const intro = useMemo(() => ({ ready: !introRunning, played: introPlayed }), [introRunning, introPlayed]);
+  // The hero copy may start rising as soon as the page begins fading in
+  // around the finished timeline, overlapping the loader's last beat.
+  const [introRevealing, setIntroRevealing] = useState(false);
+  const intro = useMemo(
+    () => ({ ready: !introRunning || introRevealing, played: introPlayed }),
+    [introRunning, introRevealing, introPlayed]
+  );
   useLayoutEffect(() => {
     // "played" (vs "done") tells CSS the loader placed the timeline cells,
     // so they skip their own pop-in entrance.
@@ -70,6 +79,16 @@ function App() {
 
   useReveal([route]);
 
+  // Once the homepage (and its intro) has settled, fetch the other pages in
+  // the background so opening one is instant.
+  useEffect(() => {
+    if (!isHome || introRunning) return;
+    const idle = window.requestIdleCallback ?? ((cb) => setTimeout(cb, 1500));
+    const cancel = window.cancelIdleCallback ?? clearTimeout;
+    const id = idle(preloadAllPages, { timeout: 4000 });
+    return () => cancel(id);
+  }, [isHome, introRunning]);
+
   const skipLink = (
     <a className="skip-link" href="#main" onClick={(e) => {
       e.preventDefault();
@@ -91,7 +110,9 @@ function App() {
     return (
       <>
         {chrome}
-        <MilestonePage key={milestone.slug} slug={milestone.slug} />
+        <Suspense fallback={null}>
+          <MilestonePage key={milestone.slug} slug={milestone.slug} />
+        </Suspense>
       </>
     );
   }
@@ -101,7 +122,9 @@ function App() {
     return (
       <>
         {chrome}
-        <Page />
+        <Suspense fallback={null}>
+          <Page />
+        </Suspense>
       </>
     );
   }
@@ -113,7 +136,7 @@ function App() {
         // A crash in the loader must never blank the site or leave scroll
         // locked: it just steps aside and the page shows as if it had ended.
         <ErrorBoundary silent onError={() => setIntroRunning(false)}>
-          <Preloader onDone={() => setIntroRunning(false)} />
+          <Preloader onDone={() => setIntroRunning(false)} onReveal={() => setIntroRevealing(true)} />
         </ErrorBoundary>
       )}
       {/* Case study and milestone headers carry their own progress bar. */}

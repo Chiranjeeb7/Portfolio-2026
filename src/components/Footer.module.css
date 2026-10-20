@@ -62,13 +62,13 @@
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
   background: transparent;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.7rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-muted);
   cursor: pointer;
-  transition: color 0.15s, border-color 0.15s, background-color 0.15s;
+  transition: color 0.3s var(--ease-out-expo), border-color 0.3s var(--ease-out-expo), background-color 0.3s var(--ease-out-expo);
 }
 
 .copyBtn:hover { color: var(--ink); border-color: var(--ink); }
@@ -100,11 +100,12 @@
   align-items: center;
   gap: 12px;
   text-decoration: none;
-  font-family: var(--font-mono);
-  font-weight: 400;
-  font-size: 0.92rem;
-  letter-spacing: var(--tracking-mono-tight);
-  text-transform: uppercase;
+  /* An email address and handles read (and get copied) as typed, so no
+     uppercase label treatment here. */
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: -0.005em;
   width: fit-content;
   max-width: 100%;
   min-height: 44px;
@@ -139,9 +140,9 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 10px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.74rem;
-  letter-spacing: var(--tracking-mono-wide);
+  letter-spacing: var(--tracking-label-wide);
   text-transform: uppercase;
   color: var(--ink-faint);
 }
@@ -157,7 +158,7 @@
   text-transform: inherit;
   color: inherit;
   cursor: pointer;
-  transition: color 0.15s;
+  transition: color 0.3s var(--ease-out-expo);
 }
 
 .toTop:hover { color: var(--ink); }
@@ -168,5 +169,5 @@
 
 @media (max-width: 480px) {
   .contactLink { font-size: 0.82rem; gap: 10px; }
-  .bottom { letter-spacing: var(--tracking-mono-loose); font-size: 0.68rem; }
+  .bottom { letter-spacing: var(--tracking-label-loose); font-size: 0.68rem; }
 }

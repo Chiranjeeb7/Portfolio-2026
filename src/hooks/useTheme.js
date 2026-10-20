@@ -1,63 +1,26 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
-const STORAGE_KEY = "theme-preference"; // "light" | "dark" | absent (follow system)
-
-function getSystemPrefersDark() {
-  return window.matchMedia("(prefers-color-scheme: dark)").matches;
-}
-
-function readStored() {
-  try {
-    const v = localStorage.getItem(STORAGE_KEY);
-    return v === "light" || v === "dark" ? v : null;
-  } catch {
-    return null;
-  }
-}
+const THEME_COLORS = { light: "#fafcfd", dark: "#12161b" };
 
 function applyTheme(theme) {
-  const root = document.documentElement;
-  if (theme) root.setAttribute("data-theme", theme);
-  else root.removeAttribute("data-theme");
+  document.documentElement.setAttribute("data-theme", theme);
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", THEME_COLORS[theme]);
 }
 
-// Three states: explicit "light", explicit "dark", or null (follow system).
-// The nav toggle only ever switches between the two explicit states.
+// Every page load starts in light mode, whatever the system preference, so
+// the intro loader always samples light colours. index.html sets
+// data-theme="light" before first paint. The nav toggle switches to dark for
+// the rest of the visit only; nothing is persisted.
 export function useTheme() {
-  const [theme, setThemeState] = useState(() => readStored());
-  const [isDark, setIsDark] = useState(() => {
-    const stored = readStored();
-    return stored ? stored === "dark" : getSystemPrefersDark();
-  });
+  // Read from the DOM, not a fixed false: Nav and CaseStudyHeader each hold
+  // their own copy, and one mounting after a mid-visit toggle must match.
+  const [isDark, setIsDark] = useState(() => document.documentElement.getAttribute("data-theme") === "dark");
 
-  useEffect(() => {
-    applyTheme(theme);
-  }, [theme]);
-
-  useEffect(() => {
-    if (theme) {
-      setIsDark(theme === "dark");
-      return;
-    }
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    setIsDark(mq.matches);
-    const onChange = (e) => setIsDark(e.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, [theme]);
-
-  // Applies to the DOM synchronously (not only via the effect above), so a
-  // view transition wrapped around the toggle captures the new theme.
+  // Applies to the DOM synchronously, so a view transition wrapped around
+  // the toggle captures the new theme.
   const toggle = useCallback(() => {
-    const current = document.documentElement.getAttribute("data-theme") ?? (getSystemPrefersDark() ? "dark" : "light");
-    const next = current === "dark" ? "light" : "dark";
+    const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
     applyTheme(next);
-    try {
-      localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      /* private mode / storage unavailable — theme just won't persist */
-    }
-    setThemeState(next);
     setIsDark(next === "dark");
   }, []);
 

@@ -34,9 +34,9 @@
 
 .figureCaption {
   margin-top: 10px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.72rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-faint);
 }
@@ -46,6 +46,8 @@
   width: 100%;
   max-width: 100%;
   background: #000;
+  background-size: cover;
+  background-position: center;
   border: 1px solid var(--line);
   overflow: hidden;
 }
@@ -93,6 +95,10 @@
 }
 
 .findingValue {
+  text-transform: none;
+  font-weight: 600;
+  font-stretch: 112%;
+  letter-spacing: -0.02em;
   font-size: 1.8rem;
   line-height: 1;
   color: var(--accent-strong);
@@ -131,9 +137,9 @@
 }
 
 .gradeRange {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.72rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: #5b6b7a;
 }

@@ -11,7 +11,6 @@ export default function MoreWork({ currentId }) {
 
   return (
     <section className={styles.section} aria-labelledby="more-work">
-      <span className={styles.eyebrow}>Keep exploring</span>
       <h2 id="more-work" className={styles.heading}>
         More work
       </h2>

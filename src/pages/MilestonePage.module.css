@@ -19,9 +19,9 @@
 .switcherLabel,
 .keysHint {
   flex-shrink: 0;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.68rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-faint);
 }
@@ -53,8 +53,8 @@
   width: 8px;
   height: 8px;
   border-radius: 2px;
-  background: var(--gold);
-  box-shadow: inset 0 0 0 1px var(--gold-strong);
+  background: var(--milestone);
+  box-shadow: inset 0 0 0 1px var(--milestone-strong);
   opacity: 0.45;
 }
 
@@ -72,9 +72,9 @@
 
 .kind {
   display: inline-block;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.78rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--accent-strong);
 }
@@ -83,7 +83,7 @@
   margin-top: 10px;
   font-size: clamp(2rem, 2.1vw + 1.2rem, 3.25rem);
   line-height: 1.06;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.025em;
 }
 
 .summary {
@@ -113,9 +113,9 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.66rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-faint);
 }
@@ -193,9 +193,9 @@
 }
 
 .caption {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.68rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-faint);
 }
@@ -219,9 +219,9 @@
   background-size: 18px 18px;
 }
 .photoEmpty span {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.72rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
 }
 .photoEmpty figcaption {
@@ -322,7 +322,7 @@
 .stepIndex {
   flex-shrink: 0;
   padding-top: 0.2em;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.72rem;
   color: var(--accent-strong);
 }
@@ -353,9 +353,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.7rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--accent-strong);
 }
@@ -366,7 +366,7 @@
 .pagerTitle {
   font-size: clamp(1.1rem, 0.6vw + 0.95rem, 1.35rem);
   font-weight: 600;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
 }
 
 .pagerDate {

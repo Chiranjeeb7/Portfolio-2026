@@ -24,7 +24,7 @@ export const hero = {
     { text: "How we got planners to", accent: false },
     { text: "trust the algorithm", accent: true },
   ],
-  role: "As the lead designer for the planning revamp, I bridged a decade of proprietary logistics data with a user-friendly SaaS interface, and rebuilt planners' trust in an algorithm they'd been quietly working around for a year.",
+  role: "I led the planner revamp: a simple SaaS interface on top of a decade of logistics data, and **planners' trust rebuilt** in an algorithm they'd worked around for a year.",
   stats: [
     {
       icon: "trust",
@@ -43,67 +43,65 @@ export const hero = {
 };
 
 export const context = {
-  eyebrow: "A bit of context…",
   heading: "About Delhivery TMS",
   paragraphs: [
-    "Delhivery is India's largest fully integrated logistics services provider. Since its inception in 2011, the company has built a massive nationwide network covering over 19,000 pin codes and successfully fulfilling over 4 billion shipments.",
-    "TransportOne is Delhivery's strategic entry into the SaaS arena. It is an Autonomous Transport Management System (TMS) designed to move enterprise shippers from manual data entry to automated execution.",
+    "Delhivery is India's largest fully integrated logistics provider: **19,000+ pin codes** and 4 billion+ shipments since 2011.",
+    "TransportOne is its SaaS bet: a Transport Management System (TMS) that moves enterprise shippers from **manual data entry to automated execution**.",
   ],
-  diagramHeading: "So, what is a planner?",
+  diagramHeading: "What is a planner?",
   flow: [
     {
       icon: "orders",
       title: "Intelligent order orchestration",
-      text: "Fragmented orders enter the TMS as raw data points: weight, volume, delivery windows.",
+      text: "Orders come in as raw data: weight, volume, delivery windows.",
     },
     {
       icon: "core",
       title: "The optimization core (our USP)",
-      text: 'A proprietary algorithm (built on 10 years of operational data) acts as the "brain." It instantly groups orders by customer split, weight/volume utilization, and route bundling.',
+      text: "An algorithm built on 10 years of data groups orders by customer, weight/volume use and route.",
     },
     {
       icon: "output",
       title: "An output planners had to decide whether to trust",
-      text: "The system replaced manual guesswork with ready-to-dispatch loads that maximized vehicle capacity and minimized cost, at least on paper. Whether planners actually shipped that output was a different question.",
+      text: "Ready-to-dispatch loads that fill trucks and cut cost, on paper. Whether planners shipped them was another question.",
     },
   ],
 };
 
 export const story = {
-  eyebrow: "But how did it all start?",
-  heading: "Story time",
+  heading: "How it started",
   beats: [
     {
       title: "The forgotten planner",
-      text: "The old team had built the planner about a year earlier and left it to gather dust, with no updates since.",
+      text: "Built a year earlier, then left untouched.",
     },
     {
       title: "A better algorithm, a few months back",
-      text: "Our data science team shipped a meaningfully sharper planning algorithm: better optimization under the hood, sitting behind the exact same old interface.",
+      text: "Data science shipped a sharper algorithm, behind the same old interface.",
     },
     {
       title: "Leadership wanted to see it end to end",
-      text: "With a stronger algorithm in hand, leadership asked for a full walkthrough, from a planner's first click to a confirmed load.",
+      text: "A full walkthrough, from first click to confirmed load.",
     },
     {
       title: "The review didn't go well",
-      text: "It surfaced real product and design problems: broken flows, confusing screens, steps that didn't match how planners actually worked.",
+      text: "Broken flows, confusing screens, steps that didn't match real work.",
     },
     {
       title: "No one had answers",
-      text: "Folks from the old team had left, and there was no one from design left to own it or be accountable.",
+      text: "The old team had left. No designer owned it.",
     },
     {
       title: "So what was the big problem?",
-      text: "Broken flows on the surface, but underneath, planners simply didn't trust the algorithm's output enough to act on it.",
+      text: "Underneath the broken flows, **planners didn't trust the output**.",
     },
     {
       title: "Leadership wanted trust, and savings to prove it",
-      text: "The brief was explicit: get planners to trust the algorithm's output, and show visible savings against planning loads by hand.",
+      text: "Get planners to trust the output, and show savings over planning by hand.",
     },
     {
       title: "That's where I stepped in",
-      text: "I moved onto the TMS team and led the project end to end, from design strategy through to shipped product.",
+      text: "I joined the TMS team and led it end to end.",
     },
   ],
 };
@@ -114,10 +112,9 @@ export const story = {
 // sentences, since the point here is what the research surfaced, not how
 // any one person phrased it.
 export const insights = {
-  eyebrow: "Straight from the research",
   heading: "What we found",
   method:
-    "I interviewed 4 planners and 3 plant heads across current customers, and pulled in our own customer support, sales, and business teams for the full picture.",
+    "I interviewed **4 planners and 3 plant heads**, plus our support, sales and business teams.",
   stats: [
     { icon: "gauge", value: "80%", label: "truck utilization plant heads wanted before cost improved" },
     { icon: "clock", value: "15-20 min", label: "to plan, update, and confirm a single load" },
@@ -133,36 +130,36 @@ export const insights = {
 };
 
 export const problem = {
-  eyebrow: "So the problem is clear now,",
+  eyebrow: "The problem",
   business: {
     title: "Business problem",
-    text: "Plant heads should be able to see lower freight costs. The tool's high complexity and training-heavy workflow prevented it from becoming a scalable, market-ready SaaS differentiator.",
+    text: "Plant heads couldn't see lower freight costs, and a **training-heavy tool** couldn't scale as SaaS.",
   },
   user: {
     title: "User problem",
-    text: 'Logistics planners faced extreme cognitive overload and a steep learning curve, caused by a fragmented, "black-box" interface that made complex algorithmic output difficult to trust or manage.',
+    text: "Planners faced a steep learning curve and a fragmented, **black-box interface** they couldn't trust.",
   },
   core: {
     tag: "Defined problem to solve",
     title: "The core problem",
-    text: "Our powerful, 10-year proprietary optimization algorithm was trapped behind an over-engineered interface, one that made the product too complex to scale as SaaS, and its output too opaque to trust.",
+    text: "A strong 10-year algorithm was trapped behind an interface too complex to scale and **too opaque to trust**.",
   },
   // Each problem statement above, broken into the concrete goals it implied —
   // same facts as business/user problem, restructured as a checklist.
   businessGoals: {
     title: "Business goals",
     items: [
-      { title: "Lower freight costs", text: "Plant heads should see cost come down, not just look efficient on paper." },
-      { title: "Cut the support & training load", text: "A training-heavy, high-complexity tool couldn't scale as self-serve SaaS." },
-      { title: "Stronger market position", text: "The planner was meant to be a best-in-class differentiator, not a liability." },
+      { title: "Lower freight costs", text: "Real savings, not just efficiency on paper." },
+      { title: "Cut the support & training load", text: "Self-serve, not two weeks of training." },
+      { title: "Stronger market position", text: "A differentiator, not a liability." },
     ],
   },
   designGoals: {
     title: "Design goals",
     items: [
-      { title: "Faster plan creation", text: "Get from raw orders to a usable plan in minutes, not 15-20." },
-      { title: "Persona-based tasks", text: "Planning and dispatch are two different jobs, and the tool should treat them that way." },
-      { title: "An interface planners could trust", text: "Replace the black-box feeling with output planners understand and believe." },
+      { title: "Faster plan creation", text: "Raw orders to a plan in minutes, not 15-20." },
+      { title: "Persona-based tasks", text: "Planning and dispatch are different jobs." },
+      { title: "An interface planners could trust", text: "Output planners understand and believe." },
     ],
   },
 };
@@ -170,38 +167,38 @@ export const problem = {
 export const iterations = {
   heading: "Iterations",
   eyebrow: "Five concepts before this shipped",
-  intro: "Every pass circled the same two open questions: where do a planner's actions actually live, and can this scale without turning into a second control tower? Concept 5 was the first to answer both, so it's what shipped.",
+  intro: "Every pass asked two things: where do a planner's actions live, and can it scale without becoming a second control tower? **Concept 5 answered both**, so it shipped.",
   concepts: [
     {
       number: 1,
       title: "Continuous plan + reporting layer",
       pros: [
-        "Plan auto-refreshed at set intervals, always surfacing the most recent run",
-        "Unassigned orders got an automatic LTL fallback instead of sitting idle",
+        "Plan auto-refreshed, always showing the latest run",
+        "Unassigned orders fell back to LTL automatically",
       ],
       cons: [
-        "Buried the actions a planner actually needed one layer behind the plan",
-        "The performance view suited plant managers more than the planners using it daily",
+        "Buried planners' actions a layer deep",
+        "The performance view suited plant managers, not planners",
       ],
       shipped: false,
     },
     {
       number: 2,
       title: "Loads up front, no analytics layer",
-      pros: ["Dropped the reporting layer entirely and put loads straight in front of planners"],
+      pros: ["Dropped reporting and put loads up front"],
       cons: [
-        "Failed orders sat in one tab, new ones in another, confusing to reconcile",
-        "Accepted and confirmed loads shared a tab, blurring what was actually approved",
+        "Failed and new orders sat in separate tabs",
+        "Accepted and confirmed loads shared a tab",
       ],
       shipped: false,
     },
     {
       number: 3,
       title: "Action center + performance graph",
-      pros: ["Gave planners explicit next-step guidance instead of a passive table"],
+      pros: ["Clear next steps instead of a passive table"],
       cons: [
-        "Duplicated the existing control tower: an action center for one module implied every module needed one",
-        "Orders placed inside the planner tab still weren't shown clearly enough",
+        "Duplicated the control tower: every module would need one",
+        "Orders in the planner tab still weren't clear",
       ],
       shipped: false,
     },
@@ -209,12 +206,12 @@ export const iterations = {
       number: 4,
       title: "Icon actions, loads and orders separated",
       pros: [
-        "Kept loads and orders in their own sections",
-        "Icon-based actions packed more into less horizontal space",
+        "Loads and orders in separate sections",
+        "Icon actions saved horizontal space",
       ],
       cons: [
-        "Risked growing into a full order-management system with its own status set",
-        "Still too many steps for a planner to get through per action",
+        "Risked becoming a full order-management system",
+        "Still too many steps per action",
       ],
       shipped: false,
     },
@@ -222,8 +219,8 @@ export const iterations = {
       number: 5,
       title: "Dedicated orders tab, no action center",
       pros: [
-        "Orders got their own tab from day one, so it scales without bolting on new sections later",
-        "Cut the redundant action center: the existing control tower plus pending-action indicators on each tab did that job already",
+        "Orders got their own tab, so it **scales without new sections**",
+        "Dropped the action center: the control tower and **pending-action badges** already did that job",
       ],
       cons: [],
       shipped: true,
@@ -233,68 +230,68 @@ export const iterations = {
 
 export const solutions = [
   {
-    number: "Problem 1",
+    number: "Solution 1",
     title: "A trustworthy quality signal",
-    problem: "Planners had no way to tell whether a given output from the algorithm was actually good.",
+    problem: "Planners couldn't tell if a plan was any good.",
     solution:
-      "Introduced freight cost as a percentage of order value (the lower the percentage, the better the plan), surfaced directly as green/yellow/red, so quality was legible at a glance instead of implied.",
+      "We show **freight cost as a % of order value**, coloured green, yellow or red. Lower is better, readable at a glance.",
     image: "plan",
   },
   {
-    number: "Problem 2",
+    number: "Solution 2",
     title: "Seeing the load in 3D",
     problem:
-      "Planners had no way to visualize how a truck was actually going to be loaded, or whether the suggested load packed it well by volume or weight.",
+      "Planners couldn't see how a truck would be packed, or how well.",
     solution:
-      "Introduced a 3D truck planner view where planners can see exactly how every box is packed before committing to a plan.",
+      "A **3D truck view** shows every box in place before planners commit.",
     image: "truck3d",
   },
   {
-    number: "Problem 3",
+    number: "Solution 3",
     title: "A clear path when boxes don't fit",
     problem:
-      "When a handful of boxes couldn't be planned, there was no reliable way to handle the failure or tell the planner what to do about it.",
+      "When boxes couldn't be planned, nothing told planners what to do.",
     solution:
-      "Built dedicated failure handling that flags exactly which boxes couldn't be planned and prescribes the next best action, instead of leaving planners to guess.",
+      "Failures now flag **exactly which boxes** didn't fit, with the next best action.",
     image: "summary",
   },
   {
-    number: "Problem 4",
+    number: "Solution 4",
     title: "Fewer steps to a confirmed load",
-    problem: "The old planner's flow had too many steps, making it too complex for new users to pick up.",
+    problem: "Too many steps for new users to pick up.",
     solution:
-      "Reduced and simplified the flow so that, in the ideal case, going from planning to indenting a load takes just two clicks.",
+      "Planning to indenting a load now takes **just two clicks**, in the ideal case.",
     image: "orderLoad",
   },
 ];
 
 export const impact = {
-  heading: "Time to flex our impact muscles",
+  heading: "Impact",
   stats: [
     {
       icon: "trust",
       value: "18% → 72%",
       title: "4x surge in trust",
-      text: "Auto-plan acceptance nearly quadrupled once the optimization logic became transparent instead of a black box.",
+      text: "Auto-plan acceptance nearly quadrupled once the logic stopped being a black box.",
     },
     {
       icon: "cost",
       value: "TBD",
       title: "Freight cost saved",
-      text: "The direct cost impact of planners actually shipping the algorithm's plan instead of re-planning by hand. Figure to be added.",
+      text: "Savings from shipping the algorithm's plan instead of re-planning by hand. Figure to be added.",
       placeholder: true,
     },
     {
       icon: "time",
       value: "74% faster",
       title: "Faster execution",
-      text: "Daily planning time dropped from 19 minutes to under 5, once the interface stopped fighting the algorithm.",
+      text: "Daily planning dropped from 19 minutes to under 5.",
     },
     {
       icon: "onboarding",
       value: "100% self-serve",
       title: "Zero-friction onboarding",
-      text: "Went from a tool that needed 2 weeks of training to one planners could pick up on their own.",
+      text: "From 2 weeks of training to picking it up alone.",
     },
   ],
 };
@@ -303,12 +300,20 @@ export const learnings = {
   heading: "What this project taught me",
   items: [
     {
-      title: "Talk before you build",
-      text: "Talk to your users before you build anything. This product wouldn't have been so flawed if the original team had run proper user interviews before building.",
+      title: "A better algorithm isn't a better product",
+      text: "A sharper algorithm changed nothing. Acceptance rose **from 18% to 72%** only once the interface showed why a plan was good.",
     },
     {
-      title: "Trust your gut (and act)",
-      text: "Take initiative when your instincts nudge you. While reviewing old files, a hunch that a small change could help users turned out right. Without acting on it, none of this impact would have happened.",
+      title: "Explain in the user's units, not the model's",
+      text: "Planners didn't need the logic. They needed **one number they already trusted**: freight cost as a share of order value.",
+    },
+    {
+      title: "Trust breaks at the edges",
+      text: "One plan that quietly drops boxes undoes every good one. **The failure path** is where planners decide to rely on the tool.",
+    },
+    {
+      title: "Interviews find what reviews miss",
+      text: "The review found broken flows. Interviews found the real problem: **a black box planners worked around in Excel**.",
     },
   ],
 };

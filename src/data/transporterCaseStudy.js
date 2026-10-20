@@ -1,17 +1,19 @@
 // Content for the Transporter auctions case study (V2). Unlike the V1 Framer
 // page (which covered building the whole transporter app in 30 days), this
 // one is about the follow-up redesign of the spot and long-term auction
-// experience. Problems and solutions come straight from the project brief;
-// the "before" screens are the V1 app as shown on the Framer page. Outcome
-// metrics for the redesign are pending — marked as placeholders, not
-// fabricated. Comparison slots with `src: null` render an "add screen"
-// placeholder until the matching screen is supplied.
+// experience on mobile. The "before" screens are the V1 app as shown on the
+// Framer page; the Kiro screenshot and hand-held phone mockup come from
+// there too. Remaining outcome metrics are pending and marked as
+// placeholders, not fabricated. Screen slots with `src: null` render an
+// "add screen" placeholder until the matching screen is supplied.
 
 export const nav = [
   { id: "context", label: "Context" },
+  { id: "research", label: "Research" },
   { id: "problem", label: "Problem" },
   { id: "goals", label: "Goals" },
   { id: "solution", label: "Solution" },
+  { id: "build", label: "How we built it" },
   { id: "impact", label: "Impact" },
   { id: "learnings", label: "Learnings" },
 ];
@@ -22,22 +24,12 @@ export const hero = {
     { text: "Making auctions on the app", accent: false },
     { text: "feel like an auction", accent: true },
   ],
-  role: "I led the redesign of the spot and long-term auction experience in TransportOne's transporter app, turning a generic bidding flow into a live auction room that pulls auctions off WhatsApp and phone calls and onto the app.",
+  role: "I led the redesign of spot and long-term auctions in TransportOne's transporter app, turning a generic flow into a **live auction room**. The PM and I vibe coded the UI refresh ourselves with Kiro.",
   stats: [
+    { icon: "adoption", value: "6% → 50%", label: "of auction usage on the app, vs web and WhatsApp" },
+    { icon: "typing", value: "Zero typing", label: "to place or revise a bid: tap + or −" },
     { icon: "scope", value: "Spot + long term", label: "both auction types redesigned end to end" },
-    { icon: "typing", value: "Zero typing", label: "to place or revise a bid: tap +/- or a preset chip" },
-    {
-      icon: "participation",
-      value: "TBD",
-      label: "auction participation on the app after the redesign",
-      placeholder: true,
-    },
-    {
-      icon: "offline",
-      value: "TBD",
-      label: "auctions moved from WhatsApp and calls onto the app",
-      placeholder: true,
-    },
+    { icon: "build", value: "2 people", label: "the PM and I built the UI refresh with Kiro" },
   ],
   screens: [
     { src: "newHome", alt: "Home with a live spot auction banner" },
@@ -48,174 +40,244 @@ export const hero = {
 };
 
 export const context = {
-  eyebrow: "A bit of context…",
   heading: "About TransportOne for transporters",
   paragraphs: [
-    "TransportOne is Delhivery's Transport Management System (TMS) for enterprise shippers. Transporters join the platform to work with those shippers: accepting loads, assigning trucks and bidding for new business.",
-    "We'd already shipped a transporter mobile app, and it was working: most load acceptance had moved onto it. Auctions were a different story: a lot of the bidding still happened offline, over WhatsApp and phone calls.",
+    "TransportOne is Delhivery's Transport Management System (TMS). Transporters use it to accept loads, assign trucks and **bid for new business**.",
+    "Our transporter app already handled most load acceptance. Auctions didn't: bidding stayed on the web, WhatsApp and calls, with **only 6% on the app**.",
   ],
-  diagramHeading: "So, how does an auction work?",
+  diagramHeading: "How an auction works",
   flow: [
     {
       icon: "gavel",
       title: "A shipper opens an auction",
-      text: "Spot auctions fill a load that needs a truck soon; long-term auctions lock in rates on a lane for longer. Each comes with a ceiling price.",
+      text: "Spot auctions fill a load soon; long-term ones lock in lane rates. Each has a ceiling price.",
     },
     {
       icon: "trend",
       title: "Transporters bid down, live",
-      text: "Bids go under the ceiling. Transporters see their rank and revise their bid before the timer runs out.",
+      text: "Bids drop in fixed steps: with a ₹500 decrement, ₹14,000 goes to ₹13,500, never ₹13,999.",
     },
     {
       icon: "trophy",
       title: "The winning bid is binding",
-      text: "Winning is a commitment to move the load at the quoted price: the right truck, on time, or penalties apply.",
+      text: "The winner moves the load at that price, on time, or pays penalties.",
+    },
+  ],
+};
+
+export const research = {
+  heading: "We listened first",
+  intro:
+    "We called transporters to learn **how they bid and why they left the app**. Customer support, who talk to them daily, filled in the rest.",
+  sources: [
+    {
+      icon: "phone",
+      title: "Calls with transporters",
+      text: "Before any screens, calls showed how they bid and what pushed them to WhatsApp.",
+    },
+    {
+      icon: "support",
+      title: "Customer support",
+      text: "They knew the recurring complaints, and helped move transporters onto the app at launch.",
     },
   ],
 };
 
 export const problem = {
-  eyebrow: "What was going wrong",
-  heading: "Auctions were leaking offline",
+  heading: "Auctions were leaking off the app",
   intro:
-    "The app handled auctions, but transporters kept falling back to WhatsApp and phone calls. Looking at how the old flow worked, and at who our transporters are, a few problems stood out.",
+    "Transporters kept falling back to the web, WhatsApp and calls. A few problems stood out.",
   points: [
     {
-      icon: "generic",
-      title: "It felt like any other app",
-      text: "Transporters aren't very tech-savvy and avoid juggling apps. A generic UI gave them no reason to stay instead of calling.",
+      icon: "eyeOff",
+      title: "Rank and bid were buried",
+      text: "What matters most was hidden under clutter.",
+    },
+    {
+      icon: "leave",
+      title: "Nothing brought them back",
+      text: "They check in and leave. Nothing pulled them back to a live auction.",
+    },
+    {
+      icon: "keyboard",
+      title: "Bidding meant typing",
+      text: "Typed amounts that broke the decrement got rejected.",
+    },
+    {
+      icon: "lanes",
+      title: "Many lanes, one small screen",
+      text: "Bidding lane by lane on a phone was slow.",
     },
     {
       icon: "gamepad",
       title: "It didn't feel like an auction",
-      text: "Many of them play online games like poker, so they know what live competition feels like. The old flow felt like a form.",
+      text: "They play games like poker. The old flow felt like a form.",
     },
     {
-      icon: "eyeOff",
-      title: "Rank and bid were buried",
-      text: "The two things that matter in an auction weren't highlighted, while less important details sat upfront and cluttered the screen.",
+      icon: "generic",
+      title: "It felt like any other app",
+      text: "A generic UI gave them no reason not to just call.",
     },
   ],
 };
 
 export const goals = {
-  eyebrow: "So the problem is clear now,",
+  eyebrow: "The problem",
   business: {
     title: "Business problem",
-    text: "Too many auctions happened offline, over WhatsApp and phone calls. We needed adoption of the app to grow, and more auctions to actually run on it.",
+    text: "Too much bidding happened off the app. We needed **more auctions on the app**.",
   },
   user: {
     title: "User problem",
-    text: "For transporters who aren't very tech-savvy, the old auction flow felt generic, hid their rank and bid behind clutter, and never created the urgency of a live auction.",
+    text: "The old flow **hid rank and bid**, made them type exact amounts, and never pulled them back.",
   },
   core: {
     tag: "Defined problem to solve",
     title: "The core problem",
-    text: "Bidding on the app took more effort and felt less alive than picking up the phone, so transporters picked up the phone.",
+    text: "Bidding on the app took more effort and felt less alive than a call, so **transporters picked up the phone**.",
   },
   businessGoals: {
     title: "Business goals",
-    emoji: "📈",
     items: [
-      { title: "Bring offline auctions onto the app", text: "Move bidding that happens over WhatsApp and calls into the product." },
-      { title: "More auctions on the app", text: "Grow participation in spot and long-term auctions." },
-      { title: "Drive app adoption", text: "Give transporters a reason to open the app, not their phone dialer." },
+      { title: "Move bidding onto the app", text: "Away from web, WhatsApp and calls." },
+      { title: "More auctions on the app", text: "In both spot and long-term." },
+      { title: "Keep transporters coming back", text: "While an auction is still live." },
     ],
   },
   designGoals: {
     title: "Design goals",
-    emoji: "🎨",
     items: [
-      { title: "Make it feel like an auction", text: "Urgency and competition, through visual design and copy." },
-      { title: "Put rank and bid first", text: "Surface what matters; move the rest out of the way." },
-      { title: "Built for thumbs, not keyboards", text: "Fewer clicks and no typing to place or revise a bid." },
+      { title: "Put rank and bid first", text: "Every screen built around them." },
+      { title: "Built for thumbs, not keyboards", text: "No typing, no invalid amounts." },
+      { title: "Scale to many lanes", text: "Many lanes as quick as one." },
     ],
   },
 };
 
 // `before` / `after` screens per solution. `src` keys map to imported images
 // in the page; `null` renders a placeholder slot for a screen still to come.
+// An empty `before` means the feature is new, so it shows as "Redesign" only.
 export const solutions = [
   {
     number: "Solution 1",
-    title: "An auction room, not a form",
+    title: "Information hierarchy, rebuilt around the auction",
     problem:
-      "The old auction screen looked like every other page in the app: light, generic, and quiet. Nothing about it said a live auction was happening.",
+      "Every detail had the same weight, so rank and bid got lost.",
     solution:
-      "Entering an auction now takes transporters into a dedicated auction room with a dark-mode treatment. A big rank badge, a live countdown and copy like \"You're falling behind!\" create the urgency to place or revise a bid.",
+      "The list splits into live, upcoming, won and lost, each with a timer. The auction room leads with a **big rank badge, a countdown and the bid**; the rest moves behind more actions.",
     before: [{ src: "oldAuctionDetail", label: "Old auction details" }],
     after: [
-      { src: "newAcceptTerms", label: "Accept terms to enter" },
+      { src: "newSpotList", label: "Auction list" },
       { src: "newAuctionRoom", label: "Live auction room" },
     ],
   },
   {
     number: "Solution 2",
-    title: "Always one tap back into the room",
+    title: "Bringing transporters back to the app",
     problem:
-      "If a transporter tapped back or left the app mid-auction, there was no easy way back. The auction was out of sight, and out of mind.",
+      "Transporters check in and leave, and the auction moves on without them.",
     solution:
-      "Designed notifications and a live-auction banner on the home page that shows their current rank and nudges them to revise, plus clearer live and upcoming tabs with \"ends in\" timers on the auction list.",
+      "A **live-auction banner** on home shows their rank and nudges them to revise. Snackbars, push and WhatsApp bring them back while it's still running.",
     before: [{ src: "oldHome", label: "Old home" }],
-    after: [
-      { src: "newHome", label: "Home with live auction banner" },
-      { src: "newSpotList", label: "Auction list" },
-    ],
+    after: [{ src: "newHome", label: "Home with live auction banner" }],
   },
   {
     number: "Solution 3",
-    title: "Fewer clicks to a bid",
+    title: "A bid you tap, not type",
     problem:
-      "Placing a bid meant working through fields that most bids didn't need, and starting the amount from scratch every time.",
+      "Bids were typed into a form, and amounts off the fixed step got rejected.",
     solution:
-      "Moved secondary inputs like remarks into additional actions, and prefilled the bid with the ceiling price, so a transporter can start bidding immediately instead of filling out a form.",
-    before: [{ src: null, label: "Old place bid" }],
-    after: [{ src: null, label: "New place bid" }],
+      "Tap − or + to move one step, or a chip to jump several. **Every amount is a valid bid**, and nothing needs the keyboard.",
+    before: [{ src: "oldBidForm", label: "Old bid form" }],
+    after: [
+      { src: "newAuctionRoom", label: "Bid card in the auction room" },
+      { src: "newBidCard", label: "Close-up: tap − or +, or a preset chip", crop: true },
+    ],
   },
   {
     number: "Solution 4",
-    title: "A bid card built for mobile",
+    title: "A head start on the first bid",
     problem:
-      "Bidding meant tapping into a field and typing an amount on the keyboard: slow and error-prone on a phone, especially mid-auction.",
+      "Every first bid started blank, so transporters had to work out an opening rate.",
     solution:
-      "Redesigned the place/revise bid card around mobile interactions: tap + or - to step the amount, or use predefined chips to drop it by a set value. No keyboard needed.",
-    before: [{ src: null, label: "Old place/revise bid" }],
-    after: [{ src: "newBidCard", label: "New revise bid card", crop: true }],
+      "The first bid is **preloaded** from the lane's past rates or the ceiling price. Adjust with a tap or two.",
+    before: [{ src: "oldBidForm", label: "Old place bid" }],
+    after: [{ src: "newPreloadedBid", label: "First bid preloaded, ready to submit" }],
+  },
+  {
+    number: "Solution 5",
+    title: "Pre-bids and bookmarks for multi-lane auctions",
+    problem:
+      "When bidding opened, transporters raced to find their lanes and bid on each.",
+    solution:
+      "**Pre-bids** put them in the race before it opens, and bookmarks take them straight to their lanes.",
+    before: [],
+    after: [
+      { src: "newLongTermList", label: "Bookmark from the auction list" },
+      { src: "newEarlyBid", label: "Pre-bid before the auction" },
+      { src: "newLaneBookmarked", label: "Bookmarked lane in the auction" },
+    ],
+  },
+  {
+    number: "Solution 6",
+    title: "Swipe between lanes",
+    problem:
+      "Changing lanes meant going back to the list, every time, mid-auction.",
+    solution:
+      "**Swipe left or right** to change lanes, like flipping through cards.",
+    before: [],
+    // Not a still: an animated demo of the swipe, built from the auction room screen.
+    after: [{ demo: "laneSwipe", label: "Swipe left or right to change lanes" }],
   },
 ];
 
+export const build = {
+  heading: "Vibe coded by the PM and me",
+  paragraphs: [
+    "The APIs already existed. Only the experience was missing, so **the PM and I built the UI refresh ourselves** instead of queueing it for engineering.",
+    "We vibe coded it with Kiro, from my designs to the auction room and bid card.",
+  ],
+  image: { src: "kiroBuild", alt: "The app running on a phone next to a Kiro session editing the React Native screens" },
+  caption: "The app on a phone, and the Kiro session building it.",
+};
+
 export const impact = {
-  heading: "Time to flex our impact muscles",
+  heading: "Impact",
+  intro:
+    "With customer support backing the rollout, the app's share of auction usage grew **from 6% to 50%**.",
+  // Share of auction usage on the app, before and after. The rest is web and
+  // WhatsApp combined, since those are the only other channels measured.
+  adoption: { before: 6, after: 50 },
   stats: [
+    {
+      icon: "adoption",
+      value: "6% → 50%",
+      title: "Auctions on the mobile app",
+      text: "The app's share of auction usage, against web and WhatsApp.",
+    },
     {
       icon: "participation",
       value: "TBD",
       title: "Auction participation",
-      text: "Share of auctions transporters bid on through the app, before vs after the redesign. Figure to be added.",
-      placeholder: true,
-    },
-    {
-      icon: "offline",
-      value: "TBD",
-      title: "Offline auctions moved to the app",
-      text: "Bidding that used to happen over WhatsApp and phone calls, now on the app. Figure to be added.",
+      text: "Auctions transporters bid on through the app, before vs after. Figure to be added.",
       placeholder: true,
     },
     {
       icon: "typing",
       value: "TBD",
       title: "Faster bids",
-      text: "Taps or time to place and revise a bid with the new bid card. Figure to be added.",
+      text: "Taps or time to place and revise a bid. Figure to be added.",
       placeholder: true,
     },
     {
       icon: "revise",
       value: "TBD",
       title: "Bid revisions",
-      text: "How often transporters revise a bid once the room tells them they're falling behind. Figure to be added.",
+      text: "How often they revise once told they're falling behind. Figure to be added.",
       placeholder: true,
     },
   ],
+  showcase: { src: "newHome", alt: "The new home screen, with the live auction banner, on a phone held in hand" },
 };
 
 export const learnings = {
@@ -223,11 +285,19 @@ export const learnings = {
   items: [
     {
       title: "Borrow from what users already love",
-      text: "Our transporters play online games like poker. Designing the auction room around that familiar sense of a live contest mattered more than any new feature.",
+      text: "Transporters play games like poker. **That feeling of a live contest** mattered more than any new feature.",
     },
     {
       title: "On mobile, typing is friction",
-      text: "Replacing a keyboard field with +/- and preset chips is a small change on paper, but it's what makes bidding feel quick in the middle of someone's day.",
+      text: "Swapping a keyboard for + and − **removed invalid bids entirely** and made bidding quick.",
+    },
+    {
+      title: "Getting users back is part of the design",
+      text: "People don't live in a B2B app. **The nudges did as much for adoption** as the screens.",
+    },
+    {
+      title: "Designers can ship the UI",
+      text: "With APIs in place, the PM and I took a UI refresh **to production without engineering**.",
     },
   ],
 };

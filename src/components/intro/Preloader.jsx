@@ -41,22 +41,27 @@ const TRANSPARENT = new Set(["transparent", "rgba(0, 0, 0, 0)"]);
 
 // Computed colours come back as "rgb(r, g, b)" (0-255), or, for anything
 // defined with color-mix(), as "color(srgb r g b)" with 0-1 channels.
+// Channels can also come back in exponent form ("1e-05"), so match that too.
 function parseRgb(css) {
-  const m = css.match(/[\d.]+/g);
+  const m = css.match(/-?[\d.]+(?:e-?\d+)?/gi);
   if (!m) return [255, 255, 255];
   const channels = m.slice(0, 3).map(Number);
   return css.trim().startsWith("color(") ? channels.map((v) => v * 255) : channels;
 }
 const mix = (a, b, t) => `rgb(${Math.round(lerp(a[0], b[0], t))}, ${Math.round(lerp(a[1], b[1], t))}, ${Math.round(lerp(a[2], b[2], t))})`;
 
-export default function Preloader({ onDone }) {
+// onReveal fires once, as the page starts fading in around the timeline, so
+// the hero copy can rise during the fade instead of after it.
+export default function Preloader({ onDone, onReveal }) {
   const rootRef = useRef(null);
   const canvasRef = useRef(null);
   const nameRef = useRef(null);
   const doneRef = useRef(onDone);
+  const revealRef = useRef(onReveal);
   useEffect(() => {
     doneRef.current = onDone;
-  }, [onDone]);
+    revealRef.current = onReveal;
+  }, [onDone, onReveal]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -176,13 +181,20 @@ export default function Preloader({ onDone }) {
     let fontsReady = !document.fonts;
     document.fonts?.ready.then(() => (fontsReady = true));
 
+    // A real resize (rotation, window drag) skips, since every target cell
+    // moves. Height-only changes don't: a phone's address bar showing or
+    // hiding fires resize too, and would cut the intro short.
+    const onResize = () => {
+      if (Math.abs(window.innerWidth - W) > 1) finish();
+    };
     window.addEventListener("pointerdown", finish);
     window.addEventListener("keydown", finish);
-    window.addEventListener("resize", finish);
+    window.addEventListener("resize", onResize);
 
     const t0 = performance.now();
     let mergeStart = 0;
     let lastMeasure = 0;
+    let revealed = false;
     let raf = 0;
 
     const drawTile = (x, y, size, rot, color, alpha) => {
@@ -223,6 +235,10 @@ export default function Preloader({ onDone }) {
 
       ctx.clearRect(0, 0, W, H);
       if (reveal > 0) {
+        if (!revealed) {
+          revealed = true;
+          revealRef.current?.();
+        }
         // The overlay's own backdrop hands over to one the canvas can fade.
         rootRef.current.style.background = "transparent";
         ctx.globalAlpha = 1 - easeInOutSine(reveal);
@@ -288,7 +304,7 @@ export default function Preloader({ onDone }) {
       window.removeEventListener("load", onLoad);
       window.removeEventListener("pointerdown", finish);
       window.removeEventListener("keydown", finish);
-      window.removeEventListener("resize", finish);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 

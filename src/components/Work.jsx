@@ -1,5 +1,6 @@
+import { rich } from "./rich";
 import { useLayoutEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useInView, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import { projects } from "../data/content";
 import { useMediaQuery } from "../hooks/useMediaQuery";
@@ -24,12 +25,18 @@ const NAV_H = 72;
 const STACK_TOP = NAV_H + 24;
 const STACK_STEP = 30;
 
-function ProjectCard({ project: p, index, total, progress, stacked, reduce }) {
+function ProjectCard({ project: p, index, total, progress, stacked, reduce, touch }) {
   const external = !p.href.startsWith("#");
   const stack = SCREEN_STACKS[p.id];
   const isCover = !stack && COVER_THUMBNAILS.has(p.id);
   const [hovered, setHovered] = useState(false);
   const last = index === total - 1;
+
+  // Touch screens can't hover, so there the screens shuffle while the
+  // card's art is well in view instead, and stop once it scrolls away.
+  const artRef = useRef(null);
+  const artInView = useInView(artRef, { amount: 0.6 });
+  const active = touch ? artInView : hovered;
 
   // While pinned, each earlier card sinks back (smaller, dimmer) as the
   // cards after it slide up over it: depth that says "you've read this one".
@@ -71,14 +78,15 @@ function ProjectCard({ project: p, index, total, progress, stacked, reduce }) {
         onPointerLeave={() => setHovered(false)}
       >
         <motion.div
+          ref={artRef}
           className={`${styles.art} ${isCover ? styles.artFlat : ""} ${stack ? styles.artStack : ""} ${ART_BACKGROUNDS[p.id] ?? ""}`}
           {...artReveal}
         >
           {stack ? (
             stack.phones ? (
-              <PhoneCarousel {...stack} hovered={hovered} eager={index === 0} />
+              <PhoneCarousel {...stack} hovered={active} eager={index === 0} />
             ) : (
-              <ScreenStack {...stack} hovered={hovered} eager={index === 0} />
+              <ScreenStack {...stack} hovered={active} eager={index === 0} />
             )
           ) : THUMBNAILS[p.id] ? (
             <motion.img
@@ -104,7 +112,7 @@ function ProjectCard({ project: p, index, total, progress, stacked, reduce }) {
           </div>
 
           <h3 className={styles.cardTitle}>{p.title}</h3>
-          <p className={styles.cardDescription}>{p.description}</p>
+          <p className={styles.cardDescription}>{rich(p.description)}</p>
 
           <dl className={styles.stats}>
             {p.stats.map((s) => (
@@ -147,6 +155,7 @@ export default function Work() {
   const reduce = useReducedMotion();
   const canStack = useMediaQuery(STACK_QUERY);
   const stacked = canStack && !reduce;
+  const touch = useMediaQuery("(hover: none)");
 
   // Progress runs from the first card pinning (list top at the stack line) to
   // the last card pinning (list bottom one card-height below its own pin
@@ -189,6 +198,7 @@ export default function Work() {
               progress={scrollYProgress}
               stacked={stacked}
               reduce={reduce}
+              touch={touch}
             />
           ))}
         </div>

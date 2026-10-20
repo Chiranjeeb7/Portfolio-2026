@@ -76,41 +76,40 @@ button is an outlined ghost in slate). `.btn-primary` is solid `--ink` with
 `--bg-panel-raised`-colored text (inverts automatically between light/dark
 mode since `--ink` flips), hovering to `--accent-strong` — the one moment
 accent color touches an interactive surface. `.btn-secondary` is transparent
-with a `--line-strong` border. Both sharp-cornered, Departure Mono uppercase.
+with a `--line-strong` border. Both sharp-cornered, Anek Latin uppercase.
 
 ## Type
 
-- **Inter** (weights 400/500) carries every heading and body copy. Weight
-  500 for h1–h4 and inline emphasis (som never goes above 500); tracking is
-  `-0.04em` uniformly — som's own ratio across every size they use (36px,
-  24px, 16px all resolve to the same -0.04em).
-- **Departure Mono** (self-hosted, SIL OFL license — see
-  `public/fonts/DepartureMono-LICENSE.txt`, by Helena Zhang /
-  departuremono.com) carries every label, control, and piece of meta/data
-  text: nav links, buttons, tags, stat values *and* labels, role-chip text,
-  footer social links, all captions/hints. Always uppercase, weight 400 (the
-  family ships one weight only). Tracking scales inversely with size:
-  - `--tracking-mono-tight` (`-0.02em`) — ~16px mono (wordmark)
-  - `--tracking-mono` (`normal`) — ~14–15px mono (nav links, buttons)
-  - `--tracking-mono-loose` (`0.04em`) — ~11–13px mono (tags, labels, hints)
-  - `--tracking-mono-wide` (`0.09em`) — the footer fine-print line only
+Two families (2026-10: Departure Mono dropped after feedback that the pixel
+mono wasn't landing; headings moved off Manrope at the same time):
+
+- **Anek Latin** (Google Fonts, variable `wdth` 75–125, `wght` 400–700;
+  Bricolage Grotesque was tried first), token `--font-display`. Carries
+  h1–h4 (weight 600, `-0.01em`) and every label, control and piece of
+  meta/data text: nav links, buttons, tags, eyebrows, captions/hints, stat
+  values. Labels are uppercase. Anek is already narrow, so heading tracking
+  sits about 0.02em looser than the Manrope-era values (hero `-0.025em`).
+  Large stat-tile values (`.statValue`, `.impactValue`, etc. on case
+  studies) drop the caps and use weight 600 so they read as headings.
+  Tracking for uppercase labels scales inversely with size:
+  - `--tracking-label-tight` (`0.01em`) — ~16px (wordmark, card stats)
+  - `--tracking-label` (`0.04em`) — ~14–15px (nav links, buttons)
+  - `--tracking-label-loose` (`0.06em`) — ~11–13px (tags, labels, hints)
+  - `--tracking-label-wide` (`0.1em`) — footer fine print, preloader name
+- **Manrope** (400/500/600), token `--font-sans`, carries all body copy.
+- No italics are loaded for either family, so don't use `font-style:
+  italic`: the browser would fake the slant.
 - Body measure capped at `~68ch` via `.measure`.
-- Detector note (accepted, not a bug): `detect.mjs` flags Inter as an
-  "overused font." Expected and deliberately kept — it's the pinned brief
-  ("same typography as som.design"), which itself uses Inter. Departure Mono
-  plus the sharp/flat material language are the offsetting distinctive
-  choices; don't swap Inter for a "safer" face without the user reopening
-  this decision.
 
 ## Components & composition
 
-- **Nav**: sticky, blurred, mono wordmark + role line; a sharp icon button
-  toggles dark mode (`useTheme.js` — three states: explicit light, explicit
-  dark via `data-theme` + localStorage, or unset/follows system); mobile
+- **Nav**: sticky, blurred, uppercase wordmark + role line; a sharp icon button
+  toggles dark mode (`useTheme.js`: every load starts light, ignoring the
+  system setting, so the intro loader never flips; the toggle lasts for the visit only, nothing persisted); mobile
   hamburger with a full slide-down panel.
-- **Hero**: `HEY, I'M CHIRANJEEB.` (mono greeting) → Inter pitch heading →
+- **Hero**: `HEY, I'M CHIRANJEEB.` (uppercase greeting) → display pitch heading →
   subhead → two sharp-cornered "Currently Working with [logo]" / "Previously
-  Worked with [logo]" chips (plain Inter text, real company logos — see
+  Worked with [logo]" chips (plain Manrope text, real company logos — see
   Third-party brand assets below), no CTA buttons in the hero itself. The
   text column and the activity panel stretch to equal height
   (`align-items: stretch` on the hero grid).
@@ -592,14 +591,9 @@ the coffee game's UI copy) with no visual/system changes.
 - Real figures for the hidden placeholder metrics: Planner freight cost
   saved; all four Transporter auction-redesign outcomes (its Impact section
   returns automatically once any is filled)
-- Transporter screens still missing: old/new place-bid (Solution 3), old
-  revise-bid (Solution 4)
-- The homepage Transporter card cites the original app launch (80%,
-  9–10% → 39%) but links to the auction-redesign case study; align one or
-  the other
 - A resume/CV link (none exists on the site yet)
-- An Open Graph preview image (`og:image` needs an absolute URL on the live
-  domain)
+- `og:image` in index.html is a relative path (`/og-image.jpg`); most
+  link scrapers need it absolute, so prefix the live domain once it is set
 - The split-expense app has no date of its own in the brief (it shared a
   line with the Lego block game), so it sits alongside it at 9 months back
   / Dec 2025 — move it in `src/data/activity.js` if that's wrong
@@ -608,6 +602,33 @@ the coffee game's UI copy) with no visual/system changes.
   mouse/trackpad/touch — and roughly what you were doing right before it
   happened) would help pin down the actual root cause, since it wasn't
   conclusively reproduced during this pass.
+
+## Design audit pass (Oct 2026)
+
+- **Eyebrow restraint.** Case-study sections no longer carry chatty
+  eyebrows ("A bit of context…", "Let's deep dive into the problem"); a
+  section opens on its heading. Eyebrows stay only where they add a fact
+  (Planner "Five concepts before this shipped", Map Practice usability-test
+  venue) or label a block ("My role", "Solution N", "Change N"). Planner
+  solution blocks are "Solution N" to match Transporter. A data file's
+  `eyebrow` is optional; leaving it out renders nothing.
+- **Plain headings.** "Impact", "The problem", "How it started", "How an
+  auction works" replaced the cute ones ("Time to flex our impact muscles",
+  "So the problem is clear now,").
+- **Skim highlights.** `**phrase**` in any copy string renders as a
+  `.hl` span (components/rich.jsx): full ink, weight 600, one phrase per
+  paragraph at most. On the accent core-problem panel it keeps the panel's
+  text colour and leans on weight.
+- **No emoji** in goal-card titles; the icon system carries meaning.
+- **Footer contacts** are sentence case Manrope, not uppercase labels, so
+  the email address reads (and copies) as typed.
+- **Performance.** Case studies and milestone pages are lazy chunks
+  (src/routes.jsx), preloaded in idle time once the homepage intro ends;
+  the router waits for a chunk before starting its view transition so the
+  wipe never captures a blank frame. Every photo import is WebP.
+- **Share card.** public/og-image.jpg (1200x630), rendered from the hero
+  line, wordmark, grid and portrait.
+- **Video slots** show the YouTube thumbnail until the player loads.
 
 ## Verification notes
 

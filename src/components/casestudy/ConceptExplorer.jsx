@@ -1,3 +1,4 @@
+import { rich } from "../rich";
 import { useState } from "react";
 import { Check, Minus } from "lucide-react";
 import styles from "./ConceptExplorer.module.css";
@@ -43,11 +44,19 @@ export default function ConceptExplorer({ concepts }) {
 
       <div key={concept.number} className={styles.panel}>
         <div className={styles.shot}>
-          <img
-            src={CONCEPT_SCREENSHOTS[concept.number]}
-            alt={`Concept ${concept.number}: ${concept.title}`}
-            className={styles.shotImage}
-          />
+          <a
+            href={CONCEPT_SCREENSHOTS[concept.number]}
+            target="_blank"
+            rel="noreferrer"
+            className={styles.shotLink}
+            title="Open full size"
+          >
+            <img
+              src={CONCEPT_SCREENSHOTS[concept.number]}
+              alt={`Concept ${concept.number}: ${concept.title}`}
+              className={styles.shotImage}
+            />
+          </a>
         </div>
 
         <div className={styles.details}>
@@ -61,13 +70,13 @@ export default function ConceptExplorer({ concepts }) {
             {concept.pros.map((p) => (
               <li key={p} className={styles.proItem}>
                 <Check size={18} strokeWidth={2.2} className={styles.proIcon} />
-                <span>{p}</span>
+                <span>{rich(p)}</span>
               </li>
             ))}
             {concept.cons.map((con) => (
               <li key={con} className={styles.conItem}>
                 <Minus size={18} strokeWidth={2.2} className={styles.conIcon} />
-                <span>{con}</span>
+                <span>{rich(con)}</span>
               </li>
             ))}
           </ul>

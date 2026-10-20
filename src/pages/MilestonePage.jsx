@@ -1,3 +1,4 @@
+import { rich } from "../components/rich";
 import { useEffect } from "react";
 import { ArrowLeft, ArrowRight, CalendarDays, Clock, ImagePlus, MapPin } from "lucide-react";
 import CaseStudyHeader from "../components/casestudy/CaseStudyHeader";
@@ -44,7 +45,7 @@ function PhotoSet({ images }) {
   );
 }
 
-// Detail page for one gold milestone from the hero timeline. Same shell as a
+// Detail page for one teal milestone from the hero timeline. Same shell as a
 // case study (sticky header, footer), with three ways to move between the
 // milestones: the switcher under the header, previous/next cards at the end,
 // and the arrow keys.
@@ -98,7 +99,7 @@ export default function MilestonePage({ slug }) {
           <header className={styles.hero}>
             <span className={styles.kind}>{m.kind}</span>
             <RevealText as="h1" trigger="mount" className={styles.title} text={m.title} key={m.slug} />
-            <p className={styles.summary}>{m.summary}</p>
+            <p className={styles.summary}>{rich(m.summary)}</p>
 
             <dl className={styles.facts}>
               <div className={styles.fact}>
@@ -133,7 +134,7 @@ export default function MilestonePage({ slug }) {
                 <h2 className={styles.sectionTitle}>{s.heading}</h2>
                 <div className={styles.sectionText}>
                   {s.body.map((p) => (
-                    <p key={p}>{p}</p>
+                    <p key={p}>{rich(p)}</p>
                   ))}
                   {s.steps && (
                     <ol className={styles.steps}>

@@ -55,8 +55,7 @@ export default function Footer() {
             <RevealText className={styles.heading} text="Coffee's on me." />
           </div>
           <p className={styles.copy} data-reveal>
-            Have a project or idea in mind? Let's connect and create something great together.
-            I read every message myself.
+            Hiring, or have a product problem worth untangling? I read every message myself.
           </p>
 
           <div className={styles.contacts} data-reveal style={{ "--reveal-i": 1 }}>

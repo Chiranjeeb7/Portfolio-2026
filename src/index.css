@@ -1,14 +1,3 @@
-/* Departure Mono — self-hosted, SIL OFL license (see /public/fonts/DepartureMono-LICENSE.txt) */
-@font-face {
-  font-family: "Departure Mono";
-  src:
-    url("/fonts/DepartureMono-Regular.woff2") format("woff2"),
-    url("/fonts/DepartureMono-Regular.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* ---------- Tokens ----------
    Reverse-engineered from som.design's own computed styles: cool near-white
    ground, slate ink (never black), hairline borders, near-zero radius,
@@ -38,24 +27,25 @@
      dark in dark mode since --ink flips light. */
   --accent-on-ink: #ff8a5c;
 
-  /* Gold — the only colour besides the accent in the activity grid, marking
+  /* Teal — the only colour besides the accent in the activity grid, marking
      the three milestone cells (first Figma plugin, first PR, the AI workshop). */
-  --gold: #f5b400;
-  --gold-strong: #a87800;
+  --milestone: #13897a;
+  --milestone-strong: #0b5e53;
 
   /* Success/positive accents (copied-email confirmation, case-study pros). */
   --sage: #4c7361;
   --sage-tint: #e3ebe5;
 
   --font-sans: "Manrope", system-ui, sans-serif;
-  --font-mono: "Departure Mono", ui-monospace, SFMono-Regular, monospace;
+  /* Anek Latin carries headings plus every uppercase label, control and
+     data value; Manrope stays on body copy. */
+  --font-display: "Anek Latin", "Manrope", system-ui, sans-serif;
 
-  /* Departure Mono is a pixel font tuned for multiples of 11px; nudge the
-     tracking wider as size drops, matching som.design's own mono usage. */
-  --tracking-mono-tight: -0.02em;
-  --tracking-mono: normal;
-  --tracking-mono-loose: 0.04em;
-  --tracking-mono-wide: 0.09em;
+  /* Uppercase labels need positive tracking, widening as size drops. */
+  --tracking-label-tight: 0.01em;
+  --tracking-label: 0.04em;
+  --tracking-label-loose: 0.06em;
+  --tracking-label-wide: 0.1em;
 
   /* Sharp, technical — matches som's 0px panels / 2px chips exactly. */
   --radius-sm: 2px;
@@ -100,8 +90,8 @@
     --accent-tint: #3a2313;
     --accent-on-ink: #a03a1b;
 
-    --gold: #ffc83d;
-    --gold-strong: #ffe08a;
+    --milestone: #3fcfb4;
+    --milestone-strong: #a8f0e1;
 
     --sage: #86a892;
     --sage-tint: #1f2921;
@@ -127,8 +117,8 @@
   --accent-tint: #3a2313;
   --accent-on-ink: #a03a1b;
 
-  --gold: #ffc83d;
-  --gold-strong: #ffe08a;
+  --milestone: #3fcfb4;
+  --milestone-strong: #a8f0e1;
 
   --sage: #86a892;
   --sage-tint: #1f2921;
@@ -161,8 +151,9 @@ ul, ol { list-style: none; margin: 0; padding: 0; }
 h1, h2, h3, h4, p { margin: 0; }
 
 h1, h2, h3, h4 {
+  font-family: var(--font-display);
   font-weight: 600;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 
@@ -171,10 +162,19 @@ p, li {
   text-wrap: pretty;
 }
 
-.numeric, .mono {
-  font-family: var(--font-mono);
+/* Skim highlight: the one phrase per paragraph marked `**…**` in the copy
+   (see components/rich.jsx). Body text is --ink-muted, so full ink plus a
+   heavier weight lifts it without a second colour. */
+.hl {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.numeric {
+  font-family: var(--font-display);
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
-  letter-spacing: var(--tracking-mono);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
 }
 
@@ -248,7 +248,7 @@ body::after {
   padding: 10px 14px;
   background: var(--ink);
   color: var(--bg);
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.8rem;
   text-transform: uppercase;
   transform: translateY(-160%);
@@ -345,9 +345,9 @@ body::after {
   border-radius: var(--radius-sm);
   background: var(--bg-panel);
   border: 1px solid var(--line);
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.72rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-muted);
 }
@@ -361,10 +361,10 @@ body::after {
   gap: 10px;
   padding: 12px 22px;
   border-radius: var(--radius-sm);
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 0.88rem;
-  letter-spacing: var(--tracking-mono);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   border: 1px solid transparent;
   cursor: pointer;
@@ -416,9 +416,13 @@ body::after {
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
   ::view-transition-new(root) { animation: none !important; }
-  * {
+  /* Pseudo-elements too: `*` alone misses them, and several loops (the
+     milestone ripple, the headline underline) live on ::before/::after.
+     One iteration, so an infinite loop can't strobe at 0.01ms a cycle. */
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     transition-delay: 0ms !important;
   }

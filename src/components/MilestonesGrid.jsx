@@ -14,10 +14,10 @@ function kindOf(day) {
 const LEGEND = [
   { kind: "milestone", label: "Milestone", swatch: styles.milestone },
   { kind: "event", label: "Event", swatch: styles.event },
-  { kind: "quiet", label: "Quiet day", swatch: styles.empty },
+  { kind: "quiet", label: "Regular day", swatch: styles.empty },
 ];
 
-// One accent colour for every event; gold only for the three milestones.
+// One accent colour for every event; teal only for the three milestones.
 function cellClass(day) {
   if (day.events.length === 0) return day.isFuture ? styles.upcoming : styles.empty;
   if (day.milestone) return styles.milestone;
@@ -45,7 +45,7 @@ function edgeClass(index) {
 
 export default function MilestonesGrid() {
   // Hovering (or focusing) a legend entry fades every other kind of cell, so
-  // the three gold milestones can be found among ~400 squares at a glance.
+  // the three teal milestones can be found among ~400 squares at a glance.
   const [focus, setFocus] = useState(null);
 
   return (

@@ -1,11 +1,12 @@
+import { rich } from "./rich";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { BookOpen, GraduationCap, Maximize2, MousePointer2, Move, Users, ZoomIn, ZoomOut } from "lucide-react";
 import byjusIcon from "../assets/logos/byjus-icon.svg";
 import delhiveryIcon from "../assets/logos/delhivery-icon-onlight.png";
 import omnirioLogo from "../assets/logos/omnirio-logo.png";
-import communityPhoto from "../assets/photos/community-extended-pack.jpg";
+import communityPhoto from "../assets/photos/community-extended-pack.webp";
 import profilePhoto from "../assets/photos/profile.webp";
-import workshopPhoto from "../assets/photos/workshop-ai-design.jpg";
+import workshopPhoto from "../assets/photos/workshop-ai-design.webp";
 import { bio, community, education, research, skills, teaching, workExperience, writingNote } from "../data/content";
 import RevealText from "./motion/RevealText";
 import styles from "./CanvasAbout.module.css";
@@ -467,7 +468,7 @@ export default function CanvasAbout() {
     <section id="about" className={`container section ${styles.section}`}>
       <RevealText className={styles.heading} text="Who I am, off the record" />
       <p className={styles.subheading} data-reveal>
-        Everything from the &quot;About&quot; page, sorted into a board instead of an accordion.
+        The About page, as a board you can pan around.
       </p>
 
       <div
@@ -540,7 +541,7 @@ export default function CanvasAbout() {
               `${styles.card} ${styles.cardBio}`,
               <>
                 <span className={styles.cardName}>{"Hi, I'm Chiranjeeb Deb"}</span>
-                {bio.replace("Hi, I'm Chiranjeeb, ", "")}
+                {rich(bio.replace("Hi, I'm Chiranjeeb, ", ""))}
               </>
             )}
             {card(
@@ -621,7 +622,7 @@ export default function CanvasAbout() {
                 <>
                   <Users size={18} className={styles.featureIcon} />
                   <span className={styles.featureHeading}>{community.heading}</span>
-                  <p className={styles.featureBody}>{community.description}</p>
+                  <p className={styles.featureBody}>{rich(community.description)}</p>
                 </>
               )}
               {card(
@@ -638,7 +639,7 @@ export default function CanvasAbout() {
                 <>
                   <GraduationCap size={18} className={styles.featureIcon} />
                   <span className={styles.featureHeading}>{teaching.heading}</span>
-                  <p className={styles.featureBody}>{teaching.description}</p>
+                  <p className={styles.featureBody}>{rich(teaching.description)}</p>
                 </>
               )}
               {card("teaching-fact", `${styles.card} ${styles.cardFact}`, writingNote)}

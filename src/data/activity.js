@@ -20,7 +20,7 @@ export const TOTAL_DAYS = WINDOW_WEEKS * 7;
 // the field reads as someone getting busier rather than ticking along at a
 // flat rate.
 //
-// `milestone: true` is the only thing that changes a cell's colour (gold).
+// `milestone: true` is the only thing that changes a cell's colour (teal).
 export const activityEvents = [
   // — Sep 2025: where the code story starts
   { month: "2025-09", week: 1, kind: "Community", label: "EPC dinner" },

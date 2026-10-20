@@ -44,10 +44,12 @@
   transition: transform 0.6s var(--ease-out-expo);
 }
 .row[data-from="top"]::before { transform-origin: top; }
-.row:hover::before,
-.row:focus-visible::before { transform: scaleY(1); }
-.row:hover,
-.row:focus-visible { color: var(--accent-ink); }
+/* The "on" state. Keyboard focus always gets it, hover only where hover is
+   real (the (hover: hover) block below), and a tap only while the finger is
+   down, so it can't stay stuck on after returning from the article the way
+   :hover does on touch screens. */
+.row:is(:focus-visible, :active)::before { transform: scaleY(1); }
+.row:is(:focus-visible, :active) { color: var(--accent-ink); }
 .row:focus-visible { outline-offset: -2px; }
 
 .logo {
@@ -58,30 +60,27 @@
   object-fit: cover;
   transition: rotate 0.6s var(--ease-out-expo), scale 0.6s var(--ease-out-expo);
 }
-.row:hover .logo { rotate: -6deg; scale: 1.06; }
 
 .title {
   font-size: 0.98rem;
   line-height: 1.35;
   transition: translate 0.6s var(--ease-out-expo);
 }
-.row:hover .title { translate: 10px 0; }
 
 .meta {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 4px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.68rem;
-  letter-spacing: var(--tracking-mono-loose);
+  letter-spacing: var(--tracking-label-loose);
   text-transform: uppercase;
   color: var(--ink-faint);
   white-space: nowrap;
   transition: color 0.45s var(--ease-out-expo);
 }
-.row:hover .meta,
-.row:focus-visible .meta { color: inherit; }
+.row:is(:focus-visible, :active) .meta { color: inherit; }
 
 .arrow {
   display: grid;
@@ -93,8 +92,16 @@
   transition: border-color 0.45s var(--ease-out-expo);
 }
 .arrow svg { transition: transform 0.6s var(--ease-out-expo); }
-.row:hover .arrow { border-color: currentColor; }
-.row:hover .arrow svg { transform: rotate(45deg); }
+
+@media (hover: hover) {
+  .row:hover::before { transform: scaleY(1); }
+  .row:hover { color: var(--accent-ink); }
+  .row:hover .logo { rotate: -6deg; scale: 1.06; }
+  .row:hover .title { translate: 10px 0; }
+  .row:hover .meta { color: inherit; }
+  .row:hover .arrow { border-color: currentColor; }
+  .row:hover .arrow svg { transform: rotate(45deg); }
+}
 
 @media (max-width: 760px) {
   .row {
