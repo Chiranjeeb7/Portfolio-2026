@@ -63,6 +63,13 @@ export const activityEvents = [
   { month: "2026-09", week: 1, kind: "Build", label: "Personal finance tracker" },
   { month: "2026-09", week: 1, kind: "Pull request", label: "Pull request merged" },
   { month: "2026-09", week: 2, kind: "Code", label: "Commits" },
+  { month: "2026-09", day: 23, kind: "Code", label: "Commits: intro loader and work-card screen stacks" },
+
+  // - October 2026, from this repo's own history: exact days, so `day`
+  // pins them instead of the usual week-of-month estimate.
+  { month: "2026-10", day: 20, kind: "Code", label: "Commits: new type and a site-wide design audit" },
+  { month: "2026-10", day: 22, kind: "Build", label: "Story page for this portfolio" },
+  { month: "2026-10", day: 23, kind: "Design", label: "Story hero, drawn as an engineering sheet" },
 
   // - Design work at Delhivery. The activities come from the Planner and
   // Transporter case studies (and the animations in assets/photos), but
@@ -106,9 +113,11 @@ function hash(text) {
 // A day-grid needs a day, but the brief only gave months. Each event is
 // placed inside the week it belongs to, deterministically, so the square
 // never moves between renders - the tooltip still says only the month,
-// which is all we actually know.
+// which is all we actually know. Events with a known `day` (taken from
+// the repo's commit history) sit on exactly that day.
 function placeEvent(event) {
   const [year, month] = event.month.split("-").map(Number);
+  if (event.day) return new Date(year, month - 1, event.day);
   const daysInMonth = new Date(year, month, 0).getDate();
   const day = Math.min(event.week * 7 + 1 + (hash(event.label + event.month) % 5), daysInMonth);
   return new Date(year, month - 1, day);
