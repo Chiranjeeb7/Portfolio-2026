@@ -9,6 +9,7 @@ import profilePhoto from "../assets/photos/profile.webp";
 import workshopPhoto from "../assets/photos/workshop-ai-design.webp";
 import { bio, community, education, research, skills, teaching, workExperience, writingNote } from "../data/content";
 import RevealText from "./motion/RevealText";
+import StoryTeaser from "./story/StoryTeaser";
 import styles from "./CanvasAbout.module.css";
 
 // Icon-only marks (as opposed to CompanyLogo's wordmarks used elsewhere) for
@@ -470,6 +471,7 @@ export default function CanvasAbout() {
       <p className={styles.subheading} data-reveal>
         The About page, as a board you can pan around.
       </p>
+      <StoryTeaser />
 
       <div
         className={`${styles.viewport} ${isPanning ? styles.panning : ""} ${boardIn ? styles.boardIn : ""}`}

@@ -1,0 +1,558 @@
+/* The Story hero as an engineering drawing sheet (HeroSheet.jsx).
+   Outer trim line, a margin strip with zone markings, the drawing area on
+   graph paper, and a title block along the bottom. Circles are the one
+   exception to the sharp-corner rule: balloons and the drafted head circle
+   are round on every real drawing too. */
+
+.wrap {
+  padding-block: 14px 4px;
+}
+
+.sheet {
+  --margin: 24px;
+  position: relative;
+  padding: var(--margin);
+}
+
+/* ---------- Frame (outer trim) ---------- */
+.edge {
+  position: absolute;
+  background: var(--ink);
+}
+.edgeTop { top: 0; left: 0; right: 0; height: 1.5px; transform-origin: left; }
+.edgeRight { top: 0; right: 0; bottom: 0; width: 1.5px; transform-origin: top; }
+.edgeBottom { bottom: 0; left: 0; right: 0; height: 1.5px; transform-origin: right; }
+.edgeLeft { top: 0; left: 0; bottom: 0; width: 1.5px; transform-origin: bottom; }
+
+/* ---------- Zone markings in the margin ---------- */
+.zones {
+  position: absolute;
+  display: grid;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: var(--tracking-label-loose);
+  color: var(--ink-faint);
+}
+.zones span {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.zonesTop,
+.zonesBottom {
+  left: var(--margin);
+  right: var(--margin);
+  height: var(--margin);
+  grid-template-columns: repeat(8, 1fr);
+}
+.zonesTop { top: 0; }
+.zonesBottom { bottom: 0; }
+.zonesLeft,
+.zonesRight {
+  top: var(--margin);
+  bottom: var(--margin);
+  width: var(--margin);
+  grid-template-rows: repeat(4, 1fr);
+}
+.zonesLeft { left: 0; }
+.zonesRight { right: 0; }
+
+/* Short ticks between zones. */
+.zonesTop span + span::before,
+.zonesBottom span + span::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 7px;
+  background: var(--line-strong);
+}
+.zonesTop span + span::before { bottom: 0; }
+.zonesBottom span + span::before { top: 0; }
+.zonesLeft span + span::before,
+.zonesRight span + span::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  height: 1px;
+  width: 7px;
+  background: var(--line-strong);
+}
+.zonesLeft span + span::before { right: 0; }
+.zonesRight span + span::before { left: 0; }
+
+/* ---------- Drawing area ---------- */
+.inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+  min-height: clamp(540px, calc(100dvh - 64px - 160px), 760px);
+  border: 1px solid var(--line-strong);
+}
+
+/* Graph paper: fine squares with a heavier line every fifth. */
+.paper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  --minor: color-mix(in srgb, var(--line) 70%, transparent);
+  --major: var(--line);
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--major) 1px, transparent 1px),
+    linear-gradient(var(--minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--minor) 1px, transparent 1px);
+  background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
+  background-position: -1px -1px;
+}
+
+/* ---------- Crosshair ---------- */
+.crosshair {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out-expo);
+}
+.crosshairOn { opacity: 1; }
+.crossV,
+.crossH {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.crossV { bottom: 0; width: 1px; }
+.crossH { right: 0; height: 1px; }
+.readout {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  padding: 2px 6px;
+  white-space: pre;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: var(--tracking-label-loose);
+  color: var(--accent-strong);
+  background: color-mix(in srgb, var(--bg-panel-raised) 85%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+/* ---------- Text column ---------- */
+.textCol {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: clamp(28px, 4vw, 56px) 0 clamp(28px, 3.5vw, 48px) clamp(24px, 4vw, 56px);
+}
+
+.eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: var(--tracking-label-loose);
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+
+.title {
+  margin-top: 14px;
+  font-size: clamp(2.5rem, 4.1vw + 0.5rem, 5rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  max-width: 12ch;
+}
+
+.titleEm {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.word,
+.sketchWord {
+  position: relative;
+  display: inline-block;
+}
+
+.sketchWord {
+  cursor: help;
+  outline-offset: 6px;
+}
+
+/* The notebook car that opens above "sketching". */
+.notebook {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  z-index: 5;
+  width: 200px;
+  padding: 10px 12px 9px;
+  translate: -50% 8px;
+  scale: 0.92;
+  opacity: 0;
+  pointer-events: none;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.3;
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--line-strong);
+  transition:
+    opacity 0.3s var(--ease-out-expo),
+    translate 0.4s var(--ease-out-expo),
+    scale 0.4s var(--ease-out-expo);
+}
+.notebookOpen {
+  opacity: 1;
+  translate: -50% 0;
+  scale: 1;
+}
+.notebookNote {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  letter-spacing: var(--tracking-label-loose);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  white-space: normal;
+}
+
+.summary {
+  margin-top: 18px;
+  max-width: 42ch;
+  font-size: clamp(1.02rem, 0.35vw + 0.94rem, 1.15rem);
+  color: var(--ink-muted);
+}
+
+/* ---------- Parts list ---------- */
+.parts {
+  margin-top: auto;
+  width: 100%;
+  max-width: 540px;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--line-strong);
+}
+
+.parts caption {
+  caption-side: top;
+  padding: 28px 0 6px;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: var(--tracking-label-loose);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.parts th,
+.parts td {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.parts thead th {
+  padding-block: 6px;
+  font-family: var(--font-display);
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: var(--tracking-label-loose);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  background: var(--bg-panel);
+}
+
+.parts tbody th {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.parts tbody td:last-child { color: var(--ink-muted); }
+.parts tbody td:first-child { width: 1%; }
+
+.parts tbody tr {
+  cursor: default;
+  transition: background-color 0.3s var(--ease-out-expo), opacity 0.3s var(--ease-out-expo);
+}
+.parts tbody tr:focus-visible { outline-offset: -2px; }
+.rowOn { background: var(--accent-tint); }
+.rowDim { opacity: 0.5; }
+
+.rowBalloon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: background-color 0.3s var(--ease-out-expo), color 0.3s var(--ease-out-expo), border-color 0.3s var(--ease-out-expo);
+}
+.rowOn .rowBalloon {
+  background: var(--accent);
+  border-color: var(--accent-strong);
+  color: var(--accent-ink);
+}
+
+/* ---------- Stage: the drafted portrait ---------- */
+.stageCol {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-top: clamp(40px, 5vw, 64px);
+  min-width: 0;
+}
+
+.stage {
+  position: relative;
+  height: 100%;
+  max-height: 660px;
+  aspect-ratio: 480 / 600;
+  margin-right: clamp(48px, 5vw, 72px);
+}
+
+.drafting,
+.leaders {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.leaders { z-index: 2; }
+
+.headFill { fill: color-mix(in srgb, var(--accent) 16%, transparent); }
+.headLine {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.centre {
+  stroke: var(--ink-faint);
+  stroke-width: 1;
+  stroke-dasharray: 22 6 4 6;
+  vector-effect: non-scaling-stroke;
+}
+
+.print {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+.print img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom;
+}
+
+.printHead {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.printHead::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.leader path {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 0.3s var(--ease-out-expo);
+}
+.leader circle {
+  fill: var(--accent);
+  stroke: var(--bg);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+.leader {
+  transition: opacity 0.3s var(--ease-out-expo);
+}
+.leaderOn path {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+.leaderDim { opacity: 0.3; }
+
+.balloon {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  background: var(--bg-panel-raised);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: default;
+  transition:
+    background-color 0.3s var(--ease-out-expo),
+    color 0.3s var(--ease-out-expo),
+    border-color 0.3s var(--ease-out-expo),
+    opacity 0.3s var(--ease-out-expo);
+}
+.balloonOn {
+  background: var(--accent);
+  border-color: var(--accent-strong);
+  color: var(--accent-ink);
+}
+.balloonDim { opacity: 0.4; }
+
+/* ---------- Hello sticker ---------- */
+.hello {
+  position: absolute;
+  z-index: 4;
+  top: 3%;
+  right: -10%;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--ink);
+  color: var(--bg-panel-raised);
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.wave {
+  display: inline-flex;
+  color: var(--accent-on-ink);
+  transform-origin: 70% 80%;
+  animation: wave 2.6s ease-in-out 2.8s infinite;
+}
+@keyframes wave {
+  0%, 60%, 100% { rotate: 0deg; }
+  10%, 30% { rotate: 18deg; }
+  20%, 40% { rotate: -10deg; }
+}
+
+/* ---------- Title block ---------- */
+.block {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 0.8fr 1.4fr 0.6fr;
+  margin: 0;
+  border: 1px solid var(--line-strong);
+  border-top: 0;
+  background: var(--bg-panel-raised);
+}
+
+.cell {
+  padding: 10px 14px 12px;
+}
+.cell + .cell { border-left: 1px solid var(--line); }
+
+.cell dt {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: var(--tracking-label-loose);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.cell dd {
+  margin: 4px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(0.98rem, 0.4vw + 0.9rem, 1.15rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+.cellAccent dd { color: var(--accent-strong); }
+
+/* ---------- Responsive ---------- */
+/* Stacked, the photo comes before the parts list that explains its
+   balloons: the text column dissolves (display: contents) so its pieces
+   can be reordered around the stage. */
+@media (max-width: 980px) {
+  .inner {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .textCol { display: contents; }
+  .eyebrow,
+  .title,
+  .summary,
+  .parts {
+    position: relative;
+    z-index: 1;
+    margin-inline: 24px;
+  }
+  .eyebrow { margin-top: 28px; }
+  .title { max-width: 13ch; }
+  .stageCol { order: 1; padding-top: 48px; }
+  .parts {
+    order: 2;
+    width: auto;
+    margin-top: 0;
+    margin-bottom: 24px;
+  }
+  .stage {
+    height: auto;
+    width: min(64vw, 380px);
+    margin-right: 56px;
+  }
+  .block { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cell:nth-child(4) { border-left: 0; }
+  .cell:nth-child(n + 4) { border-top: 1px solid var(--line); }
+}
+
+@media (max-width: 560px) {
+  .sheet { --margin: 10px; }
+  .zones { display: none; }
+  .eyebrow,
+  .title,
+  .summary,
+  .parts { margin-inline: 16px; }
+  .eyebrow { margin-top: 22px; }
+  .parts th,
+  .parts td { padding: 7px 8px; }
+  .parts { font-size: 0.82rem; }
+  .stage { width: min(66vw, 300px); margin-right: 44px; }
+  .balloon { width: 30px; height: 30px; font-size: 0.88rem; }
+  .hello { right: -8%; font-size: 0.72rem; padding: 7px 10px; }
+  .block { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cell:nth-child(n) { border-left: 0; border-top: 1px solid var(--line); }
+  .cell:nth-child(even) { border-left: 1px solid var(--line); }
+  .cell:first-child { border-top: 0; }
+  .cell:nth-child(2) { border-top: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave { animation: none; }
+}

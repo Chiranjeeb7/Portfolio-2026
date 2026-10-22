@@ -1,0 +1,62 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: 6px;
+  max-width: calc(var(--cols) * 34px);
+}
+
+/* Same quiet-cell treatment as the homepage grid: a pale accent wash. */
+.cell {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--accent) 9%, var(--bg-panel));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 17%, var(--bg-panel));
+}
+
+.pod {
+  background: color-mix(in srgb, var(--accent) 38%, var(--bg-panel));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 60%, var(--bg-panel));
+}
+
+.me {
+  background: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent-strong);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: var(--tracking-label-loose);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--accent) 9%, var(--bg-panel));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 30%, var(--bg-panel));
+}
+.swatch.pod {
+  background: color-mix(in srgb, var(--accent) 38%, var(--bg-panel));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 60%, var(--bg-panel));
+}
+.swatch.me {
+  background: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent-strong);
+}

@@ -1,0 +1,40 @@
+/* Line drawings on the Story page. Colours are theme tokens, so every
+   sketch flips with dark mode without a second asset. */
+.sketch {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.stroke {
+  fill: none;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ink { stroke: var(--ink); }
+.muted { stroke: var(--ink-muted); }
+.faint { stroke: var(--line-strong); }
+.accent { stroke: var(--accent); }
+
+.guide {
+  stroke: var(--line-strong);
+  stroke-width: 1;
+  stroke-dasharray: 3 5;
+}
+
+.fill-accent { fill: var(--accent); }
+.fill-ink { fill: var(--ink); }
+.stroke.fill-panel { fill: var(--bg-panel-raised); }
+.stroke.fill-accent { fill: var(--accent); }
+.stroke.fill-sun { fill: color-mix(in srgb, var(--accent) 22%, transparent); }
+
+.label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: var(--tracking-label-loose);
+  text-transform: uppercase;
+}
+.label-faint { fill: var(--ink-faint); }
+.label-accent { fill: var(--accent-strong); }

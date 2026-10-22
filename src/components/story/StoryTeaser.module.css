@@ -1,0 +1,204 @@
+/* Story teaser on the homepage About section (StoryTeaser.jsx): a graph-
+   paper strip, the same paper as the Story page's hero sheet, so the click
+   feels like opening the full drawing. */
+.teaser {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr) auto;
+  align-items: center;
+  gap: clamp(24px, 3.5vw, 48px);
+  margin-top: 28px;
+  padding: clamp(24px, 3vw, 36px) clamp(20px, 3vw, 40px);
+  border: 1px solid var(--line-strong);
+  --minor: color-mix(in srgb, var(--line) 70%, transparent);
+  background-color: var(--bg-panel-raised);
+  background-image:
+    linear-gradient(var(--minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--minor) 1px, transparent 1px);
+  background-size: 16px 16px;
+  background-position: -1px -1px;
+  transition: border-color 0.4s var(--ease-out-expo);
+}
+.teaser:hover { border-color: var(--accent); }
+
+/* Coral corner ticks, the drawing-sheet trim. */
+.teaser::before,
+.teaser::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 0 solid var(--accent);
+  pointer-events: none;
+}
+.teaser::before { top: -1px; left: -1px; border-top-width: 2px; border-left-width: 2px; }
+.teaser::after { bottom: -1px; right: -1px; border-bottom-width: 2px; border-right-width: 2px; }
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.kicker {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: var(--tracking-label-loose);
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 1.4vw + 0.95rem, 2.1rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+/* ---------- Track ---------- */
+.trackWrap {
+  /* Room for the car above the line and the years below it. */
+  padding: 52px 20px 30px;
+}
+
+.track {
+  position: relative;
+  height: 2px;
+}
+
+.line,
+.lineFill {
+  position: absolute;
+  inset: 0;
+}
+.line { background: var(--line-strong); }
+.lineFill {
+  background: var(--accent);
+  transform-origin: left;
+}
+
+.stop {
+  position: absolute;
+  top: 50%;
+  translate: -50% -50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.marker {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--line-strong);
+  transition:
+    background-color 0.3s var(--ease-out-expo),
+    border-color 0.3s var(--ease-out-expo),
+    scale 0.4s var(--ease-out-expo);
+}
+.stopOn .marker {
+  background: var(--accent);
+  border-color: var(--accent-strong);
+  scale: 1.2;
+}
+
+.year {
+  position: absolute;
+  top: 16px;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: var(--tracking-label-loose);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faint);
+  transition: color 0.3s var(--ease-out-expo);
+}
+.stopOn .year { color: var(--ink); }
+.stopLast .year { color: var(--accent-strong); font-weight: 600; }
+
+/* Pops over 2026 once the car arrives: the AI agents at the end. */
+.spark {
+  position: absolute;
+  right: -10px;
+  bottom: 50px;
+  display: inline-flex;
+  color: var(--accent);
+  opacity: 0;
+  scale: 0.2;
+  rotate: -60deg;
+  transition:
+    opacity 0.3s var(--ease-out-expo),
+    scale 0.6s cubic-bezier(0.34, 1.8, 0.64, 1),
+    rotate 0.6s var(--ease-out-expo);
+}
+.sparkOn {
+  opacity: 1;
+  scale: 1;
+  rotate: 0deg;
+}
+
+.car {
+  position: absolute;
+  left: 0;
+  bottom: 1px;
+  width: 64px;
+  margin-left: -32px;
+  pointer-events: none;
+}
+.carSvg { width: 100%; height: auto; overflow: visible; }
+.carBody {
+  fill: var(--bg-panel-raised);
+  stroke: var(--ink);
+  stroke-width: 5;
+  stroke-linejoin: round;
+}
+.carGlass {
+  fill: color-mix(in srgb, var(--accent) 22%, transparent);
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+.carLight {
+  stroke: var(--accent);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+.wheel {
+  fill: var(--ink);
+}
+.spoke {
+  stroke: var(--bg-panel-raised);
+  stroke-width: 2.5;
+}
+
+/* ---------- CTA ---------- */
+.cta {
+  white-space: nowrap;
+}
+/* The whole strip is the link, so hovering anywhere fills the button. */
+.teaser:hover .cta { border-color: var(--accent-strong); }
+.teaser:hover .cta::before { transform: scaleY(1); }
+:global(:root[data-theme="dark"]) .teaser:hover .cta { color: var(--accent-ink); }
+@media (prefers-color-scheme: dark) {
+  :global(:root:not([data-theme="light"])) .teaser:hover .cta { color: var(--accent-ink); }
+}
+.ctaArrow { transition: translate 0.4s var(--ease-out-expo); }
+.teaser:hover .ctaArrow { translate: 4px 0; }
+
+/* ---------- Narrow screens: stack ---------- */
+@media (max-width: 900px) {
+  .teaser {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .cta { justify-self: start; margin-top: 8px; }
+}
+@media (max-width: 480px) {
+  .year { font-size: 0.6rem; }
+  /* 2017/2018 and 2020/2021 sit a year apart: drop one label of each
+     pair, keep every marker. (Children 1-2 are the line and its fill.) */
+  .stop:nth-child(4) .year,
+  .stop:nth-child(7) .year { display: none; }
+}

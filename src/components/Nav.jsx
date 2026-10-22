@@ -10,6 +10,9 @@ const LINKS = [
   { href: "#work", label: "Work" },
   { href: "#about", label: "About" },
   { href: "#writing", label: "Writing" },
+  // A page of its own, not a homepage section, so it never takes the
+  // active-section marker.
+  { href: "#/story", label: "Story", page: true },
 ];
 
 const EASE = [0.16, 1, 0.3, 1];
@@ -18,7 +21,9 @@ const EASE = [0.16, 1, 0.3, 1];
 function useActiveSection() {
   const [active, setActive] = useState(null);
   useEffect(() => {
-    const targets = LINKS.map((l) => document.querySelector(l.href)).filter(Boolean);
+    const targets = LINKS.filter((l) => !l.page)
+      .map((l) => document.querySelector(l.href))
+      .filter(Boolean);
     const observer = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {

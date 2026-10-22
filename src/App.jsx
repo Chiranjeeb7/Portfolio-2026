@@ -17,6 +17,7 @@ import {
   MilestonePage,
   PlannerCaseStudy,
   preloadAllPages,
+  StoryPage,
   TransporterCaseStudy,
 } from "./routes";
 import { milestoneBySlug } from "./data/milestones";
@@ -28,6 +29,11 @@ const CASE_STUDIES = {
   planner: { Page: PlannerCaseStudy, title: "Planner" },
   "map-practice": { Page: MapPracticeCaseStudy, title: "Map Practice" },
   transporter: { Page: TransporterCaseStudy, title: "Transporter auctions" },
+};
+
+// Standalone pages that are not case studies, titled on their own.
+const PAGES = {
+  story: { Page: StoryPage, title: "My story" },
 };
 
 const HOME_TITLE = `${profile.name}: ${profile.role}`;
@@ -57,15 +63,18 @@ function App() {
     setScrollLocked(introRunning);
   }, [introRunning, introPlayed]);
   // "#/moment/<slug>" routes to a milestone page; any other "#/<id>" to a
-  // case study. Unknown ids fall through to the homepage.
+  // case study or a standalone page. Unknown ids fall through to the homepage.
   const milestone = route?.startsWith("moment/") ? milestoneBySlug[route.slice(7)] : null;
   const caseStudy = milestone ? null : CASE_STUDIES[route];
+  const page = milestone || caseStudy ? null : PAGES[route];
   const pageTitle = milestone
     ? `${milestone.title}: ${profile.name}`
     : caseStudy
       ? `${caseStudy.title} case study: ${profile.name}`
-      : HOME_TITLE;
-  const isHome = !milestone && !caseStudy;
+      : page
+        ? `${page.title}: ${profile.name}`
+        : HOME_TITLE;
+  const isHome = !milestone && !caseStudy && !page;
 
   // Runs after the new route has rendered, so the target exists. A case
   // study always opens at its top; the homepage honours a section anchor
@@ -117,8 +126,8 @@ function App() {
     );
   }
 
-  if (caseStudy) {
-    const { Page } = caseStudy;
+  if (caseStudy || page) {
+    const { Page } = caseStudy || page;
     return (
       <>
         {chrome}

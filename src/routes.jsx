@@ -36,11 +36,13 @@ export const PlannerCaseStudy = lazyPage(() => import("./pages/PlannerCaseStudy"
 export const MapPracticeCaseStudy = lazyPage(() => import("./pages/MapPracticeCaseStudy"));
 export const TransporterCaseStudy = lazyPage(() => import("./pages/TransporterCaseStudy"));
 export const MilestonePage = lazyPage(() => import("./pages/MilestonePage"));
+export const StoryPage = lazyPage(() => import("./pages/StoryPage"));
 
 const PAGES = {
   planner: PlannerCaseStudy,
   "map-practice": MapPracticeCaseStudy,
   transporter: TransporterCaseStudy,
+  story: StoryPage,
 };
 
 // Resolves once the page for a route (as returned by useHashRoute) is ready
@@ -53,7 +55,7 @@ export function preloadRoute(route) {
 // Warms every page chunk once the homepage has settled, so a click on a case
 // study rarely has to wait on the network at all.
 export function preloadAllPages() {
-  [PlannerCaseStudy, MapPracticeCaseStudy, TransporterCaseStudy, MilestonePage].forEach((p) =>
+  [PlannerCaseStudy, MapPracticeCaseStudy, TransporterCaseStudy, MilestonePage, StoryPage].forEach((p) =>
     p.preload().catch(() => {}),
   );
 }
