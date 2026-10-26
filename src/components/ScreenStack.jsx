@@ -18,7 +18,10 @@ const slotOf = (s) => SLOTS[Math.min(s, SLOTS.length - 1)];
 
 // A pile of product screens that sits still until its card is hovered, then
 // deals the front one to the back straight away and every couple of seconds
-// for as long as the hover lasts.
+// for as long as the hover lasts. A screen is an image URL, or
+// `{ video, poster }` for a recording: videos loop muted, and only play
+// while the stack is on screen (and never under reduced motion, where the
+// poster stands in).
 //
 // Driven imperatively rather than through React state: each shuffle is one
 // ordered sequence (fade out, restack, fade in at the back), so the stacking
@@ -31,6 +34,8 @@ export default function ScreenStack({ screens, aspect, tone = "periwinkle", hove
   // order[0] is the index of the screen currently in front.
   const order = useRef(screens.map((_, i) => i));
   const busy = useRef(false);
+  const stageRef = useRef(null);
+  const videos = useRef([]);
 
   const put = useCallback((i, s, transition) => {
     const { layer, shade, ...pose } = slotOf(s);
@@ -66,6 +71,18 @@ export default function ScreenStack({ screens, aspect, tone = "periwinkle", hove
     busy.current = false;
   }, [put]);
 
+  // Play recordings only while the stack is visible, so a page full of
+  // cards doesn't decode video nobody is looking at.
+  useEffect(() => {
+    const els = videos.current.filter(Boolean);
+    if (reduce || els.length === 0 || !("IntersectionObserver" in window)) return;
+    const io = new IntersectionObserver(([entry]) => {
+      els.forEach((v) => (entry.isIntersecting ? v.play().catch(() => {}) : v.pause()));
+    });
+    io.observe(stageRef.current);
+    return () => io.disconnect();
+  }, [reduce]);
+
   useEffect(() => {
     if (reduce || !hovered) return;
     shuffle();
@@ -74,11 +91,23 @@ export default function ScreenStack({ screens, aspect, tone = "periwinkle", hove
   }, [hovered, reduce, shuffle]);
 
   return (
-    <div className={`${styles.stage} ${styles[tone]}`} aria-hidden="true">
+    <div className={`${styles.stage} ${styles[tone]}`} ref={stageRef} aria-hidden="true">
       <div className={styles.pile} style={{ aspectRatio: aspect }}>
-        {screens.map((src, i) => (
-          <div key={src} ref={(el) => (cards.current[i] = el)} className={styles.card}>
-            <img src={src} alt="" loading={eager ? "eager" : "lazy"} draggable="false" />
+        {screens.map((screen, i) => (
+          <div key={screen.video ?? screen} ref={(el) => (cards.current[i] = el)} className={styles.card}>
+            {screen.video ? (
+              <video
+                ref={(el) => (videos.current[i] = el)}
+                src={screen.video}
+                poster={screen.poster}
+                muted
+                loop
+                playsInline
+                preload={eager ? "auto" : "metadata"}
+              />
+            ) : (
+              <img src={screen} alt="" loading={eager ? "eager" : "lazy"} draggable="false" />
+            )}
             <span ref={(el) => (shades.current[i] = el)} className={styles.shade} />
           </div>
         ))}

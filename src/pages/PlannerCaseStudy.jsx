@@ -1,4 +1,5 @@
 import { rich } from "../components/rich";
+import { useReducedMotion } from "motion/react";
 import {
   ArrowUpDown,
   Banknote,
@@ -34,12 +35,11 @@ import MoreWork from "../components/casestudy/MoreWork";
 import CountUp from "../components/motion/CountUp";
 import ConceptExplorer from "../components/casestudy/ConceptExplorer";
 import PlannerDiagram from "../components/casestudy/PlannerDiagram";
-import CornerMarks from "../components/CornerMarks";
 import Footer from "../components/Footer";
-import landingBanner from "../assets/photos/planner-landing-banner.webp";
 import plannerPlan from "../assets/photos/planner-plan.webp";
 import plannerFailureSummary from "../assets/photos/planner-failure-summary.webp";
 import truck3dMp4 from "../assets/photos/3d-truck.mp4";
+import truck3dPoster from "../assets/photos/3d-truck-poster.webp";
 import orderLoadMp4 from "../assets/photos/order-loading.mp4";
 import styles from "./CaseStudy.module.css";
 
@@ -64,6 +64,7 @@ const INSIGHT_POINT_ICONS = {
 };
 
 export default function PlannerCaseStudy() {
+  const reduceMotion = useReducedMotion();
   const heroStats = hero.stats.filter((s) => !s.placeholder);
   const impactStats = impact.stats.filter((s) => !s.placeholder);
   const sections = nav.filter((item) => item.id !== "impact" || impactStats.length > 0);
@@ -94,7 +95,6 @@ export default function PlannerCaseStudy() {
             </div>
 
             <div className={styles.statGridWrap}>
-              <CornerMarks />
               <div className={styles.statGrid}>
                 {heroStats.map((s) => {
                   const Icon = STAT_ICONS[s.icon];
@@ -114,11 +114,19 @@ export default function PlannerCaseStudy() {
           </div>
 
           <div className={styles.heroShot}>
-            <CornerMarks />
-            <img
-              src={landingBanner}
-              alt="Planner: Unplanned orders, Plan, and load-detail screens"
+            {/* Opens on the 3D truck view: every box placed before a planner
+                commits. Muted and looping, no controls; the poster stands in
+                under reduced motion. */}
+            <video
               className={styles.heroShotImg}
+              src={truck3dMp4}
+              poster={truck3dPoster}
+              autoPlay={!reduceMotion}
+              muted
+              loop
+              playsInline
+              preload="auto"
+              aria-label="Planner: the 3D truck view, rotating a planned load and inspecting a box"
             />
           </div>
         </section>

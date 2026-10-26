@@ -56,7 +56,8 @@
   backface-visibility: hidden;
 }
 
-.card img {
+.card img,
+.card video {
   display: block;
   width: 100%;
   height: 100%;
