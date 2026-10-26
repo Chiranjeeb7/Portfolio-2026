@@ -7,7 +7,7 @@
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr) auto;
   align-items: center;
   gap: clamp(24px, 3.5vw, 48px);
-  margin-top: 28px;
+  margin-top: 32px;
   padding: clamp(24px, 3vw, 36px) clamp(20px, 3vw, 40px);
   border: 1px solid var(--line-strong);
   --minor: color-mix(in srgb, var(--line) 70%, transparent);

@@ -10,6 +10,8 @@ import workshopPhoto from "../assets/photos/workshop-ai-design.webp";
 import { bio, community, education, research, skills, teaching, workExperience, writingNote } from "../data/content";
 import RevealText from "./motion/RevealText";
 import StoryTeaser from "./story/StoryTeaser";
+import BoardExtras from "./board/BoardExtras";
+import BoardMap from "./board/BoardMap";
 import styles from "./CanvasAbout.module.css";
 
 // Icon-only marks (as opposed to CompanyLogo's wordmarks used elsewhere) for
@@ -22,7 +24,12 @@ const WORK_ICONS = {
   omnirio: { src: omnirioLogo, alt: "Omnirio" },
 };
 
-const MIN_ZOOM = 0.5;
+// Visitors can zoom out further than the default fit ever goes, far enough
+// to take in the whole board, off-screen zones included. The default view
+// and "reset board" still never fit below FIT_MIN_ZOOM, so they frame the
+// core card sort exactly as before.
+const MIN_ZOOM = 0.35;
+const FIT_MIN_ZOOM = 0.5;
 const MAX_ZOOM = 1.6;
 const ZOOM_SPEED = 0.0016;
 const ZOOM_STEP = 1.25;
@@ -33,6 +40,9 @@ const ZOOM_HINT_MS = 1400;
 const IS_MAC = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
 const ZOOM_KEY = IS_MAC ? "⌘" : "Ctrl";
 const ZERO_OFFSET = { x: 0, y: 0 };
+const JUMP_MS = 650;
+// Breathing room around the measured world, for tilted notes and stamps.
+const WORLD_MARGIN = 40;
 
 function clamp(v, min, max) {
   return Math.min(max, Math.max(min, v));
@@ -129,7 +139,12 @@ export default function CanvasAbout() {
   const [offsets, setOffsets] = useState({});
   const [boardIn, setBoardIn] = useState(false);
   const [zoomHint, setZoomHint] = useState(false);
-  const contentSize = useRef({ w: 1560, h: 900 });
+  // The whole board: the core card sort plus every off-screen zone, in
+  // board pixels. Panning is limited to this; the map draws it.
+  const worldRef = useRef({ x0: 0, y0: 0, x1: 1560, y1: 900 });
+  const [map, setMap] = useState(null);
+  const [jumping, setJumping] = useState(false);
+  const jumpTimer = useRef(null);
   const pointers = useRef(new Map());
   const panState = useRef(null);
   const pinchState = useRef(null);
@@ -241,36 +256,84 @@ export default function CanvasAbout() {
     return () => window.removeEventListener("keydown", onKey);
   }, [clearSelection]);
 
-  const clampPanFor = useCallback((p, z, size) => {
+  // Keeps the world (bounds in board pixels, which can start left of or
+  // above the core) within reach: never more than PAN_SLACK of empty board
+  // past any edge.
+  const clampPanFor = useCallback((p, z, b) => {
     const vp = viewportRef.current;
     if (!vp) return p;
     const vw = vp.clientWidth;
     const vh = vp.clientHeight;
-    const scaledW = size.w * z;
-    const scaledH = size.h * z;
-    const minX = scaledW <= vw ? -PAN_SLACK : vw - scaledW - PAN_SLACK;
-    const maxX = scaledW <= vw ? vw - scaledW + PAN_SLACK : PAN_SLACK;
-    const minY = scaledH <= vh ? -PAN_SLACK : vh - scaledH - PAN_SLACK;
-    const maxY = scaledH <= vh ? vh - scaledH + PAN_SLACK : PAN_SLACK;
-    return { x: clamp(p.x, minX, maxX), y: clamp(p.y, minY, maxY) };
+    const axis = (pos, view, lo, hi) => {
+      const scaled = (hi - lo) * z;
+      const shift = lo * z;
+      const min = scaled <= view ? -PAN_SLACK - shift : view - scaled - PAN_SLACK - shift;
+      const max = scaled <= view ? view - scaled + PAN_SLACK - shift : PAN_SLACK - shift;
+      return clamp(pos, min, max);
+    };
+    return { x: axis(p.x, vw, b.x0, b.x1), y: axis(p.y, vh, b.y0, b.y1) };
+  }, []);
+
+  // Measures the core and every off-screen zone (layout sizes, unaffected
+  // by the board's transform) into the world bounds and the map.
+  const measureWorld = useCallback((w, h) => {
+    const content = contentRef.current;
+    const zones = Array.from(content?.querySelectorAll("[data-zone]") ?? []).map((el) => ({
+      id: el.dataset.zone,
+      x: el.offsetLeft,
+      y: el.offsetTop,
+      w: el.offsetWidth,
+      h: el.offsetHeight,
+    }));
+    const world = {
+      x0: Math.min(0, ...zones.map((z) => z.x)) - WORLD_MARGIN,
+      y0: Math.min(0, ...zones.map((z) => z.y)) - WORLD_MARGIN,
+      x1: Math.max(w, ...zones.map((z) => z.x + z.w)) + WORLD_MARGIN,
+      y1: Math.max(h, ...zones.map((z) => z.y + z.h)) + WORLD_MARGIN,
+    };
+    worldRef.current = world;
+    return { world, zones };
   }, []);
 
   const resetBoard = useCallback(() => {
     const vp = viewportRef.current;
     const content = contentRef.current;
     if (!vp || !content) return;
+    // The core card sort alone sets the fit: off-screen zones are
+    // absolutely positioned, so they never count toward these sizes.
     const w = content.offsetWidth;
     const h = content.offsetHeight;
-    contentSize.current = { w, h };
+    const { world, zones } = measureWorld(w, h);
     const vw = vp.clientWidth;
     const scaledFit = (vw - 64) / w;
-    const z = clamp(Math.min(scaledFit, 1), MIN_ZOOM, MAX_ZOOM);
+    const z = clamp(Math.min(scaledFit, 1), FIT_MIN_ZOOM, MAX_ZOOM);
     const scaledW = w * z;
     const px = scaledW <= vw ? (vw - scaledW) / 2 : 32;
-    flushView({ zoom: z, pan: clampPanFor({ x: px, y: 32 }, z, { w, h }) });
+    flushView({ zoom: z, pan: clampPanFor({ x: px, y: 32 }, z, world) });
+    setMap({ world, zones, core: { w, h }, viewport: { w: vw, h: vp.clientHeight } });
     flushOffsets({});
     clearSelection();
-  }, [clampPanFor, clearSelection, flushView, flushOffsets]);
+  }, [clampPanFor, clearSelection, flushView, flushOffsets, measureWorld]);
+
+  // Map jumps glide rather than cut, so the visitor sees where they went.
+  const jumpTo = useCallback(
+    (bx, by) => {
+      const vp = viewportRef.current;
+      if (!vp) return;
+      const current = pendingView.current ?? viewRef.current;
+      const pan = clampPanFor(
+        { x: vp.clientWidth / 2 - bx * current.zoom, y: vp.clientHeight / 2 - by * current.zoom },
+        current.zoom,
+        worldRef.current
+      );
+      setJumping(true);
+      clearTimeout(jumpTimer.current);
+      jumpTimer.current = setTimeout(() => setJumping(false), JUMP_MS);
+      flushView({ zoom: current.zoom, pan });
+    },
+    [clampPanFor, flushView]
+  );
+  useEffect(() => () => clearTimeout(jumpTimer.current), []);
 
   useLayoutEffect(() => {
     resetBoard();
@@ -317,7 +380,7 @@ export default function CanvasAbout() {
       const newPan = clampPanFor(
         { x: cx - contentX * newZoom, y: cy - contentY * newZoom },
         newZoom,
-        contentSize.current
+        worldRef.current
       );
       flushView({ zoom: newZoom, pan: newPan });
     },
@@ -359,7 +422,7 @@ export default function CanvasAbout() {
         const newPan = clampPanFor(
           { x: cx - contentX * newZoom, y: cy - contentY * newZoom },
           newZoom,
-          contentSize.current
+          worldRef.current
         );
         return { zoom: newZoom, pan: newPan };
       });
@@ -418,7 +481,7 @@ export default function CanvasAbout() {
         const newPan = clampPanFor(
           { x: mid.x - contentX * newZoom, y: mid.y - contentY * newZoom },
           newZoom,
-          contentSize.current
+          worldRef.current
         );
         commitView({ zoom: newZoom, pan: newPan });
         return;
@@ -432,7 +495,7 @@ export default function CanvasAbout() {
           pan: clampPanFor(
             { x: panState.current.startPan.x + dx, y: panState.current.startPan.y + dy },
             prev.zoom,
-            contentSize.current
+            worldRef.current
           ),
         }));
       }
@@ -471,7 +534,6 @@ export default function CanvasAbout() {
       <p className={styles.subheading} data-reveal>
         The About page, as a board you can pan around.
       </p>
-      <StoryTeaser />
 
       <div
         className={`${styles.viewport} ${isPanning ? styles.panning : ""} ${boardIn ? styles.boardIn : ""}`}
@@ -519,7 +581,7 @@ export default function CanvasAbout() {
         </div>
 
         <div
-          className={styles.content}
+          className={`${styles.content} ${jumping ? styles.jumping : ""}`}
           ref={contentRef}
           style={{ transform: `translate(${view.pan.x}px, ${view.pan.y}px) scale(${view.zoom})` }}
         >
@@ -652,8 +714,24 @@ export default function CanvasAbout() {
               )}
             </Frame>
           </div>
+
+          <BoardExtras card={card} shown={boardIn} />
         </div>
+
+        {map && (
+          <BoardMap
+            world={map.world}
+            core={map.core}
+            zones={map.zones}
+            view={view}
+            viewport={map.viewport}
+            onJump={jumpTo}
+          />
+        )}
       </div>
+
+      {/* After the board: once someone has explored it, the long version. */}
+      <StoryTeaser />
     </section>
   );
 }
