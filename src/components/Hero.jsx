@@ -67,10 +67,11 @@ export default function Hero() {
               stagger={0.06}
               className={styles.heading}
               emClassName={styles.emphasis}
-              text="curious by default, and I build until it's *trusted*."
+              text="I design products that turn complexity into *confidence*."
             />
             <motion.p className={styles.subhead} {...(motionOff ? {} : rise(0.85, ready))}>
-              Product Designer &amp; Builder with about 6 years of experience
+              Product designer &amp; builder, 6 years across logistics, ed-tech and B2B SaaS. Now leading design
+              for AI agents at Delhivery.
             </motion.p>
           </div>
 

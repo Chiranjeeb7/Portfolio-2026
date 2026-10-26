@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from "motion/react";
 
 const EASE = [0.16, 1, 0.3, 1];
 
-// Splits "curious by default, and I build until it's *trusted*." into words,
+// Splits "I design products that turn complexity into *confidence*." into words,
 // each rising out of its own clipping mask in sequence. Words wrapped in
 // *asterisks* render inside <em> so a component can style the emphasis.
 // `trigger="mount"` plays on load (hero), otherwise it plays the first time
