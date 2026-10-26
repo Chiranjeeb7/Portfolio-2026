@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { buildGrid, totalEvents, TOTAL_DAYS } from "../data/activity";
-import CornerMarks from "./CornerMarks";
+import { buildGrid, totalEvents } from "../data/activity";
 import styles from "./MilestonesGrid.module.css";
 
-const { days, yearLabels, from, to } = buildGrid();
+const { days, yearLabels, totalDays, from, to } = buildGrid();
 
 // Which legend entry a cell belongs to, for the legend-hover highlight.
 function kindOf(day) {
@@ -38,8 +37,8 @@ function cellLabel(day) {
 // out past the panel. Measured as a share of the row, since how many columns
 // those days land in depends on the row count CSS picks at this width.
 function edgeClass(index) {
-  if (index < TOTAL_DAYS * 0.1) return styles.edgeStart;
-  if (index > TOTAL_DAYS * 0.9) return styles.edgeEnd;
+  if (index < totalDays * 0.1) return styles.edgeStart;
+  if (index > totalDays * 0.9) return styles.edgeEnd;
   return "";
 }
 
@@ -50,7 +49,6 @@ export default function MilestonesGrid() {
 
   return (
     <div className={styles.panel} data-focus={focus ?? undefined}>
-      <CornerMarks accentCorner="br" />
       <div className={styles.header}>
         <h3 className={styles.title}>Key moments</h3>
         <p className={styles.subtitle}>Hover a cell for details</p>

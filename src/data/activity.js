@@ -10,8 +10,13 @@
 // wide screen and taller on a phone - where fewer rows would mean more
 // columns and unreadably small squares - without the data changing at all.
 
-export const WINDOW_WEEKS = 58;
-export const TOTAL_DAYS = WINDOW_WEEKS * 7;
+// The window always ends with the current week and shows at least this many
+// weeks, but it reaches back further when needed so the earliest event is
+// never cut off. (A fixed 58 weeks did exactly that: as weeks passed, the
+// oldest events, the first Figma plugin milestone among them, slid off the
+// left edge.) A longer window means more columns and slightly smaller
+// squares, so trim very old events here rather than letting it grow forever.
+export const MIN_WINDOW_WEEKS = 58;
 
 // Fixed points, exactly as briefed: the first Figma plugin, first pull
 // request 7 months back, the AI workshop 5 months back, and each build and
@@ -132,13 +137,22 @@ export function buildGrid(now = new Date()) {
   }
 
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  // The window ends on the Saturday of the current week and runs back a
-  // whole number of weeks, so the rows stay weekday-aligned.
+  // The window ends on the Saturday of the current week and starts on a
+  // Sunday, a whole number of weeks back, so the rows stay weekday-aligned:
+  // MIN_WINDOW_WEEKS back, or the week of the earliest event if that is
+  // further.
   const end = addDays(today, 6 - today.getDay());
-  const start = addDays(end, -(WINDOW_WEEKS * 7 - 1));
+  const earliest = activityEvents.map(placeEvent).reduce((a, b) => (b < a ? b : a));
+  const minStart = addDays(end, -(MIN_WINDOW_WEEKS * 7 - 1));
+  const firstWeek = addDays(earliest, -earliest.getDay());
+  const start = firstWeek < minStart ? firstWeek : minStart;
+  // Counted by calendar day (not ms / 86400000) so a DST change inside the
+  // window can't drop or add a day.
+  let totalDays = 0;
+  while (addDays(start, totalDays) <= end) totalDays++;
 
   const days = [];
-  for (let i = 0; i < TOTAL_DAYS; i++) {
+  for (let i = 0; i < totalDays; i++) {
     const date = addDays(start, i);
     const events = byDate.get(dateKey(date)) ?? [];
     days.push({
@@ -159,12 +173,12 @@ export function buildGrid(now = new Date()) {
   let previousYear = null;
   for (const day of days) {
     if (day.year !== previousYear) {
-      yearLabels.push({ year: day.year, at: day.index / TOTAL_DAYS });
+      yearLabels.push({ year: day.year, at: day.index / totalDays });
       previousYear = day.year;
     }
   }
 
-  return { days, yearLabels, from: days[0], to: days[TOTAL_DAYS - 1] };
+  return { days, yearLabels, totalDays, from: days[0], to: days[totalDays - 1] };
 }
 
 export const totalEvents = activityEvents.length;
