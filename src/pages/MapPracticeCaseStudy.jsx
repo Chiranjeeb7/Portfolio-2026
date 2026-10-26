@@ -41,7 +41,6 @@ import CaseStudyHeader from "../components/casestudy/CaseStudyHeader";
 import CaseStudySideNav from "../components/casestudy/CaseStudySideNav";
 import MoreWork from "../components/casestudy/MoreWork";
 import CountUp from "../components/motion/CountUp";
-import CornerMarks from "../components/CornerMarks";
 import Footer from "../components/Footer";
 import scanImg from "../assets/photos/map-practice-scan.webp";
 import learnStationImg from "../assets/photos/map-practice-learnstation.webp";
@@ -230,7 +229,6 @@ export default function MapPracticeCaseStudy() {
             </div>
 
             <div className={styles.statGridWrap}>
-              <CornerMarks />
               <div className={styles.statGrid}>
                 {heroStats.map((s) => {
                   const Icon = STAT_ICONS[s.icon];
@@ -247,7 +245,6 @@ export default function MapPracticeCaseStudy() {
           </div>
 
           <div className={styles.heroShot}>
-            <CornerMarks />
             <img
               src={scanImg}
               alt="Map Practice on LearnStation: the scan screen asking students to place an India map in front of the device"

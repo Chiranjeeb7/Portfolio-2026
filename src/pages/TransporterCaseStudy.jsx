@@ -41,7 +41,6 @@ import CaseStudySideNav from "../components/casestudy/CaseStudySideNav";
 import MoreWork from "../components/casestudy/MoreWork";
 import LaneSwipeDemo from "../components/casestudy/LaneSwipeDemo";
 import CountUp from "../components/motion/CountUp";
-import CornerMarks from "../components/CornerMarks";
 import Footer from "../components/Footer";
 import newHome from "../assets/photos/transporter-new-home.webp";
 import newSpotList from "../assets/photos/transporter-new-spot-list.webp";
@@ -333,7 +332,6 @@ export default function TransporterCaseStudy() {
             </div>
 
             <div className={styles.statGridWrap}>
-              <CornerMarks />
               <div className={styles.statGrid}>
                 {heroStats.map((s) => {
                   const Icon = STAT_ICONS[s.icon];
@@ -353,7 +351,6 @@ export default function TransporterCaseStudy() {
           </div>
 
           <div className={styles.heroShot}>
-            <CornerMarks />
             <div className={local.heroStage}>
               {hero.screens.map((s) => (
                 <img key={s.src} src={SCREENS[s.src]} alt={s.alt} className={local.framedImg} />

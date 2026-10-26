@@ -21,7 +21,7 @@ function readColors(canvas) {
     inkFaint: pick("--ink-faint", "#9a9384"),
     accent: pick("--accent", "#b8460b"),
     accentStrong: pick("--accent-strong", "#8a3406"),
-    accentTint: pick("--accent-tint", "#fbe4dc"),
+    accentTint: pick("--accent-tint", "#f6e4d6"),
     line: pick("--line", "#e4ddd0"),
     lineStrong: pick("--line-strong", "#c7ced4"),
   };

@@ -61,7 +61,6 @@
 
 .statGridWrap {
   position: relative;
-  padding: 6px;
 }
 
 .statGrid {
@@ -127,7 +126,6 @@
 .heroShot {
   position: relative;
   margin-top: 48px;
-  padding: 8px;
 }
 
 .heroShotImg {
@@ -800,9 +798,6 @@
   }
   .heroShot {
     margin-top: 32px;
-  }
-  .statGridWrap {
-    padding: 0;
   }
   .twoCol,
   .impactGrid,

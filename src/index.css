@@ -1,8 +1,8 @@
 /* ---------- Tokens ----------
    Reverse-engineered from som.design's own computed styles: cool near-white
    ground, slate ink (never black), hairline borders, near-zero radius,
-   zero shadow, and one coral accent used only at decorative/large scale
-   (logo, corner marks) - never as button fill or body text. */
+   zero shadow, and one burnt-orange accent used only at decorative/large
+   scale (logo, hero emphasis) - never as button fill or body text. */
 :root {
   --bg: #fafcfd;
   --bg-panel: #f1f4f6;
@@ -13,19 +13,21 @@
   --line: #e5e8eb;
   --line-strong: #c7ced4;
 
-  /* Decorative/large-scale only (logo, corner marks, hero emphasis word) -
-     this is som's own accent value, which only clears WCAG large-text
-     contrast (3:1), not normal-text (4.5:1). --accent-strong is the AA-safe
-     shade for anywhere accent touches small text or a filled surface. */
-  --accent: #e86543;
-  --accent-strong: #b8421f;
-  --accent-hover: #93390a;
+  /* Decorative/large-scale only (logo, hero emphasis word, grid cells).
+     Burnt orange (2026-10), replacing som's coral #e86543, which read pink
+     and cheap: deeper and less pink, and 4.28:1 on --bg (coral was 3.2:1),
+     so large text clears comfortably. --accent-strong (6.06:1) is the
+     AA-safe shade for anywhere accent touches small text or a filled
+     surface. */
+  --accent: #c8551c;
+  --accent-strong: #a3430f;
+  --accent-hover: #843508;
   --accent-ink: #fff8f2;
-  --accent-tint: #fbe4dc;
+  --accent-tint: #f6e4d6;
   /* For accent text sitting on a var(--ink)-colored surface (e.g. the
      inverted tooltip chip) - bright in light mode since --ink is dark there,
      dark in dark mode since --ink flips light. */
-  --accent-on-ink: #ff8a5c;
+  --accent-on-ink: #f5a05a;
 
   /* Teal - the only colour besides the accent in the activity grid, marking
      the three milestone cells (first Figma plugin, first PR, the AI workshop). */
@@ -83,12 +85,12 @@
     --line: #262e37;
     --line-strong: #36404a;
 
-    --accent: #ff8a5c;
-    --accent-strong: #ff8a5c;
-    --accent-hover: #ffa579;
+    --accent: #f0904a;
+    --accent-strong: #f0904a;
+    --accent-hover: #f6a865;
     --accent-ink: #1c0f06;
-    --accent-tint: #3a2313;
-    --accent-on-ink: #a03a1b;
+    --accent-tint: #3a2615;
+    --accent-on-ink: #a3430f;
 
     --milestone: #3fcfb4;
     --milestone-strong: #a8f0e1;
@@ -110,12 +112,12 @@
   --line: #262e37;
   --line-strong: #36404a;
 
-  --accent: #ff8a5c;
-  --accent-strong: #ff8a5c;
-  --accent-hover: #ffa579;
+  --accent: #f0904a;
+  --accent-strong: #f0904a;
+  --accent-hover: #f6a865;
   --accent-ink: #1c0f06;
-  --accent-tint: #3a2313;
-  --accent-on-ink: #a03a1b;
+  --accent-tint: #3a2615;
+  --accent-on-ink: #a3430f;
 
   --milestone: #3fcfb4;
   --milestone-strong: #a8f0e1;

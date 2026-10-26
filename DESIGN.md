@@ -35,16 +35,22 @@ components.
   4.5:1+ AA against `--bg`.
 - `--line` `#e5e8eb` / `--line-strong` `#c7ced4` - hairline borders, matches
   som's own border gray.
-- `--accent` `#e86543` - som's own coral, used *only* at decorative or
-  large-display scale (the "complexity" emphasis word, the logo-adjacent
-  corner marks) where WCAG's large-text 3:1 threshold applies. It does not
-  clear normal-text 4.5:1 (measured 3.2:1) - this is deliberate restraint,
-  matching how sparingly som itself uses it (their logo + corner marks are
-  the *only* two places it appears on their whole site; no filled buttons,
-  no colored links).
-- `--accent-strong` `#b8421f` - the AA-safe shade for anywhere accent must
-  carry small text or a filled surface (stat values, hover states).
-- `--accent-on-ink` `#ff8a5c` (light) / `#a03a1b` (dark) - a third variant
+- `--accent` `#c8551c` (light) / `#f0904a` (dark) - burnt orange, used
+  *only* at decorative or large-display scale (the hero emphasis word, the
+  Key Moments cells) where WCAG's large-text 3:1 threshold
+  applies (measured 4.28:1 light, 7.6:1 dark). Replaced som's own coral
+  `#e86543` / `#ff8a5c` in Oct 2026 after feedback that the coral didn't
+  look premium: it leaned pink. The burnt orange is deeper and warmer, and
+  sits better next to the teal milestones. Restraint is unchanged: no
+  filled buttons, no colored links.
+- **Corner marks removed (Oct 2026).** The blueprint "+" marks at panel
+  corners (Key Moments, case-study stat grids and hero shots, milestone
+  covers) were dropped site-wide, along with the padding their wrappers kept
+  for them. Older notes below still mention them as history.
+- `--accent-strong` `#a3430f` - the AA-safe shade (6.06:1) for anywhere
+  accent must carry small text or a filled surface (stat values, hover
+  states).
+- `--accent-on-ink` `#f5a05a` (light) / `#a3430f` (dark) - a third variant
   specifically for accent text sitting on a `var(--ink)`-colored surface
   (the inverted tooltip chip), since that surface's actual color flips
   between light and dark mode.

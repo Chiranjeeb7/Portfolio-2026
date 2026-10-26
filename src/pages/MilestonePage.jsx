@@ -2,7 +2,6 @@ import { rich } from "../components/rich";
 import { useEffect } from "react";
 import { ArrowLeft, ArrowRight, CalendarDays, Clock, ImagePlus, MapPin } from "lucide-react";
 import CaseStudyHeader from "../components/casestudy/CaseStudyHeader";
-import CornerMarks from "../components/CornerMarks";
 import Footer from "../components/Footer";
 import RevealText from "../components/motion/RevealText";
 import { milestones } from "../data/milestones";
@@ -124,7 +123,6 @@ export default function MilestonePage({ slug }) {
           </header>
 
           <div className={styles.coverWrap} data-reveal>
-            <CornerMarks accentCorner="br" />
             {m.cover.set ? <PhotoSet images={m.cover.set} /> : <Photo image={m.cover} className={styles.cover} />}
           </div>
 
