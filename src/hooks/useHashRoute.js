@@ -7,6 +7,9 @@ import { preloadRoute } from "../routes";
 // schemes never collide. No routing library needed for one dynamic page,
 // and hash-based routing needs no server rewrite rules on any static host.
 const routeOf = (hash) => hash.match(/^#\/(.+)$/)?.[1] ?? null;
+// The interview decks keep their slide number in the hash ("#/ai-deck/7");
+// moving between slides is not a page change.
+const pageOf = (route) => route?.replace(/^([\w-]+-deck)\/\d+$/, "$1") ?? null;
 
 export function useHashRoute() {
   const [hash, setHash] = useState(() => window.location.hash);
@@ -15,7 +18,7 @@ export function useHashRoute() {
     let current = window.location.hash;
     const onHashChange = () => {
       const next = window.location.hash;
-      const pageChanges = routeOf(next) !== routeOf(current);
+      const pageChanges = pageOf(routeOf(next)) !== pageOf(routeOf(current));
       current = next;
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 

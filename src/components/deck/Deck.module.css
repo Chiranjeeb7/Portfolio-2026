@@ -1,0 +1,1380 @@
+/* Interview decks (shared by every deck). Everything inside .stage is laid out in fixed
+   pixels on a 1600x900 canvas that the page scales to fit the window, so
+   sizes here are slide sizes, not screen sizes. Same tokens as the site:
+   slate ink, hairlines, sharp corners, burnt orange only at large scale. */
+
+.lock,
+.lock body {
+  overflow: hidden;
+  height: 100%;
+}
+
+.deck {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-panel);
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.idle {
+  cursor: none;
+}
+
+.stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: center;
+  background: var(--bg);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  padding: 44px 96px 40px;
+  overflow: hidden;
+}
+
+.stageHead,
+.stageFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex: none;
+}
+
+.stageHead {
+  min-height: 20px;
+}
+
+.stageFoot {
+  margin-top: 24px;
+}
+
+.slide {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.progress {
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.progress span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+.counter {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-label);
+  color: var(--ink-faint);
+}
+
+/* ---------- Type ---------- */
+
+.label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-label-wide);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.kicker {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-label-wide);
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+
+.tag {
+  align-self: flex-start;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-label-loose);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px 5px;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-size: 92px;
+  line-height: 1.02;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.title {
+  font-size: 58px;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  max-width: 1200px;
+}
+
+.titleLarge {
+  font-size: 64px;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  max-width: 1300px;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.ink {
+  color: var(--ink);
+}
+
+.lede,
+.sub {
+  font-size: 28px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+  max-width: 900px;
+}
+
+.statement {
+  font-family: var(--font-display);
+  font-size: 44px;
+  line-height: 1.2;
+  font-weight: 500;
+  max-width: 1150px;
+}
+
+.muted {
+  font-size: 28px;
+  color: var(--ink-muted);
+}
+
+.body {
+  font-size: 22px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+.panelLead {
+  font-size: 30px;
+  line-height: 1.4;
+  color: var(--ink-muted);
+}
+
+/* In the deck the skim highlight takes the accent, since it is read
+   from across a table rather than skimmed. */
+.stage :global(.hl) {
+  color: var(--accent-strong);
+}
+
+.index {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+/* ---------- Layouts ---------- */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.stackTight {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 32px;
+}
+
+.center .display,
+.center .statement {
+  max-width: 1300px;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.grid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Every screenshot and recording is about 1280x722 (16:9), so frames use
+   that ratio and media is never cropped. */
+.fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.zoomable {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.zoomHint {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px 5px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: #fff;
+  background: rgb(20 26 33 / 0.78);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.zoomable:hover .zoomHint,
+.zoomable:focus-visible .zoomHint {
+  opacity: 1;
+}
+
+/* ---------- Surfaces ---------- */
+
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panelAccent {
+  border-top: 3px solid var(--accent);
+}
+
+.card {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  padding: 28px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cardTitle {
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.iconTile {
+  display: inline-grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  color: var(--ink);
+  flex: none;
+}
+
+.chips {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.chip {
+  font-family: var(--font-display);
+  font-size: 24px;
+  padding: 10px 20px 9px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  color: var(--ink-muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+}
+
+/* ---------- Cover ---------- */
+
+.cover {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 72px;
+  align-items: center;
+}
+
+.coverText {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.coverText .display {
+  font-size: 84px;
+}
+
+.coverMedia {
+  aspect-ratio: 1280 / 722;
+  border: 1px solid var(--line);
+  background: var(--bg-panel);
+  overflow: hidden;
+}
+
+
+.byline {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 20px;
+  color: var(--ink-faint);
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.center .byline {
+  align-items: center;
+  padding-inline: 48px;
+}
+
+.bylineName {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ---------- Hook ---------- */
+
+.giant {
+  font-family: var(--font-display);
+  font-size: 260px;
+  line-height: 0.9;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Stats ---------- */
+
+.statRow {
+  display: flex;
+  gap: 64px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+}
+
+.stat,
+.bigStat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bigStat {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  padding: 32px 36px;
+}
+
+.statValue {
+  font-family: var(--font-display);
+  font-size: 64px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.statLabel {
+  font-size: 21px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+/* ---------- Planner flow ---------- */
+
+.flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 56px;
+}
+
+.flowStep {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.flowHead {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.flowArrow {
+  margin-left: auto;
+  color: var(--accent);
+}
+
+.flowTitle {
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+/* ---------- Timeline ---------- */
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px;
+  border-top: 2px solid var(--line-strong);
+  padding-top: 0;
+}
+
+.beat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 40px;
+}
+
+.beatDot {
+  position: absolute;
+  top: -9px;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  background: var(--bg);
+  border: 2px solid var(--accent);
+}
+
+.beat:last-child .beatDot {
+  background: var(--accent);
+}
+
+.beatText {
+  font-size: 32px;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+/* ---------- Goals ---------- */
+
+.goalList {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.goalList li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 22px;
+  border-left: 2px solid var(--accent);
+}
+
+.goalTitle {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ---------- Concepts ---------- */
+
+.stackSnug {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.conceptLayout {
+  display: grid;
+  grid-template-columns: 900px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.conceptMain {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.conceptShot {
+  height: auto;
+  aspect-ratio: 1280 / 722;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-panel);
+  overflow: hidden;
+}
+
+.conceptTabs {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.conceptTab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px 6px 6px;
+  border: 1px solid var(--line);
+  background: var(--bg-panel);
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  cursor: pointer;
+  text-align: left;
+}
+
+.conceptTab img {
+  width: 64px;
+  aspect-ratio: 1280 / 722;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  flex: none;
+}
+
+.conceptTab:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.conceptTabOn {
+  border-color: var(--accent);
+  box-shadow: inset 0 -3px 0 var(--accent);
+  color: var(--ink);
+}
+
+.conceptDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 4px;
+}
+
+.conceptHeading {
+  font-size: 34px;
+  line-height: 1.15;
+}
+
+.winnerHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.shippedTag {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: var(--tracking-label-loose);
+  text-transform: uppercase;
+  color: var(--sage);
+  background: var(--sage-tint);
+  padding: 3px 8px 2px;
+  border-radius: var(--radius-sm);
+}
+
+.pros {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 21px;
+  line-height: 1.4;
+  color: var(--ink-muted);
+}
+
+.pros li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.proIcon {
+  flex: none;
+  color: var(--sage);
+  margin-top: 4px;
+}
+
+.conIcon {
+  flex: none;
+  color: var(--accent);
+  margin-top: 4px;
+}
+
+.whyWon {
+  margin-top: 6px;
+  padding: 16px 18px;
+  border-left: 2px solid var(--accent);
+  background: var(--bg-panel);
+  font-size: 19px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+/* ---------- Solutions ---------- */
+
+.solution {
+  display: grid;
+  grid-template-columns: 1fr 1.45fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.solutionText {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.solutionText .title {
+  font-size: 52px;
+}
+
+.pair {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 24px;
+  border-left: 2px solid var(--line-strong);
+}
+
+.pairAccent {
+  border-left-color: var(--accent);
+}
+
+.solutionMedia {
+  aspect-ratio: 1280 / 722;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-panel);
+  overflow: hidden;
+}
+
+/* ---------- Impact ---------- */
+
+.impact {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 24px;
+}
+
+.impactHero {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--accent);
+  padding: 44px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.impactValue {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: var(--font-display);
+  font-size: 140px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.impactArrow {
+  color: var(--ink-faint);
+}
+
+/* ---------- Presenter toolbar (outside the stage, screen-sized) ---------- */
+
+.toolbar {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 24px);
+  overflow-x: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--line);
+  box-shadow: 0 6px 24px -12px rgb(0 0 0 / 0.25);
+  transition: opacity 0.3s;
+  scrollbar-width: none;
+}
+
+.idle .toolbar {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: none;
+}
+
+.group + .group {
+  padding-left: 4px;
+  margin-left: 2px;
+  border-left: 1px solid var(--line);
+}
+
+.controlSep + .group {
+  padding-left: 0;
+  margin-left: 0;
+  border-left: 0;
+}
+
+.toolbar button,
+.overviewHead button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+  flex: none;
+}
+
+.toolbar button:hover:not(:disabled),
+.overviewHead button:hover {
+  background: var(--bg-panel);
+  color: var(--ink);
+}
+
+.toolbar button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.toolbar button.on {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.slideNum {
+  min-width: 44px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-label);
+  color: var(--ink-muted);
+}
+
+.toolbar .swatch {
+  width: 28px;
+}
+
+.swatch span {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12);
+}
+
+.toolbar .swatchOn {
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+.toolbar .timer {
+  width: auto;
+  display: flex;
+  gap: 6px;
+  padding-inline: 8px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-label);
+}
+
+.controlSep {
+  width: 1px;
+  height: 20px;
+  margin-inline: 2px;
+  background: var(--line-strong);
+  flex: none;
+}
+
+/* Full-size viewer for a clicked screenshot or recording. */
+.viewer {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px 24px 16px;
+  background: rgb(10 13 17 / 0.92);
+  cursor: zoom-out;
+}
+
+.viewer img,
+.viewer video {
+  max-width: 100%;
+  max-height: calc(100vh - 96px);
+  object-fit: contain;
+  background: #fff;
+  box-shadow: 0 20px 60px -20px rgb(0 0 0 / 0.6);
+}
+
+.viewer video {
+  cursor: default;
+}
+
+.viewerBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #e3e9ee;
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: var(--tracking-label-tight);
+}
+
+.viewerBar button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Blank screen (B): pure black, so nothing on the slide competes with the
+   conversation. Any key or click brings the slide back. */
+.blank {
+  position: fixed;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: #000;
+  cursor: none;
+}
+
+.helpScrim {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgb(0 0 0 / 0.35);
+}
+
+.help {
+  width: min(460px, 100%);
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--line);
+  padding: 16px 20px 20px;
+}
+
+.help .overviewHead {
+  margin-bottom: 8px;
+}
+
+.helpList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.helpList dt {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label-tight);
+  color: var(--ink);
+  white-space: pre;
+}
+
+.helpList dd {
+  margin: 0;
+  color: var(--ink-muted);
+  text-align: right;
+}
+
+.overview {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  overflow-y: auto;
+  padding: 24px clamp(16px, 4vw, 48px) 48px;
+}
+
+.overviewHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.overviewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.overviewItem {
+  width: 100%;
+  min-height: 116px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  text-align: left;
+  padding: 16px 18px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.overviewItem:hover {
+  border-color: var(--line-strong);
+}
+
+.overviewActive {
+  border-color: var(--accent);
+  box-shadow: inset 0 3px 0 var(--accent);
+}
+
+.overviewTitle {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.overviewChapter {
+  margin-top: auto;
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+
+.overviewItem .index {
+  font-size: 13px;
+}
+
+/* ---------- AI deck ---------- */
+
+.bodySmall {
+  font-size: 19px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+.sageText {
+  color: var(--sage);
+}
+
+.iconTileAccent {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+}
+
+.iconTileLarge {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-panel);
+  color: var(--accent);
+}
+
+/* Checklist beside a screenshot. */
+.points {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  font-size: 23px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+.points li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+/* Old bulk-upload loop: four steps, with a bracket under steps 2-4 that
+   carries the user back to "upload it" again. */
+.loop {
+  position: relative;
+  padding-bottom: 88px;
+}
+
+.loopSteps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+
+.loopStep {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 28px 28px 30px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+}
+
+.loopStep:nth-child(3) {
+  border-top: 3px solid var(--accent);
+}
+
+.loopText {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.loopArrow {
+  position: absolute;
+  right: -34px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-faint);
+}
+
+.loopBack {
+  position: absolute;
+  bottom: 0;
+  /* From the middle of step 2 to the middle of step 4. */
+  left: calc((100% - 120px) / 4 * 1.5 + 40px);
+  right: calc((100% - 120px) / 8);
+  height: 60px;
+  border: 2px dashed var(--accent);
+  border-top: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.loopBack span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transform: translateY(50%);
+  padding: 4px 14px;
+  background: var(--bg);
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--accent-strong);
+}
+
+/* Five-step agent pipeline. */
+.pipeline {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 32px;
+}
+
+.pipeline .flowTitle {
+  font-size: 28px;
+}
+
+/* Agent activity, oldest first. */
+.activity {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--ink-muted);
+}
+
+.activity li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.activityIcon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-panel);
+  color: var(--ink);
+}
+
+.activity li:last-child .activityIcon {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+}
+
+.mediaStack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* Two 16:9 shots stacked must fit the slide height. */
+  width: 560px;
+  justify-self: end;
+}
+
+/* Partial success. */
+.partial {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1100px;
+}
+
+.partialNums {
+  display: flex;
+  gap: 96px;
+}
+
+.partialNums > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.partialNums .statValue {
+  font-size: 120px;
+}
+
+.partialBar {
+  display: flex;
+  height: 14px;
+  gap: 4px;
+}
+
+.partialBar span:first-child {
+  background: var(--sage);
+}
+
+.partialBar span:last-child {
+  background: var(--accent);
+}
+
+/* Full-width demo recording. */
+.demo {
+  align-self: center;
+  width: 1080px;
+  aspect-ratio: 1280 / 722;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-panel);
+  overflow: hidden;
+}
+
+/* Before / after table. */
+.compareHead,
+.compareRow {
+  display: grid;
+  grid-template-columns: 300px 1fr 1fr;
+  gap: 32px;
+  align-items: baseline;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.compareHead {
+  padding-top: 0;
+  border-bottom: 2px solid var(--line-strong);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-label-wide);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.compareHead span:last-child {
+  color: var(--accent-strong);
+}
+
+.compareRow > span:first-child {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.compareBefore {
+  font-size: 23px;
+  color: var(--ink-faint);
+}
+
+.compareAfter {
+  font-size: 23px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Link from a deck's slide overview back to the presentations list. */
+.allDecks {
+  margin-left: auto;
+  margin-right: 8px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.allDecks:hover {
+  color: var(--accent-strong);
+}
+
+/* A step marked as the part of a flow the story is about. */
+.flowStepHere .flowHead {
+  border-bottom-color: var(--accent);
+}
+
+.hereTag {
+  align-self: flex-start;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: var(--tracking-label-loose);
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: var(--accent-strong);
+  padding: 4px 9px 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ---------- Planner slide: case study diagram + its three steps ---------- */
+
+.plannerPanel {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.plannerDiagram {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0 6px;
+}
+
+/* The diagram is drawn for a web page (about 880px wide, rem-sized labels);
+   zoom it so its labels read at slide scale. */
+.plannerDiagram > * {
+  width: 880px;
+  zoom: 1.08;
+}
+
+.plannerFlow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--line);
+}
+
+.plannerStep {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 28px 22px;
+  background: var(--bg-panel-raised);
+}
+
+.plannerStep + .plannerStep {
+  border-left: 1px solid var(--line);
+}
+
+.plannerStepHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.plannerStepHead .iconTile {
+  width: 44px;
+  height: 44px;
+}
+
+.plannerStepTitle {
+  font-size: 24px;
+  line-height: 1.2;
+}

@@ -14,8 +14,12 @@ import { clearSectionAnchor, IntroContext, shouldPlayIntro } from "./components/
 import ScrollProgress from "./components/motion/ScrollProgress";
 import {
   MapPracticeCaseStudy,
+  AiDeck,
+  deckOf,
   MilestonePage,
   PlannerCaseStudy,
+  PlannerDeck,
+  PresentationsPage,
   preloadAllPages,
   StoryPage,
   TransporterCaseStudy,
@@ -34,6 +38,14 @@ const CASE_STUDIES = {
 // Standalone pages that are not case studies, titled on their own.
 const PAGES = {
   story: { Page: StoryPage, title: "My story" },
+  // Unlisted: reached only by its link (/presentations).
+  presentations: { Page: PresentationsPage, title: "Presentations" },
+};
+
+// Unlisted interview decks, reached only by typing their link.
+const DECKS = {
+  "planner-deck": { Page: PlannerDeck, title: "Planner" },
+  "ai-deck": { Page: AiDeck, title: "Agentic data ingestion" },
 };
 
 const HOME_TITLE = `${profile.name}: ${profile.role}`;
@@ -64,17 +76,20 @@ function App() {
   }, [introRunning, introPlayed]);
   // "#/moment/<slug>" routes to a milestone page; any other "#/<id>" to a
   // case study or a standalone page. Unknown ids fall through to the homepage.
-  const milestone = route?.startsWith("moment/") ? milestoneBySlug[route.slice(7)] : null;
-  const caseStudy = milestone ? null : CASE_STUDIES[route];
-  const page = milestone || caseStudy ? null : PAGES[route];
-  const pageTitle = milestone
+  const deck = DECKS[deckOf(route)] ?? null;
+  const milestone = !deck && route?.startsWith("moment/") ? milestoneBySlug[route.slice(7)] : null;
+  const caseStudy = milestone || deck ? null : CASE_STUDIES[route];
+  const page = milestone || caseStudy || deck ? null : PAGES[route];
+  const pageTitle = deck
+    ? `${deck.title}: ${profile.name}`
+    : milestone
     ? `${milestone.title}: ${profile.name}`
     : caseStudy
       ? `${caseStudy.title} case study: ${profile.name}`
       : page
         ? `${page.title}: ${profile.name}`
         : HOME_TITLE;
-  const isHome = !milestone && !caseStudy && !page;
+  const isHome = !deck && !milestone && !caseStudy && !page;
 
   // Runs after the new route has rendered, so the target exists. A case
   // study always opens at its top; the homepage honours a section anchor
@@ -114,6 +129,17 @@ function App() {
       {skipLink}
     </>
   );
+
+  // The unlisted interview decks: full-screen slideshows with no site
+  // chrome (no smooth scroll, nav or footer). Nothing links here.
+  if (deck) {
+    const { Page } = deck;
+    return (
+      <Suspense fallback={null}>
+        <Page />
+      </Suspense>
+    );
+  }
 
   if (milestone) {
     return (

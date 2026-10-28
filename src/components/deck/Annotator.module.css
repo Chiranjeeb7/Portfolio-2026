@@ -1,0 +1,60 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.active {
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.pen,
+.highlighter {
+  cursor: crosshair;
+}
+
+.eraser,
+.laser {
+  cursor: none;
+}
+
+.ink,
+.highlight {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.highlight {
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+}
+
+:global([data-theme="dark"]) .highlight {
+  mix-blend-mode: screen;
+  opacity: 0.4;
+}
+
+.eraserRing {
+  fill: color-mix(in srgb, var(--ink) 6%, transparent);
+  stroke: var(--ink-faint);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+
+.laserDot {
+  fill: #ff2d2d;
+}
+
+.laserGlow {
+  fill: #ff2d2d;
+  opacity: 0.22;
+}
+
+.laserTrail {
+  fill: #ff2d2d;
+}
