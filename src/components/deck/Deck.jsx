@@ -15,6 +15,8 @@ import {
   LayoutGrid,
   Maximize2,
   Minimize2,
+  Pause,
+  Play,
   MonitorOff,
   Moon,
   MousePointer2,
@@ -224,15 +226,45 @@ const FRAME_INNER = {
   show: { scale: 1, transition: { duration: 1.4, ease: EASE } },
 };
 
+// Play / pause for a slide's video, so the presenter decides when it moves.
+// Mirrors the video's own state, so K and clicks elsewhere stay in sync.
+export function PlayToggle({ videoRef, className, size = 14, withLabel = false }) {
+  const [playing, setPlaying] = useState(false);
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    // timeupdate also catches an autoplay that started before this mounted.
+    const sync = () => setPlaying(!v.paused);
+    const events = ["play", "playing", "pause", "timeupdate"];
+    events.forEach((ev) => v.addEventListener(ev, sync));
+    return () => events.forEach((ev) => v.removeEventListener(ev, sync));
+  }, [videoRef]);
+  const toggle = (e) => {
+    e.stopPropagation();
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) v.play().catch(() => {});
+    else v.pause();
+  };
+  const what = playing ? "Pause" : "Play";
+  return (
+    <button type="button" className={className} onClick={toggle} aria-label={`${what} video (K)`} title={`${what} (K)`}>
+      {playing ? <Pause size={size} fill="currentColor" /> : <Play size={size} fill="currentColor" />}
+      {withLabel && <span>{what}</span>}
+    </button>
+  );
+}
+
 export function Media({ media, label, chrome = true }) {
   const reduce = useReducedMotion();
   const zoom = useContext(ZoomContext);
+  const videoRef = useRef(null);
   const rx = useMotionValue(0);
   const ry = useMotionValue(0);
   const rotateX = useSpring(rx, { stiffness: 140, damping: 18 });
   const rotateY = useSpring(ry, { stiffness: 140, damping: 18 });
   const el = media.video ? (
-    <video className={s.mediaEl} src={media.video} poster={media.poster} autoPlay={!reduce} muted loop playsInline aria-label={label} />
+    <video ref={videoRef} className={s.mediaEl} src={media.video} poster={media.poster} autoPlay={!reduce} muted loop playsInline aria-label={label} />
   ) : (
     <img className={s.mediaEl} src={media.img} alt={label} />
   );
@@ -253,11 +285,14 @@ export function Media({ media, label, chrome = true }) {
         ry.set(0);
       }}
     >
-      {chrome && (
-        <div className={s.frameBar} aria-hidden="true">
-          <i />
-          <i />
-          <i />
+      {(chrome || media.video) && (
+        <div className={s.frameBar}>
+          <span className={s.frameDots} aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </span>
+          {media.video && <PlayToggle videoRef={videoRef} className={s.frameToggle} withLabel />}
         </div>
       )}
       <button type="button" className={s.zoomable} onClick={() => zoom({ ...media, label })} aria-label={`${label}: view full size`}>
@@ -316,6 +351,7 @@ const SHORTCUTS = [
   ["T", "Reset the timer"],
   ["D", "Dark mode"],
   ["F", "Fullscreen"],
+  ["K", "Play / pause the slide's video"],
   ["?", "This list"],
 ];
 
@@ -510,6 +546,14 @@ export default function Deck({ slides, slug, brand, label, preload = [] }) {
       else if (lower === "o" || lower === "g") setOverview(true);
       else if (lower === "d") toggleTheme();
       else if (k === "?") setHelp(true);
+      else if (lower === "k") {
+        // Play / pause the video on the current slide.
+        const v = stageRef.current?.querySelector("section video");
+        if (v) {
+          if (v.paused) v.play().catch(() => {});
+          else v.pause();
+        }
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);

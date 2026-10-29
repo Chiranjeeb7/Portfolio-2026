@@ -4,7 +4,7 @@
 // on the site links here and the page asks search engines not to index it.
 //
 // The presenter shell and tools live in components/deck/Deck.jsx.
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   ArrowRight,
@@ -26,7 +26,7 @@ import {
   ShieldCheck,
   Truck,
 } from "lucide-react";
-import Deck, { Count, Media, Meter, R, Words } from "../components/deck/Deck";
+import Deck, { Count, Media, Meter, PlayToggle, R, Words } from "../components/deck/Deck";
 import { ZoomContext } from "../components/deck/zoom";
 import PlannerDiagram from "../components/casestudy/PlannerDiagram";
 import { rich } from "../components/rich";
@@ -36,6 +36,8 @@ import plannerPlan from "../assets/photos/planner-plan.webp";
 import plannerFailureSummary from "../assets/photos/planner-failure-summary.webp";
 import truck3dMp4 from "../assets/photos/3d-truck.mp4";
 import truck3dPoster from "../assets/photos/3d-truck-poster.webp";
+import oldFlowMp4 from "../assets/photos/planner-old-flow.mp4";
+import oldFlowPoster from "../assets/photos/planner-old-flow-poster.webp";
 import orderLoadMp4 from "../assets/photos/order-loading.mp4";
 import concept1 from "../assets/photos/planner-concept-1.webp";
 import concept2 from "../assets/photos/planner-concept-2.webp";
@@ -305,6 +307,133 @@ function Findings() {
   );
 }
 
+// The old planner, as a 31-second screen recording, with the problems it
+// shows listed beside it. Each problem is pinned to the moment it appears:
+// clicking one jumps the video there, and the current one lights up as the
+// video plays. Every point is what the recording itself shows.
+const OLD_FLOW_LENGTH = 31;
+const OLD_FLOW_ISSUES = [
+  {
+    at: 0,
+    title: "Plans failed, silently",
+    text: "Recent plans are row after row of “Failed”, with no reason and “--” in every column.",
+  },
+  {
+    at: 6,
+    title: "A plan you couldn't judge",
+    text: "₹0 freight, estimated freight “--”, and settings in jargon. Nothing says whether the plan is good.",
+  },
+  {
+    at: 8,
+    title: "Loads and orders, split apart",
+    text: "Separate tabs, so seeing which orders went into which load meant switching back and forth.",
+  },
+  {
+    at: 10,
+    title: "Numbers that contradicted each other",
+    text: "The header says 0 unassigned; the order below is tagged “Unassigned”; filtering for it finds nothing.",
+  },
+  {
+    at: 23,
+    title: "Back to a bulk upload",
+    text: "With no orders visible, the way forward was uploading a file to a template.",
+  },
+];
+
+function OldPlanner() {
+  const reduce = useReducedMotion();
+  const videoRef = useRef(null);
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const onTime = () => setTime(v.currentTime);
+    v.addEventListener("timeupdate", onTime);
+    return () => v.removeEventListener("timeupdate", onTime);
+  }, []);
+
+  const seek = (at) => {
+    const v = videoRef.current;
+    if (!v) return;
+    // Jumps without changing play state: paused stays paused on that frame.
+    v.currentTime = at;
+    setTime(at);
+  };
+  const togglePlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) v.play().catch(() => {});
+    else v.pause();
+  };
+
+  // The issue whose moment has most recently passed.
+  const active = OLD_FLOW_ISSUES.reduce((cur, it, i) => (time >= it.at ? i : cur), 0);
+
+  return (
+    <div className={s.stackSnug}>
+      <Words as="h2" className={s.title} text="The old planner, in *31 seconds.*" />
+      <div className={s.oldFlow}>
+        <R className={s.oldFlowMain}>
+          <div className={s.frame}>
+            <div className={s.frameBar} aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </div>
+            <video
+              ref={videoRef}
+              src={oldFlowMp4}
+              poster={oldFlowPoster}
+              autoPlay={!reduce}
+              muted
+              loop
+              playsInline
+              aria-label="Screen recording of the old planner"
+              className={`${s.mediaEl} ${s.clickToPlay}`}
+              onClick={togglePlay}
+            />
+          </div>
+          <div className={s.playerRow}>
+          <PlayToggle videoRef={videoRef} className={s.playBig} size={18} />
+          <div className={s.scrubber}>
+            <span className={s.scrubberFill} style={{ width: `${(time / OLD_FLOW_LENGTH) * 100}%` }} />
+            {OLD_FLOW_ISSUES.map((it, i) => (
+              <button
+                key={it.at}
+                type="button"
+                className={`${s.scrubberMark} ${i === active ? s.scrubberMarkOn : ""}`}
+                style={{ left: `${(it.at / OLD_FLOW_LENGTH) * 100}%` }}
+                onClick={() => seek(it.at)}
+                aria-label={`Jump to ${it.title}`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+          </div>
+        </R>
+        <ol className={s.issues}>
+          {OLD_FLOW_ISSUES.map((it, i) => (
+            <R as="li" key={it.at}>
+              <button type="button" className={`${s.issue} ${i === active ? s.issueOn : ""}`} onClick={() => seek(it.at)}>
+                <span className={s.issueNum}>{i + 1}</span>
+                <span className={s.issueBody}>
+                  <span className={s.issueTitle}>
+                    {it.title}
+                    <span className={s.issueTime}>0:{String(it.at).padStart(2, "0")}</span>
+                  </span>
+                  <span className={s.issueText}>{it.text}</span>
+                </span>
+              </button>
+            </R>
+          ))}
+        </ol>
+      </div>
+    </div>
+  );
+}
+
 function CoreProblem() {
   return (
     <div className={s.stack}>
@@ -533,6 +662,7 @@ const SLIDES = [
   { title: "The ask & my role", chapter: "02 · What went wrong", Body: Brief },
   { title: "Research", chapter: "03 · Listening", Body: Listening },
   { title: "Six findings", chapter: "03 · Listening", Body: Findings },
+  { title: "The old planner, on video", chapter: "03 · Listening", Body: OldPlanner },
   { title: "The core problem", chapter: "04 · Framing", Body: CoreProblem },
   { title: "Goals", chapter: "04 · Framing", Body: Goals },
   { title: "Five concepts", chapter: "05 · Exploring", Body: Concepts },
@@ -542,7 +672,7 @@ const SLIDES = [
   { title: "Thank you", chapter: "", Body: Close, tone: "dark" },
 ];
 
-const PRELOAD = [plannerPlan, plannerFailureSummary, truck3dPoster, ...Object.values(CONCEPT_SHOTS)];
+const PRELOAD = [oldFlowPoster, plannerPlan, plannerFailureSummary, truck3dPoster, ...Object.values(CONCEPT_SHOTS)];
 
 export default function PlannerDeck() {
   return (
