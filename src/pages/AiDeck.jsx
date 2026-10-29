@@ -25,7 +25,8 @@ import {
   Upload,
   UserCheck,
 } from "lucide-react";
-import Deck, { Media, R } from "../components/deck/Deck";
+import { motion } from "motion/react";
+import Deck, { Count, Media, R, Words } from "../components/deck/Deck";
 import { rich } from "../components/rich";
 import { profile } from "../data/content";
 import demoMp4 from "../assets/photos/ai-ingestion-demo.mp4";
@@ -47,7 +48,7 @@ function Feature({ kicker, title, points, media, label }) {
     <div className={s.solution}>
       <div className={s.solutionText}>
         <R as="p" className={s.kicker}>{kicker}</R>
-        <R as="h2" className={s.title}>{title}</R>
+        <Words as="h2" className={s.title} text={title} />
         <ul className={s.points}>
           {points.map((p) => (
             <R as="li" key={p}>
@@ -71,9 +72,7 @@ function Cover() {
     <div className={s.cover}>
       <div className={s.coverText}>
         <R className={s.tag}>Delhivery · TransportOne TMS · Agentic AI</R>
-        <R as="h1" className={s.display}>
-          From error files to <span className={s.accent}>an agent that asks</span>
-        </R>
+        <Words as="h1" className={s.display} text="From error files to *an agent that asks*" />
         <R as="p" className={s.lede}>
           Redesigning order upload, the first step of every plan, around a data ingestion agent.
         </R>
@@ -93,9 +92,7 @@ function Hook() {
   return (
     <div className={s.center}>
       <R as="p" className={s.kicker}>Where every plan starts</R>
-      <R as="h2" className={s.display}>
-        No orders in, <span className={s.accent}>no plan out.</span>
-      </R>
+      <Words className={s.display} text="No orders in, *no plan out.*" />
       <R as="p" className={s.muted}>
         Before a planner can build a single load, every order has to be in the system.
       </R>
@@ -112,7 +109,7 @@ function OldWay() {
   ];
   return (
     <div className={s.stack}>
-      <R as="h2" className={s.title}>Getting orders in meant a bulk upload.</R>
+      <Words as="h2" className={s.title} text="Getting orders in meant a bulk upload." />
       <R as="p" className={s.sub}>Typical CSV error handling: the system finds the problems, the user fixes them.</R>
       <R className={s.loop}>
         <ol className={s.loopSteps}>
@@ -157,7 +154,7 @@ function WhyItHurt() {
   ];
   return (
     <div className={s.stack}>
-      <R as="h2" className={s.title}>The system knew what was wrong. The user did all the work.</R>
+      <Words as="h2" className={s.title} text="The system knew what was wrong. The user did all the work." />
       <div className={s.grid3}>
         {cards.map(({ Icon, title, text }) => (
           <R key={title} className={s.card}>
@@ -177,9 +174,7 @@ function Shift() {
   return (
     <div className={s.center}>
       <R as="p" className={s.kicker}>The shift</R>
-      <R as="h2" className={s.display}>
-        Stop making users fit our format. <span className={s.accent}>Let an agent fit theirs.</span>
-      </R>
+      <Words className={s.display} text="Stop making users fit our format. *Let an agent fit theirs.*" />
       <R as="p" className={s.muted}>The agent does the work. People make the calls.</R>
     </div>
   );
@@ -195,7 +190,7 @@ function HowItWorks() {
   ];
   return (
     <div className={s.stack}>
-      <R as="h2" className={s.title}>A data ingestion agent, end to end.</R>
+      <Words as="h2" className={s.title} text="A data ingestion agent, end to end." />
       <div className={s.pipeline}>
         {steps.map(({ Icon, title, text }, i) => (
           <R key={title} className={s.flowStep}>
@@ -259,7 +254,7 @@ function AsksFirst() {
     <div className={s.solution}>
       <div className={s.solutionText}>
         <R as="p" className={s.kicker}>Ask before failing</R>
-        <R as="h2" className={s.title}>Missing data became a question, not an error.</R>
+        <Words as="h2" className={s.title} text="Missing data became a question, not an error." />
         <ol className={s.activity}>
           {steps.map(({ Icon, text }) => (
             <R as="li" key={text}>
@@ -287,23 +282,27 @@ function Partial() {
   return (
     <div className={s.stack}>
       <R as="p" className={s.kicker}>Partial success</R>
-      <R as="h2" className={s.titleLarge}>
-        Good rows don't wait for <span className={s.accent}>bad ones</span>.
-      </R>
+      <Words className={s.titleLarge} text="Good rows don't wait for *bad ones.*" />
       <R className={s.partial}>
         <div className={s.partialNums}>
           <div>
-            <span className={`${s.statValue} ${s.sageText}`}>27</span>
+            <Count className={`${s.statValue} ${s.sageText}`} value="27" />
             <span className={s.statLabel}>loads created straight away</span>
           </div>
           <div>
-            <span className={`${s.statValue} ${s.accent}`}>13</span>
+            <Count className={`${s.statValue} ${s.accent}`} value="13" delay={0.6} />
             <span className={s.statLabel}>rows held for review, with the reason</span>
           </div>
         </div>
         <div className={s.partialBar} aria-hidden="true">
-          <span style={{ flex: 27 }} />
-          <span style={{ flex: 13 }} />
+          <motion.span
+            style={{ flex: 27, transformOrigin: "left" }}
+            variants={{ hidden: { scaleX: 0 }, show: { scaleX: 1, transition: { duration: 1.1, delay: 0.4, ease: [0.16, 1, 0.3, 1] } } }}
+          />
+          <motion.span
+            style={{ flex: 13, transformOrigin: "left" }}
+            variants={{ hidden: { scaleX: 0 }, show: { scaleX: 1, transition: { duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] } } }}
+          />
         </div>
         <p className={s.body}>From one 40-row file. Planning can start on what's ready while the rest is resolved.</p>
       </R>
@@ -346,7 +345,7 @@ function AgentInGrid() {
 function Demo() {
   return (
     <div className={s.stackSnug}>
-      <R as="h2" className={s.title}>The whole flow, in 47 seconds.</R>
+      <Words as="h2" className={s.title} text="The whole flow, in 47 seconds." />
       <R className={s.demo}>
         <Media media={DEMO} label="Data ingestion agent: full demo" className={s.fill} />
       </R>
@@ -364,7 +363,7 @@ function BeforeAfter() {
   ];
   return (
     <div className={s.stack}>
-      <R as="h2" className={s.title}>From a form to fill to a teammate that works.</R>
+      <Words as="h2" className={s.title} text="From a form to fill to a teammate that works." />
       <R className={s.compare}>
         <div role="table" aria-label="Before and after">
         <div className={s.compareHead} role="row">
@@ -394,7 +393,7 @@ function Principles() {
   ];
   return (
     <div className={s.stack}>
-      <R as="h2" className={s.title}>What designing for an agent taught me.</R>
+      <Words as="h2" className={s.title} text="What designing for an agent taught me." />
       <div className={s.grid2}>
         {items.map(({ Icon, title, text }) => (
           <R key={title} className={s.card}>
@@ -416,9 +415,7 @@ function Close() {
       <R className={s.iconTileLarge}>
         <Bot size={40} strokeWidth={1.4} />
       </R>
-      <R as="h2" className={s.display}>
-        The best error message <span className={s.accent}>is a question.</span>
-      </R>
+      <Words className={s.display} text="The best error message *is a question.*" />
       <R as="p" className={s.muted}>Thank you. Happy to take questions.</R>
       <R className={s.byline}>
         <span className={s.bylineName}>{profile.name}</span>
@@ -430,10 +427,10 @@ function Close() {
 
 const SLIDES = [
   { title: "Cover", chapter: "", Body: Cover },
-  { title: "No orders, no plan", chapter: "", Body: Hook },
+  { title: "No orders, no plan", chapter: "", Body: Hook, tone: "dark" },
   { title: "The bulk upload loop", chapter: "01 · The old way", Body: OldWay },
   { title: "Why it hurt", chapter: "01 · The old way", Body: WhyItHurt },
-  { title: "The shift", chapter: "02 · The shift", Body: Shift },
+  { title: "The shift", chapter: "02 · The shift", Body: Shift, tone: "dark" },
   { title: "How the agent works", chapter: "02 · The shift", Body: HowItWorks },
   { title: "One list for every source", chapter: "03 · The experience", Body: OneInbox },
   { title: "Every file explains itself", chapter: "03 · The experience", Body: ExplainsItself },
@@ -444,7 +441,7 @@ const SLIDES = [
   { title: "Demo", chapter: "04 · Demo", Body: Demo },
   { title: "Before and after", chapter: "05 · What changed", Body: BeforeAfter },
   { title: "Design principles", chapter: "06 · Learnings", Body: Principles },
-  { title: "Thank you", chapter: "", Body: Close },
+  { title: "Thank you", chapter: "", Body: Close, tone: "dark" },
 ];
 
 const PRELOAD = [demoPoster, listShot, drawerShot, resolveShot, fixShot, emailShot, whatsappShot];

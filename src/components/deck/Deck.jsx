@@ -4,7 +4,7 @@
 // highlighter, laser, eraser, timer, blank screen, full-size media, overview).
 // Each deck passes its slides; slides build on R (reveal) and Media below.
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -33,6 +33,16 @@ import s from "./Deck.module.css";
 const STAGE_W = 1600;
 const STAGE_H = 900;
 
+// Where the soft accent glow drifts to, slide by slide (stage %).
+const GLOW_SPOTS = [
+  ["68%", "18%"],
+  ["12%", "70%"],
+  ["82%", "78%"],
+  ["30%", "12%"],
+  ["58%", "60%"],
+  ["8%", "28%"],
+];
+
 const clamp = (n, last) => Math.max(0, Math.min(last, n));
 // True while the address bar points at this deck ("#/<slug>" or "#/<slug>/<n>").
 const isOwnHash = (slug) => new RegExp(`^#/${slug}(/\\d+)?$`).test(window.location.hash);
@@ -41,7 +51,9 @@ const slideFromHash = (slug, last) => {
   return clamp(n - 1, last);
 };
 
-// One revealed item: rises in after the slide's earlier items.
+const EASE = [0.16, 1, 0.3, 1];
+
+// One revealed item: rises out of a soft blur after the slide's earlier items.
 export function R({ as = "div", className, children }) {
   const reduce = useReducedMotion();
   const Tag = motion[as];
@@ -53,35 +65,210 @@ export function R({ as = "div", className, children }) {
 }
 
 const ITEM = {
-  hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+  hidden: { opacity: 0, y: 26, filter: "blur(10px)" },
+  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.75, ease: EASE } },
 };
 const ITEM_STILL = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { duration: 0.2 } } };
 
-export function Media({ media, label, className }) {
+// Headline whose words rise out of clipping masks one after another (the
+// site's hero idiom). "*a phrase*" is the accent, which also gets a drawn-in
+// underline; "\n" forces a line break.
+function parseWords(text) {
+  const out = [];
+  text.split(/(\*[^*]+\*|\n)/).forEach((seg) => {
+    if (!seg) return;
+    if (seg === "\n") return out.push({ br: true });
+    const accent = seg.startsWith("*");
+    const words = (accent ? seg.slice(1, -1) : seg).split(" ").filter(Boolean);
+    words.forEach((w) => {
+      const prev = out[out.length - 1];
+      // Lone punctuation sticks to the word before it.
+      if (/^[.,!?:;]+$/.test(w) && prev && !prev.br) prev.word += w;
+      else out.push({ word: w, accent });
+    });
+  });
+  return out;
+}
+
+const WORD = {
+  hidden: { y: "108%" },
+  show: { y: "0%", transition: { duration: 0.8, ease: EASE } },
+};
+const UNDERLINE = {
+  hidden: { backgroundSize: "0% 0.07em" },
+  show: { backgroundSize: "100% 0.07em", transition: { duration: 0.9, delay: 0.55, ease: EASE } },
+};
+
+export function Words({ as = "h2", text, className }) {
   const reduce = useReducedMotion();
-  const zoom = useContext(ZoomContext);
-  const el = media.video ? (
-    <video
-      className={className}
-      src={media.video}
-      poster={media.poster}
-      autoPlay={!reduce}
-      muted
-      loop
-      playsInline
-      aria-label={label}
-    />
-  ) : (
-    <img className={className} src={media.img} alt={label} />
+  const items = parseWords(text);
+  const Tag = motion[as];
+  if (reduce) {
+    return (
+      <Tag className={className} variants={ITEM_STILL}>
+        {text.replace(/\*/g, "").split("\n").map((line, i) => (
+          <span key={i}>
+            {i > 0 && <br />}
+            {line}
+          </span>
+        ))}
+      </Tag>
+    );
+  }
+  // Consecutive accent words share one underline span so it wraps with them.
+  const groups = [];
+  items.forEach((it) => {
+    const g = groups[groups.length - 1];
+    if (!it.br && it.accent && g?.accent) g.items.push(it);
+    else groups.push({ accent: !it.br && it.accent, br: it.br, items: [it] });
+  });
+  const word = (it, k) => (
+    <span key={k} className={s.wordMask}>
+      <motion.span className={s.word} variants={WORD}>
+        {it.word}
+      </motion.span>
+    </span>
   );
   return (
-    <button type="button" className={s.zoomable} onClick={() => zoom({ ...media, label })} aria-label={`${label}: view full size`}>
-      {el}
-      <span className={s.zoomHint} aria-hidden="true">
-        <Maximize2 size={14} /> Full size
-      </span>
-    </button>
+    <Tag className={className} aria-label={text.replace(/\*/g, "").replace("\n", " ")} variants={{ hidden: {}, show: { transition: { staggerChildren: 0.05 } } }}>
+      {groups.map((g, gi) => {
+        if (g.br) return <br key={gi} />;
+        const last = gi === groups.length - 1 || groups[gi + 1].br;
+        if (!g.accent) {
+          return g.items.map((it, wi) => (
+            <span key={`${gi}-${wi}`} aria-hidden="true">
+              {word(it, wi)}
+              {(!last || wi < g.items.length - 1) && " "}
+            </span>
+          ));
+        }
+        return (
+          <span key={gi} aria-hidden="true">
+            <motion.span className={s.accentLine} variants={UNDERLINE}>
+              {g.items.map((it, wi) => (
+                <span key={wi}>
+                  {word(it, wi)}
+                  {wi < g.items.length - 1 && " "}
+                </span>
+              ))}
+            </motion.span>
+            {!last && " "}
+          </span>
+        );
+      })}
+    </Tag>
+  );
+}
+
+// Counts every number in a stat string up from zero when the slide opens.
+// The final string renders from the start (correct without JS and under
+// reduced motion); the animation only rewrites the text node.
+const NUM = /\d[\d,]*(?:\.\d+)?/g;
+export function Count({ value, className, delay = 0.35, duration = 1.5 }) {
+  const ref = useRef(null);
+  const reduce = useReducedMotion();
+  useEffect(() => {
+    const el = ref.current;
+    const parts = value.match(NUM);
+    if (reduce || !el || !parts) return;
+    const fmt = (m, k) => {
+      const n = Number(m.replace(/,/g, "")) * k;
+      if (m.includes(",")) return Math.round(n).toLocaleString("en-US");
+      const dec = m.includes(".") ? m.split(".")[1].length : 0;
+      return n.toFixed(dec);
+    };
+    const render = (k) => {
+      let i = 0;
+      el.textContent = value.replace(NUM, () => fmt(parts[i++], k));
+    };
+    render(0);
+    const c = animate(0, 1, { duration, delay, ease: EASE, onUpdate: render });
+    return () => {
+      c.stop();
+      el.textContent = value;
+    };
+  }, [value, reduce, delay, duration]);
+  return (
+    <span ref={ref} className={className}>
+      {value}
+    </span>
+  );
+}
+
+// A bar that fills from `from`% to `to`% when the slide opens.
+export function Meter({ to, from = 0, className, delay = 0.5 }) {
+  const reduce = useReducedMotion();
+  return (
+    <div className={`${s.meter} ${className ?? ""}`} aria-hidden="true">
+      <motion.span
+        className={s.meterFill}
+        variants={{
+          hidden: { width: `${reduce ? to : from}%` },
+          show: { width: `${to}%`, transition: { duration: reduce ? 0 : 1.6, delay, ease: EASE } },
+        }}
+      />
+      {from > 0 && <span className={s.meterMark} style={{ left: `${from}%` }} />}
+    </div>
+  );
+}
+
+// A screenshot or recording in a browser-style frame. It opens through a
+// clip as the slide arrives, tilts slightly toward the pointer, and opens
+// full size on click.
+const FRAME = {
+  hidden: { clipPath: "inset(0 0 100% 0)", opacity: 0 },
+  show: { clipPath: "inset(0 0 0% 0)", opacity: 1, transition: { duration: 1, ease: EASE } },
+};
+const FRAME_INNER = {
+  hidden: { scale: 1.08 },
+  show: { scale: 1, transition: { duration: 1.4, ease: EASE } },
+};
+
+export function Media({ media, label, chrome = true }) {
+  const reduce = useReducedMotion();
+  const zoom = useContext(ZoomContext);
+  const rx = useMotionValue(0);
+  const ry = useMotionValue(0);
+  const rotateX = useSpring(rx, { stiffness: 140, damping: 18 });
+  const rotateY = useSpring(ry, { stiffness: 140, damping: 18 });
+  const el = media.video ? (
+    <video className={s.mediaEl} src={media.video} poster={media.poster} autoPlay={!reduce} muted loop playsInline aria-label={label} />
+  ) : (
+    <img className={s.mediaEl} src={media.img} alt={label} />
+  );
+  const tilt = (e) => {
+    if (reduce) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    ry.set(((e.clientX - r.left) / r.width - 0.5) * 7);
+    rx.set(-((e.clientY - r.top) / r.height - 0.5) * 5);
+  };
+  return (
+    <motion.div
+      className={s.frame}
+      variants={reduce ? ITEM_STILL : FRAME}
+      style={{ rotateX, rotateY, transformPerspective: 1400 }}
+      onPointerMove={tilt}
+      onPointerLeave={() => {
+        rx.set(0);
+        ry.set(0);
+      }}
+    >
+      {chrome && (
+        <div className={s.frameBar} aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </div>
+      )}
+      <button type="button" className={s.zoomable} onClick={() => zoom({ ...media, label })} aria-label={`${label}: view full size`}>
+        <motion.div className={s.frameInner} variants={reduce ? undefined : FRAME_INNER}>
+          {el}
+        </motion.div>
+        <span className={s.zoomHint} aria-hidden="true">
+          <Maximize2 size={14} /> Full size
+        </span>
+      </button>
+    </motion.div>
   );
 }
 
@@ -157,6 +344,21 @@ export default function Deck({ slides, slug, brand, label, preload = [] }) {
   const [startedAt, setStartedAt] = useState(() => Date.now());
   const [now, setNow] = useState(() => Date.now());
   const touch = useRef(null);
+  const stageRef = useRef(null);
+  const cursorX = useMotionValue(STAGE_W / 2);
+  const cursorY = useMotionValue(STAGE_H / 2);
+  const cursorOn = useMotionValue(0);
+  const glowX = useSpring(cursorX, { stiffness: 90, damping: 22, mass: 0.8 });
+  const glowY = useSpring(cursorY, { stiffness: 90, damping: 22, mass: 0.8 });
+
+  // Direction of travel, derived while rendering (React's "adjust state on
+  // prop change" pattern), so the new slide already knows which way to enter.
+  const [prevIndex, setPrevIndex] = useState(index);
+  const [dir, setDir] = useState(1);
+  if (index !== prevIndex) {
+    setPrevIndex(index);
+    setDir(index > prevIndex ? 1 : -1);
+  }
 
   const go = useCallback((n) => setIndex((i) => clamp(typeof n === "function" ? n(i) : n, last)), [last]);
   const slideMarks = marks[index] ?? [];
@@ -327,6 +529,20 @@ export default function Deck({ slides, slug, brand, label, preload = [] }) {
   const slide = slides[index];
   const { Body } = slide;
   const hideChrome = idle && !overview && !help && !zoomed;
+  const enterDelay = 0.12;
+
+  // A soft blurred glow trails the pointer (stage coordinates, sprung so it
+  // lags a little behind), and fades out when the pointer leaves the stage.
+  const onStageMove = (e) => {
+    const el = stageRef.current;
+    if (!el || reduce) return;
+    const r = el.getBoundingClientRect();
+    cursorX.set(((e.clientX - r.left) / r.width) * STAGE_W);
+    cursorY.set(((e.clientY - r.top) / r.height) * STAGE_H);
+    if (cursorOn.get() === 0) animate(cursorOn, 1, { duration: 0.6 });
+  };
+  const onStageLeave = () => animate(cursorOn, 0, { duration: 0.8 });
+  const glow = GLOW_SPOTS[index % GLOW_SPOTS.length];
 
   return (
     <div
@@ -335,27 +551,83 @@ export default function Deck({ slides, slug, brand, label, preload = [] }) {
       onTouchEnd={onTouchEnd}
     >
       <div
+        ref={stageRef}
         className={s.stage}
+        data-tone={slide.tone ?? "light"}
         style={{ width: STAGE_W, height: STAGE_H, transform: `translate(-50%, -50%) scale(${scale})` }}
         role="region"
         aria-roledescription="slide deck"
         aria-label={label}
+        onPointerMove={onStageMove}
+        onPointerLeave={onStageLeave}
       >
+        {!reduce && (
+          <motion.div
+            className={s.cursorGlow}
+            aria-hidden="true"
+            style={{ x: glowX, y: glowY, opacity: cursorOn }}
+          />
+        )}
+        <motion.div
+          className={s.bgGlow}
+          aria-hidden="true"
+          initial={false}
+          animate={{ left: glow[0], top: glow[1] }}
+          transition={{ duration: reduce ? 0 : 1.8, ease: EASE }}
+        />
         <header className={s.stageHead}>
-          <span className={s.label}>{slide.chapter}</span>
+          {/* A new chapter's name slides in with a short accent rule. */}
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={slide.chapter}
+              className={`${s.label} ${s.chapterLabel}`}
+              initial={reduce ? false : { opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0, transition: { duration: 0.5, delay: 0.1, ease: EASE } }}
+              exit={{ opacity: 0, transition: { duration: 0.2 } }}
+            >
+              {slide.chapter && (
+                <motion.i
+                  className={s.chapterRule}
+                  aria-hidden="true"
+                  initial={reduce ? false : { scaleX: 0 }}
+                  animate={{ scaleX: 1, transition: { duration: 0.6, delay: 0.25, ease: EASE } }}
+                />
+              )}
+              {slide.chapter}
+            </motion.span>
+          </AnimatePresence>
           <span className={s.label}>{brand}</span>
         </header>
 
-        <AnimatePresence mode="wait" initial={false}>
+        <AnimatePresence mode="wait" initial={false} custom={{ dir, reduce }}>
           <motion.section
             key={index}
             className={s.slide}
             aria-roledescription="slide"
             aria-label={`${index + 1} of ${slides.length}: ${slide.title}`}
+            custom={{ dir, reduce }}
             initial="hidden"
             animate="show"
-            exit={{ opacity: 0, transition: { duration: 0.18 } }}
-            variants={{ hidden: {}, show: { transition: { staggerChildren: reduce ? 0 : 0.08 } } }}
+            exit="exit"
+            variants={{
+              hidden: (c) => ({ opacity: c.reduce ? 0 : 1, x: c.reduce ? 0 : 70 * c.dir }),
+              show: {
+                opacity: 1,
+                x: 0,
+                transition: {
+                  duration: reduce ? 0.2 : 0.8,
+                  ease: EASE,
+                  delayChildren: reduce ? 0 : enterDelay,
+                  staggerChildren: reduce ? 0 : 0.09,
+                },
+              },
+              exit: (c) => ({
+                opacity: 0,
+                x: c.reduce ? 0 : -50 * c.dir,
+                filter: c.reduce ? "none" : "blur(8px)",
+                transition: { duration: 0.28, ease: [0.4, 0, 1, 1] },
+              }),
+            }}
           >
             <ZoomContext.Provider value={setZoomed}>
               <Body />
@@ -364,8 +636,15 @@ export default function Deck({ slides, slug, brand, label, preload = [] }) {
         </AnimatePresence>
 
         <footer className={s.stageFoot}>
-          <div className={s.progress} aria-hidden="true">
-            <span style={{ transform: `scaleX(${(index + 1) / slides.length})` }} />
+          <div className={s.segments} aria-hidden="true">
+            {slides.map((sl, i) => (
+              <span
+                key={i}
+                className={`${i <= index ? s.segOn : ""} ${i === index ? s.segNow : ""} ${
+                  i > 0 && sl.chapter !== slides[i - 1].chapter ? s.segBreak : ""
+                }`}
+              />
+            ))}
           </div>
           <span className={s.counter}>
             {String(index + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
@@ -381,6 +660,7 @@ export default function Deck({ slides, slug, brand, label, preload = [] }) {
           strokes={slideMarks}
           onChange={setSlideMarks}
         />
+
       </div>
 
       <div className={s.toolbar} role="toolbar" aria-label="Presenter tools">

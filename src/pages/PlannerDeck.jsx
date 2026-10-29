@@ -26,7 +26,7 @@ import {
   ShieldCheck,
   Truck,
 } from "lucide-react";
-import Deck, { Media, R } from "../components/deck/Deck";
+import Deck, { Count, Media, Meter, R, Words } from "../components/deck/Deck";
 import { ZoomContext } from "../components/deck/zoom";
 import PlannerDiagram from "../components/casestudy/PlannerDiagram";
 import { rich } from "../components/rich";
@@ -61,9 +61,7 @@ function Cover() {
     <div className={s.cover}>
       <div className={s.coverText}>
         <R className={s.tag}>Delhivery · TransportOne TMS · B2B SaaS</R>
-        <R as="h1" className={s.display}>
-          How we got planners to <span className={s.accent}>trust the algorithm</span>
-        </R>
+        <Words as="h1" className={s.display} text="How we got planners to *trust the algorithm*" />
         <R as="p" className={s.lede}>
           The planner revamp: a simple SaaS interface on top of a decade of logistics data.
         </R>
@@ -83,7 +81,12 @@ function Hook() {
   return (
     <div className={s.center}>
       <R as="p" className={s.kicker}>The number that proved it</R>
-      <R className={s.giant}>18%</R>
+      <R className={s.giant}>
+        <Count value="18%" delay={0.5} />
+      </R>
+      <R className={s.hookMeter}>
+        <Meter to={18} delay={0.6} />
+      </R>
       <R as="p" className={s.statement}>
         of the algorithm's plans were accepted. Everyone else <span className={s.accent}>re-planned by hand</span>.
       </R>
@@ -96,14 +99,14 @@ function Setting() {
   return (
     <div className={s.split}>
       <div className={s.stack}>
-        <R as="h2" className={s.title}>Delhivery is India's largest fully integrated logistics provider.</R>
+        <Words as="h2" className={s.title} text="Delhivery is India's largest fully integrated logistics provider." />
         <R className={s.statRow}>
           <div className={s.stat}>
-            <span className={s.statValue}>19,000+</span>
+            <Count className={s.statValue} value="19,000+" />
             <span className={s.statLabel}>pin codes served</span>
           </div>
           <div className={s.stat}>
-            <span className={s.statValue}>4 billion+</span>
+            <Count className={s.statValue} value="4 billion+" />
             <span className={s.statLabel}>shipments since 2011</span>
           </div>
         </R>
@@ -131,7 +134,7 @@ function WhatIsATms() {
   return (
     <div className={s.stack}>
       <R as="p" className={s.kicker}>What's a TMS?</R>
-      <R as="h2" className={s.title}>A Transport Management System runs a shipper's freight, from order to invoice.</R>
+      <Words as="h2" className={s.title} text="A Transport Management System runs a shipper's freight, from order to invoice." />
       <div className={s.pipeline}>
         {steps.map(({ Icon, title, text, here }, i) => (
           <R key={title} className={`${s.flowStep} ${here ? s.flowStepHere : ""}`}>
@@ -155,7 +158,7 @@ function WhatIsATms() {
 function WhatIsAPlanner() {
   return (
     <div className={s.stackSnug}>
-      <R as="h2" className={s.title}>At the heart of it: the planner.</R>
+      <Words as="h2" className={s.title} text="At the heart of it: the planner." />
       {/* Same diagram as the case study: orders in, the planner, loads out. */}
       <R className={s.plannerPanel}>
         <div className={s.plannerDiagram}>
@@ -192,16 +195,23 @@ function Forgotten() {
   ];
   return (
     <div className={s.stack}>
-      <R as="h2" className={s.title}>A tool that was built, then forgotten.</R>
-      <ol className={s.timeline}>
-        {beats.map((b) => (
-          <R as="li" key={b.when} className={s.beat}>
-            <span className={s.beatDot} aria-hidden="true" />
-            <span className={s.label}>{b.when}</span>
-            <p className={s.beatText}>{b.text}</p>
-          </R>
-        ))}
-      </ol>
+      <Words as="h2" className={s.title} text="A tool that was built, then forgotten." />
+      <div className={s.timelineWrap}>
+        <motion.span
+          className={s.timelineLine}
+          aria-hidden="true"
+          variants={{ hidden: { scaleX: 0 }, show: { scaleX: 1, transition: { duration: 1.3, ease: [0.16, 1, 0.3, 1] } } }}
+        />
+        <ol className={s.timeline}>
+          {beats.map((b) => (
+            <R as="li" key={b.when} className={s.beat}>
+              <span className={s.beatDot} aria-hidden="true" />
+              <span className={s.label}>{b.when}</span>
+              <p className={s.beatText}>{b.text}</p>
+            </R>
+          ))}
+        </ol>
+      </div>
     </div>
   );
 }
@@ -209,7 +219,7 @@ function Forgotten() {
 function Review() {
   return (
     <div className={s.center}>
-      <R as="h2" className={s.display}>The review didn't go well.</R>
+      <Words as="h2" className={s.display} text="The review didn't go well." />
       <R className={s.chips}>
         <span className={s.chip}>Broken flows</span>
         <span className={s.chip}>Confusing screens</span>
@@ -226,9 +236,7 @@ function Twist() {
   return (
     <div className={s.center}>
       <R as="p" className={s.kicker}>But broken flows weren't the real problem</R>
-      <R as="h2" className={s.display}>
-        Planners didn't <span className={s.accent}>trust</span> the output.
-      </R>
+      <Words className={s.display} text="Planners didn't *trust* the output." />
       <R as="p" className={s.muted}>So they worked around it, in Excel, for a year.</R>
     </div>
   );
@@ -237,7 +245,7 @@ function Twist() {
 function Brief() {
   return (
     <div className={s.stack}>
-      <R as="h2" className={s.title}>The ask, and where I came in.</R>
+      <Words as="h2" className={s.title} text="The ask, and where I came in." />
       <div className={s.twoCol}>
         <R className={s.panel}>
           <span className={s.label}>What leadership wanted</span>
@@ -260,13 +268,13 @@ function Listening() {
   return (
     <div className={s.split}>
       <div className={s.stack}>
-        <R as="h2" className={s.title}>Before designing anything, I went and listened.</R>
+        <Words as="h2" className={s.title} text="Before designing anything, I went and listened." />
         <R as="p" className={s.sub}>{rich(insights.method)}</R>
       </div>
       <div className={s.stackTight}>
         {insights.stats.map((st) => (
           <R key={st.label} className={s.bigStat}>
-            <span className={s.statValue}>{st.value}</span>
+            <Count className={s.statValue} value={st.value} />
             <span className={s.statLabel}>{st.label}</span>
           </R>
         ))}
@@ -278,7 +286,7 @@ function Listening() {
 function Findings() {
   return (
     <div className={s.stack}>
-      <R as="h2" className={s.title}>What planners were really living with.</R>
+      <Words as="h2" className={s.title} text="What planners were really living with." />
       <div className={s.grid3}>
         {insights.points.map((p) => {
           const Icon = POINT_ICONS[p.icon];
@@ -301,10 +309,10 @@ function CoreProblem() {
   return (
     <div className={s.stack}>
       <R as="p" className={s.kicker}>{problem.core.tag}</R>
-      <R as="h2" className={s.titleLarge}>
-        A strong 10-year algorithm, trapped behind an interface too complex to scale and{" "}
-        <span className={s.accent}>too opaque to trust</span>.
-      </R>
+      <Words
+        className={s.titleLarge}
+        text="A strong 10-year algorithm, trapped behind an interface too complex to scale and *too opaque to trust.*"
+      />
       <div className={s.twoCol}>
         <R className={s.panel}>
           <span className={s.label}>{problem.business.title}</span>
@@ -323,7 +331,7 @@ function Goals() {
   const cols = [problem.businessGoals, problem.designGoals];
   return (
     <div className={s.stack}>
-      <R as="h2" className={s.title}>What success had to look like.</R>
+      <Words as="h2" className={s.title} text="What success had to look like." />
       <div className={s.twoCol}>
         {cols.map((col) => (
           <R key={col.title} className={s.panel}>
@@ -355,7 +363,7 @@ function Concepts() {
 
   return (
     <div className={s.stackSnug}>
-      <R as="h2" className={s.title}>Five concepts before one shipped.</R>
+      <Words as="h2" className={s.title} text="Five concepts before one shipped." />
       <R className={s.conceptLayout}>
         <div className={s.conceptMain}>
           <button
@@ -436,7 +444,7 @@ function makeSolution(sol, i) {
           <R as="p" className={s.kicker}>
             Fix {i + 1} of {solutions.length}
           </R>
-          <R as="h2" className={s.title}>{sol.title}</R>
+          <Words as="h2" className={s.title} text={sol.title} />
           <R className={s.pair}>
             <span className={s.label}>The problem</span>
             <p className={s.body}>{sol.problem}</p>
@@ -457,22 +465,24 @@ function makeSolution(sol, i) {
 function Impact() {
   return (
     <div className={s.stack}>
-      <R as="h2" className={s.title}>Once planners could see why a plan was good, they shipped it.</R>
+      <Words as="h2" className={s.title} text="Once planners could see why a plan was good, they shipped it." />
       <div className={s.impact}>
         <R className={s.impactHero}>
           <span className={s.label}>Auto-plan acceptance</span>
           <span className={s.impactValue}>
-            18% <ArrowRight size={56} strokeWidth={1.4} className={s.impactArrow} /> <span className={s.accent}>72%</span>
+            <Count value="18%" /> <ArrowRight size={56} strokeWidth={1.4} className={s.impactArrow} />{" "}
+            <Count className={s.accent} value="72%" delay={0.7} />
           </span>
+          <Meter to={72} from={18} delay={0.7} />
           <p className={s.body}>A 4x surge in trust: planners choosing the algorithm's plan over their own.</p>
         </R>
         <div className={s.stackTight}>
           <R className={s.bigStat}>
-            <span className={s.statValue}>74% faster</span>
+            <Count className={s.statValue} value="74% faster" />
             <span className={s.statLabel}>daily planning, from 19 minutes to under 5</span>
           </R>
           <R className={s.bigStat}>
-            <span className={s.statValue}>100% self-serve</span>
+            <Count className={s.statValue} value="100% self-serve" />
             <span className={s.statLabel}>down from 2 weeks of training</span>
           </R>
         </div>
@@ -484,7 +494,7 @@ function Impact() {
 function Learnings() {
   return (
     <div className={s.stack}>
-      <R as="h2" className={s.title}>{learnings.heading}</R>
+      <Words as="h2" className={s.title} text={learnings.heading} />
       <div className={s.grid2}>
         {learnings.items.map((l, i) => (
           <R key={l.title} className={s.card}>
@@ -501,11 +511,7 @@ function Learnings() {
 function Close() {
   return (
     <div className={s.center}>
-      <R as="h2" className={s.display}>
-        A better algorithm isn't a better product.
-        <br />
-        <span className={s.accent}>A trusted one is.</span>
-      </R>
+      <Words className={s.display} text={"A better algorithm isn't a better product.\n*A trusted one is.*"} />
       <R as="p" className={s.muted}>Thank you. Happy to take questions.</R>
       <R className={s.byline}>
         <span className={s.bylineName}>{profile.name}</span>
@@ -521,9 +527,9 @@ const SLIDES = [
   { title: "What's a TMS?", chapter: "01 · The setting", Body: WhatIsATms },
   { title: "What a planner does", chapter: "01 · The setting", Body: WhatIsAPlanner },
   { title: "Built, then forgotten", chapter: "02 · What went wrong", Body: Forgotten },
-  { title: "The review", chapter: "02 · What went wrong", Body: Review },
-  { title: "The real problem", chapter: "02 · What went wrong", Body: Twist },
-  { title: "18% accepted", chapter: "02 · What went wrong", Body: Hook },
+  { title: "The review", chapter: "02 · What went wrong", Body: Review, tone: "dark" },
+  { title: "The real problem", chapter: "02 · What went wrong", Body: Twist, tone: "dark" },
+  { title: "18% accepted", chapter: "02 · What went wrong", Body: Hook, tone: "dark" },
   { title: "The ask & my role", chapter: "02 · What went wrong", Body: Brief },
   { title: "Research", chapter: "03 · Listening", Body: Listening },
   { title: "Six findings", chapter: "03 · Listening", Body: Findings },
@@ -533,7 +539,7 @@ const SLIDES = [
   ...solutions.map((sol, i) => ({ title: sol.title, chapter: "06 · The fixes", Body: makeSolution(sol, i) })),
   { title: "Impact", chapter: "07 · Impact", Body: Impact },
   { title: "Learnings", chapter: "08 · Learnings", Body: Learnings },
-  { title: "Thank you", chapter: "", Body: Close },
+  { title: "Thank you", chapter: "", Body: Close, tone: "dark" },
 ];
 
 const PRELOAD = [plannerPlan, plannerFailureSummary, truck3dPoster, ...Object.values(CONCEPT_SHOTS)];
